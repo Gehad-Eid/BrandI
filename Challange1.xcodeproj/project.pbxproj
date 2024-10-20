@@ -6,6 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		B897CFE42CA93D62002CC428 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B897CFE32CA93D62002CC428 /* FirebaseAnalytics */; };
+		B897CFE62CA93D62002CC428 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = B897CFE52CA93D62002CC428 /* FirebaseAppCheck */; };
+		B897CFE82CA93D62002CC428 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B897CFE72CA93D62002CC428 /* FirebaseAuth */; };
+		B897CFEA2CA93D62002CC428 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = B897CFE92CA93D62002CC428 /* FirebaseDatabase */; };
+		B897CFEC2CA93D62002CC428 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = B897CFEB2CA93D62002CC428 /* FirebaseFirestore */; };
+		B897CFEE2CA93D62002CC428 /* FirebaseFunctions in Frameworks */ = {isa = PBXBuildFile; productRef = B897CFED2CA93D62002CC428 /* FirebaseFunctions */; };
+		B897CFF02CA93D62002CC428 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = B897CFEF2CA93D62002CC428 /* FirebaseStorage */; };
+		B8CBA3252CAE7BF300288719 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = B8CBA3242CAE7BF300288719 /* GoogleSignIn */; };
+		B8CBA3272CAE7BF300288719 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = B8CBA3262CAE7BF300288719 /* GoogleSignInSwift */; };
+		B8CBA3782CBBAF5500288719 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = B8CBA3772CBBAF5500288719 /* Alamofire */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		B897CFBA2CA92E61002CC428 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,9 +42,38 @@
 		B897CFC32CA92E61002CC428 /* Challange1UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Challange1UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B8CBA3212CAE78F600288719 /* Exceptions for "Challange1" folder in "Challange1Tests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"GoogleService-Info.plist",
+			);
+			target = B897CFB82CA92E61002CC428 /* Challange1Tests */;
+		};
+		B8CBA3222CAE78F600288719 /* Exceptions for "Challange1" folder in "Challange1UITests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				"GoogleService-Info.plist",
+			);
+			target = B897CFC22CA92E61002CC428 /* Challange1UITests */;
+		};
+		B8CBA3292CAE80EE00288719 /* Exceptions for "Challange1" folder in "Challange1" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B897CFA82CA92E60002CC428 /* Challange1 */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		B897CFAB2CA92E60002CC428 /* Challange1 */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B8CBA3292CAE80EE00288719 /* Exceptions for "Challange1" folder in "Challange1" target */,
+				B8CBA3212CAE78F600288719 /* Exceptions for "Challange1" folder in "Challange1Tests" target */,
+				B8CBA3222CAE78F600288719 /* Exceptions for "Challange1" folder in "Challange1UITests" target */,
+			);
 			path = Challange1;
 			sourceTree = "<group>";
 		};
@@ -52,6 +94,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8CBA3272CAE7BF300288719 /* GoogleSignInSwift in Frameworks */,
+				B897CFE62CA93D62002CC428 /* FirebaseAppCheck in Frameworks */,
+				B8CBA3252CAE7BF300288719 /* GoogleSignIn in Frameworks */,
+				B897CFE82CA93D62002CC428 /* FirebaseAuth in Frameworks */,
+				B897CFEA2CA93D62002CC428 /* FirebaseDatabase in Frameworks */,
+				B8CBA3782CBBAF5500288719 /* Alamofire in Frameworks */,
+				B897CFEE2CA93D62002CC428 /* FirebaseFunctions in Frameworks */,
+				B897CFF02CA93D62002CC428 /* FirebaseStorage in Frameworks */,
+				B897CFEC2CA93D62002CC428 /* FirebaseFirestore in Frameworks */,
+				B897CFE42CA93D62002CC428 /* FirebaseAnalytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +164,16 @@
 			);
 			name = Challange1;
 			packageProductDependencies = (
+				B897CFE32CA93D62002CC428 /* FirebaseAnalytics */,
+				B897CFE52CA93D62002CC428 /* FirebaseAppCheck */,
+				B897CFE72CA93D62002CC428 /* FirebaseAuth */,
+				B897CFE92CA93D62002CC428 /* FirebaseDatabase */,
+				B897CFEB2CA93D62002CC428 /* FirebaseFirestore */,
+				B897CFED2CA93D62002CC428 /* FirebaseFunctions */,
+				B897CFEF2CA93D62002CC428 /* FirebaseStorage */,
+				B8CBA3242CAE7BF300288719 /* GoogleSignIn */,
+				B8CBA3262CAE7BF300288719 /* GoogleSignInSwift */,
+				B8CBA3772CBBAF5500288719 /* Alamofire */,
 			);
 			productName = Challange1;
 			productReference = B897CFA92CA92E60002CC428 /* Challange1.app */;
@@ -195,6 +257,11 @@
 			);
 			mainGroup = B897CFA02CA92E60002CC428;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				B897CFE22CA93D62002CC428 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				B8CBA3232CAE7BF300288719 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				B8CBA3762CBBAF5500288719 /* XCRemoteSwiftPackageReference "Alamofire" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B897CFAA2CA92E60002CC428 /* Products */;
 			projectDirPath = "";
@@ -393,23 +460,26 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Challange1/Challange1.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Challange1/Preview Content\"";
 				DEVELOPMENT_TEAM = N5C4229YSA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Challange1/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Gehad.Challange1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Gehad.Challange1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -422,23 +492,26 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Challange1/Challange1.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Challange1/Preview Content\"";
 				DEVELOPMENT_TEAM = N5C4229YSA;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Challange1/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = Gehad.Challange1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Gehad.Challange1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -558,6 +631,86 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B897CFE22CA93D62002CC428 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.2.0;
+			};
+		};
+		B8CBA3232CAE7BF300288719 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
+		B8CBA3762CBBAF5500288719 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Alamofire/Alamofire.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B897CFE32CA93D62002CC428 /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B897CFE22CA93D62002CC428 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		B897CFE52CA93D62002CC428 /* FirebaseAppCheck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B897CFE22CA93D62002CC428 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAppCheck;
+		};
+		B897CFE72CA93D62002CC428 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B897CFE22CA93D62002CC428 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		B897CFE92CA93D62002CC428 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B897CFE22CA93D62002CC428 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		B897CFEB2CA93D62002CC428 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B897CFE22CA93D62002CC428 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		B897CFED2CA93D62002CC428 /* FirebaseFunctions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B897CFE22CA93D62002CC428 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFunctions;
+		};
+		B897CFEF2CA93D62002CC428 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B897CFE22CA93D62002CC428 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+		B8CBA3242CAE7BF300288719 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B8CBA3232CAE7BF300288719 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		B8CBA3262CAE7BF300288719 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B8CBA3232CAE7BF300288719 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
+		B8CBA3772CBBAF5500288719 /* Alamofire */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B8CBA3762CBBAF5500288719 /* XCRemoteSwiftPackageReference "Alamofire" */;
+			productName = Alamofire;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B897CFA12CA92E60002CC428 /* Project object */;
 }
