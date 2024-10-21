@@ -59,3 +59,6 @@ final class SettingsViewModel : ObservableObject {
     }
     
 }
+
+
+// gehad
