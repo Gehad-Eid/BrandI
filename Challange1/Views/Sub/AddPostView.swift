@@ -8,14 +8,40 @@
 
 import SwiftUI
 
+@MainActor
+final class AddPostViewModel: ObservableObject {
+    
+//    @Published private(set) var user: DBUser? = nil
+//    
+//    func loadCurrentUser() async throws {
+//        let userDataResult = try FirebaseAuthManager.shared.getAuthenticatedUser()
+//        self.user = try await UserManager.shared.getUser(userID: userDataResult.uid)
+//    }
+    
+    @Published var postTitle: String = ""
+    @Published var postContent: String = ""
+    @Published var selectedDate = Date()
+    @Published var selectedPlatforms: [String] = []
+//    @Published var imageList: [UIImage] = []
+    
+    func addPost(userId: String) {
+        let post = Post(postId: "", title: postTitle, content: postContent, date: selectedDate, platforms: selectedPlatforms)
+        Task {
+            try await UserManager.shared.addNewPost(userID: userId, post: post)
+        }
+    }
+}
+
 struct AddPostView: View {
-    @State private var postTitle: String = ""
-    @State private var postContent: String = ""
-    @State private var selectedDate = Date()
-    @State private var selectedPlatforms: [String] = []
-    @State private var imageList: [UIImage] = []
+//    @State private var postTitle: String = ""
+//    @State private var postContent: String = ""
+//    @State private var selectedDate = Date()
+//    @State private var selectedPlatforms: [String] = []
+//    @State private var imageList: [UIImage] = []
     @State private var isShowingImagePicker = false
     @State private var isShowingBoostPopup = false
+    
+    @StateObject var vm = AddPostViewModel()
     
     @State var userId : String
     
@@ -25,61 +51,61 @@ struct AddPostView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     // Title Section with Character Limit
                     VStack(alignment: .leading) {
-                        TextField("Post Title", text: $postTitle)
+                        TextField("Post Title", text: $vm.postTitle)
                             .font(.title)
                             .bold()
-                            .onChange(of: postTitle) { newValue in
-                                if postTitle.count > 25 {
-                                    postTitle = String(postTitle.prefix(25))
+                            .onChange(of: vm.postTitle) { newValue in
+                                if vm.postTitle.count > 25 {
+                                    vm.postTitle = String(vm.postTitle.prefix(25))
                                 }
                             }
                             .padding(.bottom, 5)
                         
-                        Text("\(postTitle.count)/25 characters")
+                        Text("\(vm.postTitle.count)/25 characters")
                             .font(.caption)
                             .foregroundColor(.gray)
                     }
                     
                     // Content Section with Character Limit
                     VStack(alignment: .leading) {
-                        TextEditor(text: $postContent)
+                        TextEditor(text: $vm.postContent)
                             .frame(height: 150)
                             .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color.gray, lineWidth: 1))
-                            .onChange(of: postContent) { newValue in
-                                if postContent.count > 300 {
-                                    postContent = String(postContent.prefix(300))
+                            .onChange(of: vm.postContent) { newValue in
+                                if vm.postContent.count > 300 {
+                                    vm.postContent = String(vm.postContent.prefix(300))
                                 }
                             }
                         
-                        Text("\(postContent.count)/300 characters")
+                        Text("\(vm.postContent.count)/300 characters")
                             .font(.caption)
                             .foregroundColor(.gray)
                     }
                     
-                    // Image Picker Section
-                    Text("Select Images")
-                    ScrollView(.horizontal) {
-                        HStack {
-                            ForEach(imageList, id: \.self) { image in
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .frame(width: 70, height: 70)
-                                    .cornerRadius(10)
-                            }
-                            Button(action: {
-                                isShowingImagePicker = true
-                            }) {
-                                Text("Add Image")
-                                    .padding()
-                                    .frame(width: 70, height: 70)
-                                    .background(Color.gray.opacity(0.1))
-                                    .cornerRadius(10)
-                            }
-                        }
-                    }
+//                    // Image Picker Section
+//                    Text("Select Images")
+//                    ScrollView(.horizontal) {
+//                        HStack {
+//                            ForEach(vm.imageList, id: \.self) { image in
+//                                Image(uiImage: image)
+//                                    .resizable()
+//                                    .frame(width: 70, height: 70)
+//                                    .cornerRadius(10)
+//                            }
+//                            Button(action: {
+//                                isShowingImagePicker = true
+//                            }) {
+//                                Text("Add Image")
+//                                    .padding()
+//                                    .frame(width: 70, height: 70)
+//                                    .background(Color.gray.opacity(0.1))
+//                                    .cornerRadius(10)
+//                            }
+//                        }
+//                    }
                     
                     // Date Picker
-                    DatePicker("Select Date", selection: $selectedDate, displayedComponents: .date)
+                    DatePicker("Select Date", selection: $vm.selectedDate, displayedComponents: .date)
                         .datePickerStyle(.compact)
                         .padding()
                         .background(Color.gray.opacity(0.1))
@@ -96,7 +122,7 @@ struct AddPostView: View {
                                 Image(platform)
                                     .resizable()
                                     .frame(width: 50, height: 50)
-                                    .background(selectedPlatforms.contains(platform) ? Color.blue : Color.clear)
+                                    .background(vm.selectedPlatforms.contains(platform) ? Color.blue : Color.clear)
                                     .cornerRadius(10)
                             }
                         }
@@ -126,21 +152,23 @@ struct AddPostView: View {
             .navigationBarTitle("Add Post", displayMode: .inline)
             .navigationBarItems(
                 leading: Button("Cancel", action: { /* Cancel action */ }),
-                trailing: Button("Add", action: { /* Add post action */ })
+                trailing: Button("Add", action: { /* Add post action */
+                    vm.addPost(userId: userId)
+                })
             )
         }
-        .sheet(isPresented: $isShowingImagePicker) {
-            // Image picker (using PHPicker here)
-            ImagePicker(images: $imageList)
-        }
+//        .sheet(isPresented: $isShowingImagePicker) {
+//            // Image picker (using PHPicker here)
+//            ImagePicker(images: $vm.imageList)
+//        }
     }
     
     // Toggle platform selection
     func togglePlatform(_ platform: String) {
-        if let index = selectedPlatforms.firstIndex(of: platform) {
-            selectedPlatforms.remove(at: index)
+        if let index = vm.selectedPlatforms.firstIndex(of: platform) {
+            vm.selectedPlatforms.remove(at: index)
         } else {
-            selectedPlatforms.append(platform)
+            vm.selectedPlatforms.append(platform)
         }
     }
 

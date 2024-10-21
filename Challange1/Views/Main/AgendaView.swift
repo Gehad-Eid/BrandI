@@ -13,22 +13,20 @@ import SwiftUI
 final class AgendaViewModel: ObservableObject {
     
     @Published private(set) var user: DBUser? = nil
+    @Published private(set) var posts: [Post]? = nil
     
     func loadCurrentUser() async throws {
         let userDataResult = try FirebaseAuthManager.shared.getAuthenticatedUser()
         self.user = try await UserManager.shared.getUser(userID: userDataResult.uid)
     }
+    
+    func loadPosts() async throws {
+        guard let userId = user?.userId else { return }
+        self.posts = try await UserManager.shared.getUserPosts(userID: userId)
+    }
 }
 
 struct AgendaView: View {
-    
-    @State private var posts: [Post] = [
-        Post(postId: "1", title: "post1", content: "contennnntttt ....", date: Date(), images: [""], platforms: ["LinkedIn"], recommendation: ""),
-        
-        Post(postId: "2", title: "Post2", content: "Instagram post about tech.", date: Date(), images: [""], platforms: ["Instagram"], recommendation: ""),
-        
-        Post(postId: "3", title: "Coffee Day", content: "Today, we celebrate the brew that fuels our mornings and warms our hearts. Whether you love it strong, sweet, iced, or hot, coffee is more than just a drink—it's a daily ritual, a moment of calm, and the perfect start to any day.", date: Date(), images: [""], platforms: ["Instagram", "X"], recommendation: "")
-    ]
     
     @State private var showingAddPostView = false
     
@@ -59,9 +57,9 @@ struct AgendaView: View {
                 
                 HStack {
                     VStack(alignment: .leading) {
-                        Text("2 Events \(vm.user?.events?.count)")
+                        Text("2 Events ")
                             .font(.caption)
-                        Text("3 Posts \(vm.user?.posts?.count)")
+                        Text("3 Posts \(vm.posts?.count)")
                             .font(.caption)
                         Text("1 Unfinished Post")
                             .font(.caption)
@@ -75,7 +73,7 @@ struct AgendaView: View {
                         Text("Tuesday, Sep 19")
                             .font(.headline)
                         
-                        ForEach(posts) { post in
+                        ForEach(vm.posts ?? []) { post in
                             WalletCardView(post: post)
                                 .padding(.bottom, 8)
                         }
@@ -84,6 +82,12 @@ struct AgendaView: View {
                 }
             }
             .navigationBarHidden(true)
+        }
+        .onAppear() {
+            Task {
+                try await vm.loadCurrentUser()
+                try await vm.loadPosts()
+            }
         }
     }
 }

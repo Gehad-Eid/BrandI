@@ -48,11 +48,34 @@ final class UserManager {
     }
     
     func addNewPost(userID: String, post: Post) async throws {
-        try userDocument(userId: userID).collection("posts").document().setData(from: post, merge: false)
+        let document = await postCollection(userId: userID).document()
+        let docId = document.documentID
+        
+        let data: [String:Any] = [
+            "post_id" : docId,
+            "start_date" : post.date,
+            "title" : post.title,
+            "content" : post.content,
+            "images": post.images,
+            "platforms": post.platforms,
+            "recommendation": post.recommendation,
+            "is_draft": post.isDraft
+            ]
+        
+        try await postCollection(userId: userID).document().setData(data, merge: false)
     }
     
     func deletePost(userID: String, postID: String) async throws {
-        try await userDocument(userId: userID).collection("posts").document(postID).delete()
+        try await postCollection(userId: userID).document(postID).delete()
+    }
+    
+    func getUserPosts(userID: String) async throws -> [Post] {
+        let snapshot = try await postCollection(userId: userID).getDocuments()
+        
+        let posts = try snapshot.documents.compactMap { document in
+            try document.data(as: Post.self)
+        }
+        return posts
     }
     
 //    func createNewUser(auth: AuthDataResultModel) async throws {

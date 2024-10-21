@@ -11,15 +11,15 @@ struct DBUser : Codable {
     let userId: String
     let email: String?
     let dateCreated: Date?
-    let posts: [Post]?
-    let events: [Event]?
+//    let posts: [Post]?
+//    let events: [Event]?
     
     init(authUser: AuthDataResultModel) {
         self.userId = authUser.uid
         self.email = authUser.email
         self.dateCreated = Date()
-        self.posts = nil
-        self.events = nil
+//        self.posts = nil
+//        self.events = nil
     }
     
     // For dynamic coding where whatever other developers writes in the DB we can handel it in 2 sec
@@ -27,8 +27,8 @@ struct DBUser : Codable {
         case userId = "user_id"
         case email = "email"
         case dateCreated = "date_created"
-        case posts = "posts"
-        case events = "events"
+//        case posts = "posts"
+//        case events = "events"
     }
     
     init(from decoder: any Decoder) throws {
@@ -36,8 +36,8 @@ struct DBUser : Codable {
         self.userId = try container.decode(String.self, forKey: .userId)
         self.email = try container.decodeIfPresent(String.self, forKey: .email)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
-        self.posts = try container.decodeIfPresent([Post].self, forKey: .posts)
-        self.events = try container.decodeIfPresent([Event].self, forKey: .events)
+//        self.posts = try container.decodeIfPresent([Post].self, forKey: .posts)
+//        self.events = try container.decodeIfPresent([Event].self, forKey: .events)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -45,7 +45,7 @@ struct DBUser : Codable {
         try container.encode(userId, forKey: .userId)
         try container.encodeIfPresent(email, forKey: .email)
         try container.encodeIfPresent(dateCreated, forKey: .dateCreated)
-        try container.encodeIfPresent(posts, forKey: .posts)
-        try container.encodeIfPresent(events, forKey: .events)
+//        try container.encodeIfPresent(posts, forKey: .posts)
+//        try container.encodeIfPresent(events, forKey: .events)
     }
 }
