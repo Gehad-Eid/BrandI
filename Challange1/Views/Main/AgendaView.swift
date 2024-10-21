@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-//TODO: load user here
-
 @MainActor
 final class AgendaViewModel: ObservableObject {
     
@@ -57,7 +55,7 @@ struct AgendaView: View {
                 
                 HStack {
                     VStack(alignment: .leading) {
-                        Text("2 Events ")
+                        Text("2 Events \(vm.user?.userId)")
                             .font(.caption)
                         Text("3 Posts \(vm.posts?.count)")
                             .font(.caption)

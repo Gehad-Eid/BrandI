@@ -11,13 +11,6 @@ import SwiftUI
 @MainActor
 final class AddPostViewModel: ObservableObject {
     
-//    @Published private(set) var user: DBUser? = nil
-//    
-//    func loadCurrentUser() async throws {
-//        let userDataResult = try FirebaseAuthManager.shared.getAuthenticatedUser()
-//        self.user = try await UserManager.shared.getUser(userID: userDataResult.uid)
-//    }
-    
     @Published var postTitle: String = ""
     @Published var postContent: String = ""
     @Published var selectedDate = Date()
@@ -33,11 +26,6 @@ final class AddPostViewModel: ObservableObject {
 }
 
 struct AddPostView: View {
-//    @State private var postTitle: String = ""
-//    @State private var postContent: String = ""
-//    @State private var selectedDate = Date()
-//    @State private var selectedPlatforms: [String] = []
-//    @State private var imageList: [UIImage] = []
     @State private var isShowingImagePicker = false
     @State private var isShowingBoostPopup = false
     
@@ -151,8 +139,10 @@ struct AddPostView: View {
             }
             .navigationBarTitle("Add Post", displayMode: .inline)
             .navigationBarItems(
-                leading: Button("Cancel", action: { /* Cancel action */ }),
-                trailing: Button("Add", action: { /* Add post action */
+                leading: Button("Cancel", action: {
+                    /* Cancel action */
+                }),
+                trailing: Button("Add", action: {
                     vm.addPost(userId: userId)
                 })
             )
