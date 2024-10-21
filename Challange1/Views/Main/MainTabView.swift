@@ -11,7 +11,7 @@ import SwiftUI
 
 struct MainTabView: View {
     @Binding var isAuthenticated: Bool
-    
+    //chaeck the view
     var body: some View {
         TabView {
             AgendaView()
