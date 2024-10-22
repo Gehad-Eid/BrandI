@@ -31,14 +31,6 @@ final class UserManager {
         userCollection.document(userId)
     }
     
-    private func postCollection(userId: String) -> CollectionReference {
-        userCollection.document(userId).collection("posts")
-    }
-    
-    private func postDocument(userId: String, postId: String) -> DocumentReference {
-        postCollection(userId: userId).document(postId)
-    }
-    
     func createNewUser(user: DBUser) async throws {
         try userDocument(userId: user.userId).setData(from: user, merge: false)
     }
@@ -47,22 +39,37 @@ final class UserManager {
         try await userDocument(userId: userID).getDocument(as: DBUser.self)
     }
     
+    func deleteUser(userID: String) async throws {
+        try await userDocument(userId: userID).delete()
+    }
+}
+
+// MARK: Posts functions
+extension UserManager {
+    private func postCollection(userId: String) -> CollectionReference {
+        userCollection.document(userId).collection("posts")
+    }
+    
+    private func postDocument(userId: String, postId: String) -> DocumentReference {
+        postCollection(userId: userId).document(postId)
+    }
+    
     func addNewPost(userID: String, post: Post) async throws {
-        let document = await postCollection(userId: userID).document()
+        let document = postCollection(userId: userID).document()
         let docId = document.documentID
-        
+                
         let data: [String:Any] = [
-            "post_id" : docId,
-            "start_date" : post.date,
-            "title" : post.title,
-            "content" : post.content,
-            "images": post.images,
-            "platforms": post.platforms,
-            "recommendation": post.recommendation,
-            "is_draft": post.isDraft
-            ]
+            Post.CodingKeys.postId.rawValue : docId,
+            Post.CodingKeys.date.rawValue : post.date,
+            Post.CodingKeys.title.rawValue : post.title,
+            Post.CodingKeys.content.rawValue : post.content,
+            Post.CodingKeys.images.rawValue: post.images,
+            Post.CodingKeys.platforms.rawValue: post.platforms,
+            Post.CodingKeys.recommendation.rawValue: post.recommendation,
+            Post.CodingKeys.isDraft.rawValue: post.isDraft
+        ]
         
-        try await postCollection(userId: userID).document().setData(data, merge: false)
+        try await document.setData(data, merge: false)
     }
     
     func deletePost(userID: String, postID: String) async throws {
@@ -78,29 +85,48 @@ final class UserManager {
         return posts
     }
     
-//    func createNewUser(auth: AuthDataResultModel) async throws {
-//        var userData: [String:Any] = [
-//        "user_id" : auth.uid,
-//        "date_created" : Timestamp(),
-//        ]
-//        
-//        if let email = auth.email {
-//            userData ["email"] = email
-//        }
-//        
-//        try await userDocument(userId: auth.uid).setData(userData, merge: false)
-//    }
+    func updatePostStatus (userID: String, post: Post) async throws {
+        try postDocument(userId: userID, postId: post.postId).setData(from: post, merge: true, encoder: encoder())
+    }
+}
+
+// MARK: events functions
+extension UserManager {
     
-//    func getUser(userID: String) async throws -> DBUser {
-//        let snapshot = try await userDocument(userId: userID).getDocument()
-//        
-//        guard let data = snapshot.data() , let userID = data["user_id"] as? String else {
-//            throw URLError(.badServerResponse)
-//        }
-//        
-//        let email = data["email"] as? String
-//        let dateCreated = data["date_created"] as? Date
-//                    
-//        return DBUser(userID: userID, email: email, dateCreated: dateCreated)
-//    }
+    private func eventCollection(userId: String) -> CollectionReference {
+        userCollection.document(userId).collection("events")
+    }
+    
+    private func eventDocument(userId: String, eventId: String) -> DocumentReference {
+        eventCollection(userId: userId).document(eventId)
+    }
+    
+    func addNewevent(userID: String, event: Event) async throws {
+        let document = eventCollection(userId: userID).document()
+        let docId = document.documentID
+        
+        let data: [String:Any] = [
+            Event.CodingKeys.eventId.rawValue: docId,
+            Event.CodingKeys.title.rawValue: event.title,
+            Event.CodingKeys.content.rawValue: event.content,
+            Event.CodingKeys.startDate.rawValue: event.startDate,
+            Event.CodingKeys.endDate.rawValue: event.endDate
+        ]
+        
+        try await document.setData(data, merge: false)
+    }
+    
+    func deleteEvent(userID: String, eventID: String) async throws {
+        try await eventCollection(userId: userID).document(eventID).delete()
+    }
+    
+    func getUserEvents(userID: String) async throws -> [Event] {
+        let snapshot = try await eventCollection(userId: userID).getDocuments()
+        
+        let events = try snapshot.documents.compactMap { document in
+            try document.data(as: Event.self)
+        }
+        
+        return events
+    }
 }

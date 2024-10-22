@@ -25,7 +25,7 @@ struct Post: Codable, Identifiable {
           images: [String]? = nil,
           platforms: [String]? = nil,
           recommendation: String? = nil,
-          isDraft: Bool? = nil
+          isDraft: Bool? = false
     ) {
         self.postId = postId
         self.title = title
@@ -70,5 +70,19 @@ struct Post: Codable, Identifiable {
         try container.encodeIfPresent(platforms, forKey: .platforms)
         try container.encodeIfPresent(recommendation, forKey: .recommendation)
         try container.encodeIfPresent(isDraft, forKey: .isDraft)
+    }
+    
+    func toggleIsDraft() -> Post{
+        let currentIsDraft = isDraft ?? false
+        
+        return Post(postId: postId,
+                    title: title,
+                    content: content,
+                    date: date,
+                    images: images,
+                    platforms: platforms,
+                    recommendation: recommendation,
+                    isDraft: !currentIsDraft
+        )
     }
 }

@@ -11,23 +11,25 @@ import SwiftUI
 
 struct MainTabView: View {
     @Binding var isAuthenticated: Bool
-    //chaeck the view
+    @StateObject private var vm = MainViewModel()
+    
     var body: some View {
         TabView {
             AgendaView()
                 .tabItem {
                     Label("Agenda", systemImage: "house.fill")
                 }
-
-            ProfileView()
-                .tabItem {
-                    Label("Profile", systemImage: "person.fill")
-                }
             
-            // for fast accsess , u can delete 'em ---
             SettingsView(isAuthenticated: $isAuthenticated)
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
+                }
+            
+            
+            // for fast accsess , u can delete 'em ---
+            ProfileView()
+                .tabItem {
+                    Label("Profile", systemImage: "person.fill")
                 }
             
             EvaluatePostView()
@@ -35,6 +37,9 @@ struct MainTabView: View {
                     Label("Evaluate Post", systemImage: "pencil")
                 }
             // --------------
+        }
+        .task {
+            try? await vm.loadCurrentUser()
         }
     }
 }
