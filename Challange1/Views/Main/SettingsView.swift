@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @ObservedObject var vm = SettingsViewModel()
+    @StateObject var vm = SettingsViewModel()
+//    @StateObject var main_vm = MainViewModel()
     @Binding var isAuthenticated: Bool
     
     var body: some View {
@@ -28,6 +29,7 @@ struct SettingsView: View {
                 Task {
                     do {
                         try await vm.deleteAccount()
+//                        try await main_vm.deleteCurrentUser()
                         isAuthenticated = false
                     }
                     catch {
@@ -53,7 +55,7 @@ struct SettingsView: View {
                 Button("update password"){
                     Task {
                         do {
-                            try await vm.updatePassword()
+                            try await vm.updatePassword(pass: "123455")
                             isAuthenticated = false
                         } catch {
                             print("Error signing out: \(error)")
@@ -64,7 +66,7 @@ struct SettingsView: View {
                 Button("update email"){
                     Task {
                         do {
-                            try await vm.updateEmail()
+                            try await vm.updateEmail(email: "placeholder@example.com")
                             isAuthenticated = false
                         } catch {
                             print("Error signing out: \(error)")

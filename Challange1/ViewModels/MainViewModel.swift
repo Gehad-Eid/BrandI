@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-final class ProfileViewModel: ObservableObject {
+final class MainViewModel: ObservableObject {
     
     @Published private(set) var user: DBUser? = nil
     
@@ -16,4 +16,11 @@ final class ProfileViewModel: ObservableObject {
         let userDataResult = try FirebaseAuthManager.shared.getAuthenticatedUser()
         self.user = try await UserManager.shared.getUser(userID: userDataResult.uid)
     }
+    
+//    func deleteCurrentUser() async throws {
+//        let userDataResult = try FirebaseAuthManager.shared.getAuthenticatedUser()
+//        try FirebaseAuthManager.shared.signOut()
+//        try await UserManager.shared.deleteUser(userID: userDataResult.uid)
+//        self.user = nil
+//    }
 }

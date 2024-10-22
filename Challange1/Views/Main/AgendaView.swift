@@ -7,30 +7,12 @@
 
 import SwiftUI
 
-//TODO: load user here
-
-@MainActor
-final class AgendaViewModel: ObservableObject {
-    
-    @Published private(set) var user: DBUser? = nil
-    @Published private(set) var posts: [Post]? = nil
-    
-    func loadCurrentUser() async throws {
-        let userDataResult = try FirebaseAuthManager.shared.getAuthenticatedUser()
-        self.user = try await UserManager.shared.getUser(userID: userDataResult.uid)
-    }
-    
-    func loadPosts() async throws {
-        guard let userId = user?.userId else { return }
-        self.posts = try await UserManager.shared.getUserPosts(userID: userId)
-    }
-}
-
 struct AgendaView: View {
     
-    @State private var showingAddPostView = false
-    
     @StateObject private var vm = AgendaViewModel()
+    @StateObject private var main_vm = MainViewModel()
+    
+    @State private var showingAddPostView = false
     
     var body: some View {
         NavigationView {
@@ -50,18 +32,18 @@ struct AgendaView: View {
                             .clipShape(Circle())
                     }
                     .sheet(isPresented: $showingAddPostView) {
-                        AddPostView(userId: vm.user?.userId ?? "")
+                        AddPostView(userId: main_vm.user?.userId ?? "")
                     }
                 }
                 .padding()
                 
                 HStack {
                     VStack(alignment: .leading) {
-                        Text("2 Events ")
+                        Text("2 Events \( main_vm.user?.userId ?? "")")
                             .font(.caption)
                         Text("3 Posts \(vm.posts?.count)")
                             .font(.caption)
-                        Text("1 Unfinished Post")
+                        Text("1 Unfinished Post \(vm.events?.count)")
                             .font(.caption)
                     }
                     Spacer()
@@ -74,7 +56,7 @@ struct AgendaView: View {
                             .font(.headline)
                         
                         ForEach(vm.posts ?? []) { post in
-                            WalletCardView(post: post)
+                            WalletCardView(post: post, id: main_vm.user?.userId ?? "")
                                 .padding(.bottom, 8)
                         }
                     }
@@ -85,51 +67,55 @@ struct AgendaView: View {
         }
         .onAppear() {
             Task {
-                try await vm.loadCurrentUser()
-                try await vm.loadPosts()
+                try await main_vm.loadCurrentUser()
+                try await vm.loadPosts(userId:  main_vm.user?.userId ?? "")
+                try await vm.loadEvents(userId:  main_vm.user?.userId ?? "")
             }
         }
     }
 }
 
 struct WalletCardView: View {
-    
     let post: Post
+    let id: String
     
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack {
-                Text(post.title)
-                    .font(.title3)
-                    .bold()
-                Spacer()
-                if let platforms = post.platforms {
-                    ForEach(platforms, id: \.self) { platform in
-                        PlatformIcon(platform: platform)
+        NavigationLink(destination: PostView(post: post, id: id)) { // Link to the detail view
+            VStack(alignment: .leading) {
+                HStack {
+                    Text(post.title)
+                        .font(.title3)
+                        .bold()
+                    Spacer()
+                    if let platforms = post.platforms {
+                        ForEach(platforms, id: \.self) { platform in
+                            PlatformIcon(platform: platform)
+                        }
                     }
                 }
+                .padding(.bottom, 4)
+                
+                Text(post.postId)
+                    .font(.body)
+                    .lineLimit(3)
+                    .padding(.bottom, 8)
+                
+                HStack {
+                    Text("Tomorrow")
+                        .font(.caption)
+                    Spacer()
+                    Text(post.date, style: .date)
+                        .font(.caption)
+                }
+                .padding(.top, 4)
             }
-            .padding(.bottom, 4)
-            
-            Text(post.content)
-                .font(.body)
-                .lineLimit(3)
-                .padding(.bottom, 8)
-            
-            HStack {
-                Text("Tomorrow")
-                    .font(.caption)
-                Spacer()
-                Text(post.date, style: .date)
-                    .font(.caption)
-            }
-            .padding(.top, 4)
+            .padding()
+            .background(Color.blue.opacity(0.1))
+            .cornerRadius(10)
         }
-        .padding()
-        .background(Color.blue.opacity(0.1))
-        .cornerRadius(10)
     }
 }
+
 
 struct PlatformIcon: View {
     let platform: String
@@ -151,7 +137,6 @@ struct PlatformIcon: View {
     }
 }
 
-// AddPostView will go here
 
 struct AgendaView_Previews: PreviewProvider {
     static var previews: some View {

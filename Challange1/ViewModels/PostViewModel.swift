@@ -11,10 +11,17 @@ import Foundation
 @MainActor
 final class PostViewModel: ObservableObject {
     
-    @Published private(set) var user: DBUser? = nil
-    
-    func loadCurrentUser() async throws {
-        let userDataResult = try FirebaseAuthManager.shared.getAuthenticatedUser()
-        self.user = try await UserManager.shared.getUser(userID: userDataResult.uid)
+    @Published private(set) var post: Post? = nil
+
+    func updatePost(userId: String, post: Post) {
+//        guard let userId, let post else { return }
+//        let currentValue = post.isDraft ?? false
+        
+        let updatedPost = post.toggleIsDraft()
+        
+        Task {
+            try await UserManager.shared.updatePostStatus(userID: userId, post: updatedPost)
+        }
     }
+    
 }

@@ -22,6 +22,9 @@ final class SettingsViewModel : ObservableObject {
     }
     
     func deleteAccount() async throws {
+        let authUser = try FirebaseAuthManager.shared.getAuthenticatedUser()
+//        try FirebaseAuthManager.shared.signOut()
+        try await UserManager.shared.deleteUser(userID:authUser.uid )
         try await FirebaseAuthManager.shared.delete()
     }
     
@@ -35,27 +38,29 @@ final class SettingsViewModel : ObservableObject {
         try await FirebaseAuthManager.shared.resetPassword(email: email)
     }
     
-    func updateEmail() async throws {
+    func updateEmail(email: String) async throws {
         let authUser = try FirebaseAuthManager.shared.getAuthenticatedUser()
         
 //        guard let email = authUser.email else {
 //            throw URLError(.fileDoesNotExist)
 //        }
         
-        let email = "gehad.eid@gmail.com"
+//        let email = "gg@gg.com"
         
         try await FirebaseAuthManager.shared.updateEmail(email: email)
     }
     
-    func updatePassword() async throws {
+    func updatePassword(pass: String) async throws {
         let authUser = try FirebaseAuthManager.shared.getAuthenticatedUser()
         
 //        guard let password = authUser.email else {
 //            throw URLError(.fileDoesNotExist)
 //        }
-       let password = "123456789"
+//       let password = "123456789"
         
-        try await FirebaseAuthManager.shared.updatePassword(password: password)
+        try await FirebaseAuthManager.shared.updatePassword(password: pass)
     }
     
 }
+
+

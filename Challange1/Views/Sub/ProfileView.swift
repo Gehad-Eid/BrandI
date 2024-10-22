@@ -9,14 +9,14 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @StateObject private var vm = ProfileViewModel()
+    @StateObject private var vm = MainViewModel()
     
     var body: some View {
         List {
             if let user = vm.user {
                 Text("User \(user.email)")
                 Text("User \(user.userId)")
-                Text("User \(user.dateCreated)") // why nill ????!
+                Text("User \(user.dateCreated)")
             }
         }
         .task {

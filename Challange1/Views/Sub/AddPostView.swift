@@ -8,36 +8,7 @@
 
 import SwiftUI
 
-@MainActor
-final class AddPostViewModel: ObservableObject {
-    
-//    @Published private(set) var user: DBUser? = nil
-//    
-//    func loadCurrentUser() async throws {
-//        let userDataResult = try FirebaseAuthManager.shared.getAuthenticatedUser()
-//        self.user = try await UserManager.shared.getUser(userID: userDataResult.uid)
-//    }
-    
-    @Published var postTitle: String = ""
-    @Published var postContent: String = ""
-    @Published var selectedDate = Date()
-    @Published var selectedPlatforms: [String] = []
-//    @Published var imageList: [UIImage] = []
-    
-    func addPost(userId: String) {
-        let post = Post(postId: "", title: postTitle, content: postContent, date: selectedDate, platforms: selectedPlatforms)
-        Task {
-            try await UserManager.shared.addNewPost(userID: userId, post: post)
-        }
-    }
-}
-
 struct AddPostView: View {
-//    @State private var postTitle: String = ""
-//    @State private var postContent: String = ""
-//    @State private var selectedDate = Date()
-//    @State private var selectedPlatforms: [String] = []
-//    @State private var imageList: [UIImage] = []
     @State private var isShowingImagePicker = false
     @State private var isShowingBoostPopup = false
     
@@ -82,27 +53,35 @@ struct AddPostView: View {
                             .foregroundColor(.gray)
                     }
                     
-//                    // Image Picker Section
-//                    Text("Select Images")
-//                    ScrollView(.horizontal) {
-//                        HStack {
-//                            ForEach(vm.imageList, id: \.self) { image in
-//                                Image(uiImage: image)
-//                                    .resizable()
-//                                    .frame(width: 70, height: 70)
-//                                    .cornerRadius(10)
-//                            }
-//                            Button(action: {
-//                                isShowingImagePicker = true
-//                            }) {
-//                                Text("Add Image")
-//                                    .padding()
-//                                    .frame(width: 70, height: 70)
-//                                    .background(Color.gray.opacity(0.1))
-//                                    .cornerRadius(10)
-//                            }
-//                        }
-//                    }
+                    // Image Picker Section
+                    Text("Select Images")
+                    ScrollView(.horizontal) {
+                        HStack {
+                            ForEach(vm.imageList, id: \.self) { image in
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .frame(width: 70, height: 70)
+                                    .cornerRadius(10)
+                            }
+                            Button(action: {
+                                isShowingImagePicker = true
+                            }) {
+                                Text("Add Image")
+                                    .padding()
+                                    .frame(width: 70, height: 70)
+                                    .background(Color.gray.opacity(0.1))
+                                    .cornerRadius(10)
+                            }
+                        }
+                    }
+                    
+                    // is draft
+                    Button {
+                        vm.isDraft.toggle()
+                    }
+                    label: {
+                        Text("is draft: \((vm.isDraft).description.capitalized)")
+                    }
                     
                     // Date Picker
                     DatePicker("Select Date", selection: $vm.selectedDate, displayedComponents: .date)
@@ -151,16 +130,19 @@ struct AddPostView: View {
             }
             .navigationBarTitle("Add Post", displayMode: .inline)
             .navigationBarItems(
-                leading: Button("Cancel", action: { /* Cancel action */ }),
-                trailing: Button("Add", action: { /* Add post action */
+                leading: Button("Cancel", action: {
+                    /* Cancel action */
+                }),
+                trailing: Button("Add", action: {
                     vm.addPost(userId: userId)
+//                    vm.addEvent(userId: userId)
                 })
             )
         }
-//        .sheet(isPresented: $isShowingImagePicker) {
-//            // Image picker (using PHPicker here)
-//            ImagePicker(images: $vm.imageList)
-//        }
+        .sheet(isPresented: $isShowingImagePicker) {
+            // Image picker (using PHPicker here)
+            ImagePicker(images: $vm.imageList)
+        }
     }
     
     // Toggle platform selection
