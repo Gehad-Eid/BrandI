@@ -11,7 +11,7 @@ import SwiftUI
 final class SettingsViewModel : ObservableObject {
     @Published var authProviders: [AuthProviderOption] = []
     
-    func loadAuthProviders () {
+    func loadAuthProviders() {
         if let providers = try? FirebaseAuthManager.shared.getProviders() {
             authProviders = providers
         }
@@ -23,8 +23,7 @@ final class SettingsViewModel : ObservableObject {
     
     func deleteAccount() async throws {
         let authUser = try FirebaseAuthManager.shared.getAuthenticatedUser()
-//        try FirebaseAuthManager.shared.signOut()
-        try await UserManager.shared.deleteUser(userID:authUser.uid )
+        try await UserManager.shared.deleteUser(userID:authUser.uid)
         try await FirebaseAuthManager.shared.delete()
     }
     
