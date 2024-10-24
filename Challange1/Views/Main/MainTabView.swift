@@ -20,7 +20,7 @@ struct MainTabView: View {
                     Label("Agenda", systemImage: "house.fill")
                 }
             
-            SettingsView(isAuthenticated: $isAuthenticated)
+            //SettingsView(isAuthenticated: $isAuthenticated)
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
