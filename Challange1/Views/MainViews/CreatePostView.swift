@@ -119,7 +119,7 @@ struct CreatePostView: View {
                                 }) {
                                     Text("Publish")
                                         .padding()
-                                    //                                        .frame(maxWidth: .infinity)
+                                    //  .frame(maxWidth: .infinity)
                                         .background(Color.red.opacity(0.2))
                                         .cornerRadius(10)
                                 }
