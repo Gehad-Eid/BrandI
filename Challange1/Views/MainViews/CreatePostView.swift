@@ -51,28 +51,16 @@ struct CreatePostView: View {
                             
                             // Content Section
                             VStack {
-                                ZStack(alignment: .topLeading) {
-                                    if vm.postContent.isEmpty {
-                                        Text("Write your content here")
-                                            .foregroundColor(.gray)
-                                            .padding(.horizontal, 8)
-                                            .padding(.vertical, 12)
-                                    }
-                                    
-                                    TextEditor(text: $vm.postContent)
-                                        .background(Color.clear)
-                                        .frame(height: 200)
-                                        .padding(8)
-                                        .overlay(
-                                            RoundedRectangle(cornerRadius: 10)
-                                                .fill(Color(UIColor.systemGray6))
-                                        )
-                                        .onChange(of: vm.postContent) { newValue in
-                                            if vm.postContent.count > 300 {
-                                                vm.postContent = String(vm.postContent.prefix(300))
-                                            }
-                                        }
-                                }
+                                TextField("Write your content here", text: $vm.postContent, axis: .vertical)
+                                       .padding(.horizontal, 12)
+                                       .padding(.vertical, 12) // to keep it aligned with placeholder
+                                       .lineLimit(7)
+                                       .frame(height: 200, alignment: .top)
+                                       .onChange(of: vm.postContent) { newValue in
+                                           if vm.postContent.count > 300 {
+                                               vm.postContent = String(vm.postContent.prefix(300))
+                                           }
+                                       }
                                 
                                 Spacer()
                                 
@@ -91,7 +79,6 @@ struct CreatePostView: View {
                         .cornerRadius(15)
                         .padding()
                         
-                        //                        .background(Color.gray)
                         
                         // Photo selection section
                         PhotoView(selectedImages: $vm.imageList, isEditingEnabled: $isEditingEnabled)
