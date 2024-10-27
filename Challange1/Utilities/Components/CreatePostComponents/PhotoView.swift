@@ -1,5 +1,5 @@
 //
-//  CreatePost.swift
+//  PhotoView.swift
 //  Challange1
 //
 //  Created by sumaiya on 21/10/2567 BE.
@@ -10,11 +10,13 @@ import PhotosUI
 
 struct PhotoView: View {
     @State private var isShowingPhotoPicker = false
-    @State private var selectedImages: [UIImage] = [] // Array to store selected images
+    @Binding var selectedImages: [UIImage]
+    
+    @Binding var isEditingEnabled: Bool
     
     var body: some View {
         VStack {
-            if selectedImages.isEmpty {
+            if selectedImages.isEmpty , isEditingEnabled {
                 // Show "Add Photo" button when no images are selected
                 Button(action: {
                     isShowingPhotoPicker = true
@@ -40,17 +42,18 @@ struct PhotoView: View {
                                 .clipped()
                                 .cornerRadius(8)
                         }
-                        
-                        // Plus button to add more photos
-                        Button(action: {
-                            isShowingPhotoPicker = true
-                        }) {
-                            Image(systemName: "plus")
-                                .foregroundColor(Color.white)
-                                .font(.title)
-                                .frame(width: 50, height: 50)
-                                .background(Color("BabyBlue"))
-                                .cornerRadius(8)
+                        if isEditingEnabled {
+                            // Plus button to add more photos
+                            Button(action: {
+                                isShowingPhotoPicker = true
+                            }) {
+                                Image(systemName: "plus")
+                                    .foregroundColor(Color.white)
+                                    .font(.title)
+                                    .frame(width: 50, height: 50)
+                                    .background(Color("BabyBlue"))
+                                    .cornerRadius(8)
+                            }
                         }
                     }
                     .padding(.horizontal)
@@ -109,6 +112,6 @@ struct PhotoPicker: UIViewControllerRepresentable {
 }
 
 #Preview {
-    PhotoView()
+    PhotoView(selectedImages: .constant([]), isEditingEnabled: .constant(false))
 }
 

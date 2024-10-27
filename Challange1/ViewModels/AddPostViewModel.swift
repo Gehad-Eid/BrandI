@@ -14,7 +14,7 @@ final class AddPostViewModel: ObservableObject {
     @Published var postTitle: String = ""
     @Published var postContent: String = ""
     @Published var selectedDate = Date()
-    @Published var selectedPlatforms: [String] = []
+    @Published var selectedPlatforms: [Platform] = []
     @Published var isDraft: Bool = false
     @Published var imageList: [UIImage] = []
     

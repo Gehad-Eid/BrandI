@@ -13,7 +13,7 @@ struct PostView: View {
     @StateObject private var vm = PostViewModel()
     
     let post: Post
-    let id: String
+    let userId: String
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -37,7 +37,7 @@ struct PostView: View {
             
             // is draft
             Button {
-                vm.updatePost(userId: id, post: post)
+                vm.updatePost(userId: userId, post: post)
             }
             label: {
                 Text("is draft: \((post.isDraft ?? false).description.capitalized)")
@@ -51,5 +51,5 @@ struct PostView: View {
 }
 
 #Preview {
-    PostView(post: .init(postId: "1", title: "Post Title", content: "Post Content", date: .init(), images: nil, platforms: nil, recommendation: nil, isDraft: nil), id: "")
+    PostView(post: .init(postId: "1", title: "Post Title", content: "Post Content", date: .init(), images: nil, platforms: nil, recommendation: nil, isDraft: nil), userId: "")
 }

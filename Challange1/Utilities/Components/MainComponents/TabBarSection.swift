@@ -15,7 +15,7 @@ struct TabBarSection: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            MainView()
+            AgendaView()
                 .tabItem {
                     Image("Agenda_1")
                     Text("Agenda")

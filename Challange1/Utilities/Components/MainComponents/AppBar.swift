@@ -15,9 +15,9 @@ struct AppBar: View {
             
             // Agenda
             HStack(){
-                EventInfoView(iconName: "Calender", count: "2", title: "Events", isSystemImage: false, destination: AnyView(MainView()))
-                EventInfoView(iconName: "document.fill", count: "3", title: "Posts", isSystemImage: true, destination: AnyView(MainView()))
-                EventInfoView(iconName: "pencil", count: "1", title: "Drafts", isSystemImage: true, destination: AnyView(MainView()))
+                EventInfoView(iconName: "Calender", count: "2", title: "Events", isSystemImage: false, destination: AnyView(AgendaView()))
+                EventInfoView(iconName: "document.fill", count: "3", title: "Posts", isSystemImage: true, destination: AnyView(AgendaView()))
+                EventInfoView(iconName: "pencil", count: "1", title: "Drafts", isSystemImage: true, destination: AnyView(AgendaView()))
                 
             }.padding(.top,10)
         }

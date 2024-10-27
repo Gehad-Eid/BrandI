@@ -55,10 +55,16 @@ final class FirebaseAuthManager {
             throw URLError(.badURL)
         }
         try await user.delete()
+        
+        // Remove the user ID from UserDefaults
+        UserDefaults.standard.removeObject(forKey: "userID")
     }
 
     func signOut() throws {
         try Auth.auth().signOut()
+        
+        // Remove the user ID from UserDefaults
+        UserDefaults.standard.removeObject(forKey: "userID")
     }
     
 }
@@ -74,6 +80,11 @@ extension FirebaseAuthManager {
     @discardableResult
     func signIn(email: String, password: String) async throws -> AuthDataResultModel {
         let authDataResult = try await Auth.auth().signIn(withEmail: email, password: password)
+
+        // Save the user ID in UserDefaults
+        let userID = authDataResult.user.uid
+        UserDefaults.standard.set(userID, forKey: "userID")
+        
         return AuthDataResultModel(user: authDataResult.user)
     }
     
@@ -94,7 +105,14 @@ extension FirebaseAuthManager {
             throw URLError(.badServerResponse)
         }
         
+//        // Check if the new email is already verified
+//        if !user.isEmailVerified {
+//            throw NSError(domain: "Email not verified", code: 403, userInfo: [NSLocalizedDescriptionKey: "Please verify the new email before changing email."])
+//        }
+        
         try await user.updateEmail(to: email)
+        print("done")
+        try await UserManager.shared.updateEmail(userID: user.uid, newEmail: email)
     }
 }
 

@@ -40,11 +40,11 @@ final class SettingsViewModel : ObservableObject {
     func updateEmail(email: String) async throws {
         let authUser = try FirebaseAuthManager.shared.getAuthenticatedUser()
         
-//        guard let email = authUser.email else {
-//            throw URLError(.fileDoesNotExist)
-//        }
+        //        guard let email = authUser.email else {
+        //            throw URLError(.fileDoesNotExist)
+        //        }
         
-//        let email = "gg@gg.com"
+        //        let email = "gg@gg.com"
         
         try await FirebaseAuthManager.shared.updateEmail(email: email)
     }
@@ -52,12 +52,24 @@ final class SettingsViewModel : ObservableObject {
     func updatePassword(pass: String) async throws {
         let authUser = try FirebaseAuthManager.shared.getAuthenticatedUser()
         
-//        guard let password = authUser.email else {
-//            throw URLError(.fileDoesNotExist)
-//        }
-//       let password = "123456789"
+        //        guard let password = authUser.email else {
+        //            throw URLError(.fileDoesNotExist)
+        //        }
+        //       let password = "123456789"
         
         try await FirebaseAuthManager.shared.updatePassword(password: pass)
+    }
+    
+    func validatePassword(email: String, password: String) async throws -> Bool {
+        do {
+            let authResult = try await FirebaseAuthManager.shared.signIn(email: email, password: password)
+            
+            // Return true if sign-in is successful
+            return authResult != nil
+        } catch let error as NSError {
+            print("Error signing in: \(error.localizedDescription)")
+            throw error // Re-throw the error to handle it in the calling function
+        }
     }
     
 }

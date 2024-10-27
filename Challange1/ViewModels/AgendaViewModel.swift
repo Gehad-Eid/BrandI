@@ -19,6 +19,5 @@ final class AgendaViewModel: ObservableObject {
     
     func loadEvents(userId: String) async throws {
         self.events = try await UserManager.shared.getUserEvents(userID: userId)
-        print("the f \(self.events)")
     }
 }

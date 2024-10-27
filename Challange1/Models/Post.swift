@@ -13,9 +13,9 @@ struct Post: Codable, Identifiable {
     let title: String
     let content: String
     let date: Date
+    let platforms: [Platform]?
     let isDraft: Bool?
     let images: [String]?
-    let platforms: [String]?
     let recommendation: String?
     
     init (postId: String,
@@ -23,7 +23,7 @@ struct Post: Codable, Identifiable {
           content: String,
           date: Date,
           images: [String]? = nil,
-          platforms: [String]? = nil,
+          platforms: [Platform]? = nil,
           recommendation: String? = nil,
           isDraft: Bool? = false
     ) {
@@ -55,7 +55,15 @@ struct Post: Codable, Identifiable {
         self.content = try container.decode(String.self, forKey: .content)
         self.date = try container.decode(Date.self, forKey: .date)
         self.images = try container.decodeIfPresent([String].self, forKey: .images)
-        self.platforms = try container.decodeIfPresent([String].self, forKey: .platforms)
+        self.platforms = try container.decodeIfPresent([Platform].self, forKey: .platforms)
+        
+        // Decode platforms from raw values
+//                if let platformStrings = try container.decodeIfPresent([String].self, forKey: .platforms) {
+//                    self.platforms = platformStrings.compactMap { Platform(rawValue: $0) }
+//                } else {
+//                    self.platforms = nil
+//                }
+        
         self.recommendation = try container.decodeIfPresent(String.self, forKey: .recommendation)
         self.isDraft = try container.decodeIfPresent(Bool.self, forKey: .isDraft)
     }
@@ -68,6 +76,11 @@ struct Post: Codable, Identifiable {
         try container.encode(date, forKey: .date)
         try container.encodeIfPresent(images, forKey: .images)
         try container.encodeIfPresent(platforms, forKey: .platforms)
+        
+        // Convert platforms to raw values before encoding
+//                let platformStrings = platforms?.map { $0.rawValue }
+//                try container.encode(platformStrings, forKey: .platforms)
+        
         try container.encodeIfPresent(recommendation, forKey: .recommendation)
         try container.encodeIfPresent(isDraft, forKey: .isDraft)
     }

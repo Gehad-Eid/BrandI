@@ -15,27 +15,33 @@ struct MainTabView: View {
     
     var body: some View {
         TabView {
+//            AgendaView()
             AgendaView()
                 .tabItem {
                     Label("Agenda", systemImage: "house.fill")
                 }
             
-            //SettingsView(isAuthenticated: $isAuthenticated)
+            CalendarView()
+                .tabItem {
+                    Label("Calendar", systemImage: "calendar")
+                }
+            
+            SettingsView(isAuthenticated: $isAuthenticated)
                 .tabItem {
                     Label("Settings", systemImage: "gearshape.fill")
                 }
             
             
             // for fast accsess , u can delete 'em ---
-            ProfileView()
-                .tabItem {
-                    Label("Profile", systemImage: "person.fill")
-                }
+//            ProfileView()
+//                .tabItem {
+//                    Label("Profile", systemImage: "person.fill")
+//                }
             
-            EvaluatePostView()
-                .tabItem {
-                    Label("Evaluate Post", systemImage: "pencil")
-                }
+//            EvaluatePostView()
+//                .tabItem {
+//                    Label("Evaluate Post", systemImage: "pencil")
+//                }
             // --------------
         }
         .task {

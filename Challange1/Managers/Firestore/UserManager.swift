@@ -42,6 +42,10 @@ final class UserManager {
     func deleteUser(userID: String) async throws {
         try await userDocument(userId: userID).delete()
     }
+    
+    func updateEmail(userID: String, newEmail: String) async throws {
+        try await userDocument(userId: userID).updateData([DBUser.CodingKeys.email.rawValue: newEmail])
+    }
 }
 
 // MARK: Posts functions
@@ -57,14 +61,17 @@ extension UserManager {
     func addNewPost(userID: String, post: Post) async throws {
         let document = postCollection(userId: userID).document()
         let docId = document.documentID
-                
+        
+        // Convert platforms to their raw string values
+        let platformStrings = post.platforms?.map { $0.rawValue }
+        
         let data: [String:Any] = [
             Post.CodingKeys.postId.rawValue : docId,
             Post.CodingKeys.date.rawValue : post.date,
             Post.CodingKeys.title.rawValue : post.title,
             Post.CodingKeys.content.rawValue : post.content,
             Post.CodingKeys.images.rawValue: post.images,
-            Post.CodingKeys.platforms.rawValue: post.platforms,
+            Post.CodingKeys.platforms.rawValue: platformStrings,
             Post.CodingKeys.recommendation.rawValue: post.recommendation,
             Post.CodingKeys.isDraft.rawValue: post.isDraft
         ]

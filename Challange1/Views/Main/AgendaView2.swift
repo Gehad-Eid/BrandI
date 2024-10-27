@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AgendaView: View {
+struct AgendaView2: View {
     
     @StateObject private var vm = AgendaViewModel()
     @StateObject private var main_vm = MainViewModel()
@@ -80,7 +80,7 @@ struct WalletCardView: View {
     let id: String
     
     var body: some View {
-        NavigationLink(destination: PostView(post: post, id: id)) { // Link to the detail view
+        NavigationLink(destination: PostView(post: post, userId: id)) { // Link to the detail view
             VStack(alignment: .leading) {
                 HStack {
                     Text(post.title)
@@ -89,7 +89,7 @@ struct WalletCardView: View {
                     Spacer()
                     if let platforms = post.platforms {
                         ForEach(platforms, id: \.self) { platform in
-                            PlatformIcon(platform: platform)
+                            PlatformIcon(platform: platform.rawValue)
                         }
                     }
                 }
@@ -140,7 +140,7 @@ struct PlatformIcon: View {
 
 struct AgendaView_Previews: PreviewProvider {
     static var previews: some View {
-        AgendaView()
+        AgendaView2()
     }
 }
 

@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-import SwiftUI
-
 struct PopUpAi: View {
     @State private var progress: CGFloat = 0.4
     @State private var progress1: Double = 0.5

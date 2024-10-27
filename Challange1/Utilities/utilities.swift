@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SwiftUICore
 
 final class Utilities {
     static let shared = Utilities()
@@ -31,5 +32,26 @@ final class Utilities {
         }
         
         return controller
+    }
+}
+
+//Corner
+struct TopCornersRoundedRectangle: Shape {
+    var radius: CGFloat = 18
+    var corners: UIRectCorner = [.topLeft, .topRight]
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
+    }
+}
+
+struct BottomCornersRoundedRectangle: Shape {
+    var radius: CGFloat = 18
+    var corners: UIRectCorner = [.bottomLeft, .bottomRight]
+
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(roundedRect: rect, byRoundingCorners: corners, cornerRadii: CGSize(width: radius, height: radius))
+        return Path(path.cgPath)
     }
 }

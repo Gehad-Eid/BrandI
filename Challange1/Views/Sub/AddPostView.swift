@@ -5,16 +5,14 @@
 //  Created by Gehad Eid on 19/10/2024.
 //
 
-
 import SwiftUI
 
 struct AddPostView: View {
     @State private var isShowingImagePicker = false
     @State private var isShowingBoostPopup = false
-    
     @StateObject var vm = AddPostViewModel()
-    
-    @State var userId : String
+    @State var userId: String
+    @Environment(\.colorScheme) var colorScheme // Detect color scheme
     
     var body: some View {
         NavigationView {
@@ -32,7 +30,7 @@ struct AddPostView: View {
                             }
                             .padding(.bottom, 5)
                         
-                        Text("\(vm.postTitle.count)/25 characters")
+                        Text("\(vm.postTitle.count)/25")
                             .font(.caption)
                             .foregroundColor(.gray)
                     }
@@ -48,7 +46,7 @@ struct AddPostView: View {
                                 }
                             }
                         
-                        Text("\(vm.postContent.count)/300 characters")
+                        Text("\(vm.postContent.count)/300")
                             .font(.caption)
                             .foregroundColor(.gray)
                     }
@@ -75,12 +73,11 @@ struct AddPostView: View {
                         }
                     }
                     
-                    // is draft
+                    // Draft Toggle
                     Button {
                         vm.isDraft.toggle()
-                    }
-                    label: {
-                        Text("is draft: \((vm.isDraft).description.capitalized)")
+                    } label: {
+                        Text("is draft: \(vm.isDraft.description.capitalized)")
                     }
                     
                     // Date Picker
@@ -93,15 +90,16 @@ struct AddPostView: View {
                     // Platform Picker Section
                     Text("Select Your Platform")
                         .font(.headline)
+                    
                     HStack {
-                        ForEach(platforms, id: \.self) { platform in
+                        ForEach(Platform.allCases, id: \.self) { platform in
                             Button(action: {
                                 togglePlatform(platform)
                             }) {
-                                Image(platform)
+                                Image(platform.iconName(for: colorScheme))
                                     .resizable()
                                     .frame(width: 50, height: 50)
-                                    .background(vm.selectedPlatforms.contains(platform) ? Color.blue : Color.clear)
+                                    .background(vm.selectedPlatforms.contains(platform) ? Color.blue.opacity(0.3) : Color.clear)
                                     .cornerRadius(10)
                             }
                         }
@@ -135,29 +133,22 @@ struct AddPostView: View {
                 }),
                 trailing: Button("Add", action: {
                     vm.addPost(userId: userId)
-//                    vm.addEvent(userId: userId)
                 })
             )
         }
         .sheet(isPresented: $isShowingImagePicker) {
-            // Image picker (using PHPicker here)
             ImagePicker(images: $vm.imageList)
         }
     }
     
     // Toggle platform selection
-    func togglePlatform(_ platform: String) {
+    func togglePlatform(_ platform: Platform) {
         if let index = vm.selectedPlatforms.firstIndex(of: platform) {
             vm.selectedPlatforms.remove(at: index)
         } else {
             vm.selectedPlatforms.append(platform)
         }
     }
-
-    // Dummy platform data
-    var platforms: [String] = [
-        "instagram_icon", "x_icon", "tiktok_icon", "linkedin_icon"
-    ]
 }
 
 struct AddPostView_Previews: PreviewProvider {
