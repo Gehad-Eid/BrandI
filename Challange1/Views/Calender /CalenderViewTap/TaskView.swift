@@ -73,6 +73,6 @@ struct TaskView: View {
 #Preview {
     NavigationView {
         TaskView()
-            .modelContainer(for: Task.self)
+            .modelContainer(for: Task1.self)
     }
 }

@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct TaskItemView: View {
-    @Bindable var task: Task
+    @Bindable var task: Task1
     @Environment(\.modelContext) private var context
     
     @State private var offset = CGSize.zero
@@ -18,7 +18,7 @@ struct TaskItemView: View {
     var body: some View {
         HStack(spacing: 5) {
             Circle()
-                .fill(Color.colorWhite)
+                .fill(Color.white)
                 .frame(width: 8, height: 8)
                 .padding(.horizontal, 15)
             VStack(alignment: .leading, spacing: 10) {
@@ -65,13 +65,13 @@ struct TaskItemView: View {
     }
 }
 
-
-#Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Task.self, configurations: config)
-    
-    let task = Task(title: "Example Task", date: Date())
-    
-    return TaskItemView(task: task)
-        .modelContainer(container)
-}
+//
+//#Preview {
+//    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+//    let container = try! ModelContainer(for: Task1.self, configurations: config)
+//    
+//    let task = Task(title: "Example Task", date: Date())
+//    
+//    return TaskItemView(task: task)
+//        .modelContainer(container)
+//}

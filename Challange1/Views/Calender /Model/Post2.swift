@@ -9,7 +9,7 @@ import SwiftData
 
 //@MainActor
 @Model
-class Task: Identifiable {
+class Task1: Identifiable {
     var id: UUID
     var title: String
     var date: Date

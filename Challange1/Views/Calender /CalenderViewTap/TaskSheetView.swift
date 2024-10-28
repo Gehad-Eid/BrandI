@@ -27,7 +27,7 @@ struct TaskSheetView: View {
                         Spacer()
                         
                         Button {
-                            let task = Task(title: taskTitle, date: taskDate)
+                            let task = Task1(title: taskTitle, date: taskDate)
                             do {
                                 context.insert(task)
                                 try context.save()
@@ -52,7 +52,7 @@ struct TaskSheetView: View {
                         .font(.body)
                         .frame(height: 35)
                         .background(.secondary)
-                        .foregroundColor(Color.secondaryText)
+                        .foregroundColor(Color.black)
                         .cornerRadius(6)
                     
                     Text("Task Date")
@@ -68,7 +68,7 @@ struct TaskSheetView: View {
                 Spacer()
                 
                 Button {
-                    let task = Task(title: taskTitle, date: taskDate)
+                    let task = Task1(title: taskTitle, date: taskDate)
                     do {
                         context.insert(task)
                         try context.save()
