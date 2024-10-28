@@ -29,7 +29,7 @@ import SwiftUICore
 //   
 //}
 @MainActor
-class SiriViewModel: ObservableObject, Sendable {
+class SiriViewModel: ObservableObject, Sendable  {
     @Published var storedNotes: [Post] = []
     @Published var selectedNote: Post?
     //private let keyStoredNotes = "storedNotes"
@@ -37,12 +37,10 @@ class SiriViewModel: ObservableObject, Sendable {
     static let shared = SiriViewModel()
     @Published var showNoteDetail: Bool = false
     
-    @StateObject var addPostVM = AddPostViewModel()
-    @StateObject var agendaVM = AgendaViewModel()
+    private let  addPostVM = AddPostViewModel()
+    private let  agendaVM = AgendaViewModel()
     
-//    init() async throws {
-//        try await readValuesFromDB()
-//       }
+
     func initialize() async throws {
             try await readValuesFromDB()
         }
@@ -50,12 +48,19 @@ class SiriViewModel: ObservableObject, Sendable {
     
     func readValuesFromDB() async throws {
         if let userID = UserDefaults.standard.string(forKey: "userID") {
-            //to getall the posts
+            print("User ID found in UserDefaults: \(userID)")
             try await agendaVM.loadPosts(userId: userID)
             storedNotes = agendaVM.posts ?? []
+            print("Successfully fetched \(storedNotes.count) posts for userID: \(userID)")
+            
+            for post in storedNotes {
+                print("Post ID: \(post.id), Title: \(post.title), Content: \(post.content)")
+            }
         } else {
-            print("vm.addPost(userId: userID!) failed")
+            print("Failed to retrieve posts: userID not found in UserDefaults")
         }
+    }
+
         
         
         
@@ -64,7 +69,7 @@ class SiriViewModel: ObservableObject, Sendable {
 //                storedNotes = decodedData
 //            }
 //        }
-    }
+    
     
     
     //get the note by Id
@@ -74,13 +79,21 @@ class SiriViewModel: ObservableObject, Sendable {
         // to get the post by id
         return try await agendaVM.loadPostById(userId: userID,postId: id)
         
-        //return storedNotes.first { $0.id == id }
+        
     }
     
-    func trail(with identifier: Post.ID) -> Post? {
+    //return storedNotes.first { $0.id == id }
+//    func trail(with identifier: Post.ID) -> Post? {
+//        return storedNotes.first { $0.id == identifier }
+//    }
+    @MainActor
+    func trail(with identifier: Post.ID) async -> Post? {
+        if storedNotes.isEmpty {
+            try? await readValuesFromDB() // Fetch from Firebase if needed
+        }
         return storedNotes.first { $0.id == identifier }
     }
-    
+
 
     
     func navigate(to id: String) async throws {
@@ -104,16 +117,7 @@ class SiriViewModel: ObservableObject, Sendable {
 //        }
     }
 
-///Friday Tring
-//    func openNoteAndNavigate(by id: UUID) {
-//    if let note = storedNotes.first(where: { $0.id == id }) {
-//        DispatchQueue.main.async {
-//            self.selectedNote = note
-//            print("Navigating to note with title: \(note.title)")
-//        }
-//    } else {
-//        print("Note with ID \(id) not found.")
-//    }
+
 
    
     func writeValuesToUserDefaults(note: Post) async throws {
@@ -125,10 +129,5 @@ class SiriViewModel: ObservableObject, Sendable {
         }
     }
     
-//    func deleteValuesFromUserDefaults(indexSet: IndexSet) {
-//        storedNotes.remove(atOffsets: indexSet)
-//        if let encodedData = try? JSONEncoder().encode(storedNotes) {
-//            UserDefaults.standard.set(encodedData, forKey: keyStoredNotes)
-//        }
-//    }
+
 }
