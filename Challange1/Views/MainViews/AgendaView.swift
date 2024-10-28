@@ -53,7 +53,7 @@ struct AgendaView: View {
                         
                     }
                     
-                    AppBar()
+                    AppBar(EventsCount: vm.events?.count, PostsCount: vm.posts?.count, DraftsCount: vm.draftPosts?.count)
                         .padding(.top, -15)
                     
                     UpcomingSection()
@@ -70,6 +70,7 @@ struct AgendaView: View {
                 if let userID = UserDefaults.standard.string(forKey: "userID") {
                     try await vm.loadPosts(userId: userID)
                     try await vm.loadEvents(userId: userID)
+                    vm.loadDraftPosts()
                 }
             }
         }

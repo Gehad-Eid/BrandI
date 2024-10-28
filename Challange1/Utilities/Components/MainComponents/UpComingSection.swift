@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct  UpcomingSection: View {
+    
     init() {
          
            if let babyBlue = UIColor(named: "BabyBlue") {
@@ -17,6 +18,7 @@ struct  UpcomingSection: View {
                UIPageControl.appearance().pageIndicatorTintColor = UIColor(named: "GrayColor")
            }
        }
+    
     var body: some View {
         VStack(alignment:.leading){
             Text("Upcoming")

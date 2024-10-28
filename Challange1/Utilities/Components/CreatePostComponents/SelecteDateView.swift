@@ -113,3 +113,16 @@ struct SelecteDateView: View {
 //        return formatter.string(from: date)
 //    }
 }
+
+
+//DatePicker("", selection: $selectedDate, displayedComponents: .date)
+//            .frame(width: 150, height: 40)
+//            .foregroundColor(.gray)
+//            .background(Color.clear)
+//            .cornerRadius(8)
+//            .overlay(
+//                RoundedRectangle(cornerRadius: 8)
+//                    .stroke(Color.gray, lineWidth: 1)
+//            )
+//            .datePickerStyle(.compact) // Compact style to keep it inline
+//            .labelsHidden() // Hides default label for a cleaner look

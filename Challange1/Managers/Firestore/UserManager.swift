@@ -95,6 +95,43 @@ extension UserManager {
     func updatePostStatus (userID: String, post: Post) async throws {
         try postDocument(userId: userID, postId: post.postId).setData(from: post, merge: true, encoder: encoder())
     }
+    
+    func getAllPostsSortedByDate(userID: String, descending: Bool, referenceDate: Date) async throws -> [Post] {
+        let calendar = Calendar.current
+        let startOfYesterday = calendar.startOfDay(for: calendar.date(byAdding: .day, value: -1, to: referenceDate)!)
+        let endOfTomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: referenceDate))!
+
+        let snapshot = try await postCollection(userId: userID)
+            .whereField(Post.CodingKeys.isDraft.rawValue, isEqualTo: false)
+            .whereField(Post.CodingKeys.date.rawValue, isGreaterThanOrEqualTo: startOfYesterday)
+            .whereField(Post.CodingKeys.date.rawValue, isLessThanOrEqualTo: endOfTomorrow)
+            .order(by: Post.CodingKeys.date.rawValue, descending: descending)
+            .getDocuments()
+
+        let posts = try snapshot.documents.compactMap { document in
+            try document.data(as: Post.self)
+        }
+
+        return posts
+    }
+    
+    func getPost(userID: String, postId: String) async throws -> Post? {
+        return try await postDocument(userId: userID, postId: postId).getDocument().data(as: Post.self)
+    }
+
+    
+    func getAllDraftPostsSortedBydate(userID: String) async throws -> [Post] {
+        let snapshot = try await postCollection(userId: userID)
+            .whereField(Post.CodingKeys.isDraft.rawValue, isEqualTo: true)
+            .order(by: Post.CodingKeys.date.rawValue, descending: true)
+            .getDocuments()
+        
+        let posts = try snapshot.documents.compactMap { document in
+            try document.data(as: Post.self)
+        }
+        
+        return posts
+    }
 }
 
 // MARK: events functions
