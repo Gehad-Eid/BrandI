@@ -81,8 +81,8 @@ struct AddPostView: View {
                     }
                     
                     // Date Picker
-                    DatePicker("Select Date", selection: $vm.selectedDate, displayedComponents: .date)
-                        .datePickerStyle(.compact)
+                    DatePicker("", selection: $vm.selectedDate, displayedComponents: .date)
+                        .datePickerStyle(.automatic)
                         .padding()
                         .background(Color.gray.opacity(0.1))
                         .cornerRadius(10)
