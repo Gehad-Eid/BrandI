@@ -34,4 +34,6 @@ final class AgendaViewModel: ObservableObject {
     func loadPostById(userId: String, postId: String) async throws -> Post? {
         return try await UserManager.shared.getPost(userID: userId, postId: postId)
     }
+    
+    
 }
