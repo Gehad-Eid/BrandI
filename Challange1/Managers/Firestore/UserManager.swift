@@ -46,6 +46,50 @@ final class UserManager {
     func updateEmail(userID: String, newEmail: String) async throws {
         try await userDocument(userId: userID).updateData([DBUser.CodingKeys.email.rawValue: newEmail])
     }
+        
+    func getMonthPostsAndEvents(userID: String, descending: Bool, referenceDate: Date) async throws -> (publishedPosts: [Post], draftPosts: [Post], events: [Event]) {
+        let calendar = Calendar.current
+
+        // Get the current month and year
+        let currentMonth = calendar.component(.month, from: referenceDate)
+        let currentYear = calendar.component(.year, from: referenceDate)
+
+        // Define the start and end of the current month
+        guard let startOfMonth = calendar.date(from: DateComponents(year: currentYear, month: currentMonth, day: 1)),
+              let endOfMonth = calendar.date(from: DateComponents(year: currentYear, month: currentMonth + 1, day: 0)) else {
+            throw NSError(domain: "DateError", code: 0, userInfo: [NSLocalizedDescriptionKey: "Invalid date components."])
+        }
+
+        // Fetch posts
+        let snapshot = try await postCollection(userId: userID)
+            .whereField(Post.CodingKeys.date.rawValue, isGreaterThanOrEqualTo: startOfMonth)
+            .whereField(Post.CodingKeys.date.rawValue, isLessThanOrEqualTo: endOfMonth)
+            .order(by: Post.CodingKeys.date.rawValue, descending: descending)
+            .getDocuments()
+
+        // Map to posts
+        let allPosts = try snapshot.documents.compactMap { document in
+            try document.data(as: Post.self)
+        }
+        print("allPosts:  \(allPosts)")
+        // Filter posts into published and draft
+        let publishedPosts = allPosts.filter { !($0.isDraft ?? false) }
+        let draftPosts = allPosts.filter { $0.isDraft ?? true }
+
+        // Fetch events (Assuming you have a similar collection for events)
+        let eventSnapshot = try await eventCollection(userId: userID)
+            .whereField(Event.CodingKeys.startDate.rawValue, isGreaterThanOrEqualTo: startOfMonth)
+            .whereField(Event.CodingKeys.startDate.rawValue, isLessThanOrEqualTo: endOfMonth)
+            .order(by: Event.CodingKeys.startDate.rawValue, descending: descending)
+            .getDocuments()
+
+        // Map to events
+        let events = try eventSnapshot.documents.compactMap { document in
+            try document.data(as: Event.self)
+        }
+        print("events:  \(events)")
+        return (publishedPosts, draftPosts, events)
+    }
 }
 
 // MARK: Posts functions
@@ -61,7 +105,7 @@ extension UserManager {
     func addNewPost(userID: String, post: Post) async throws {
         let document = postCollection(userId: userID).document()
         let docId = document.documentID
-        
+
         // Convert platforms to their raw string values
         let platformStrings = post.platforms?.map { $0.rawValue }
         
@@ -78,6 +122,31 @@ extension UserManager {
         
         try await document.setData(data, merge: false)
     }
+//        func addNewPost(userID: String, post: Post) async throws {
+//        var docId: String
+//        
+//        if post.postId.isEmpty {
+//            let document = postCollection(userId: userID).document()
+//            docId = document.documentID
+//        } else {
+//            docId = post.postId
+//        }
+//        // Convert platforms to their raw string values
+//        let platformStrings = post.platforms?.map { $0.rawValue }
+//        
+//        let data: [String:Any] = [
+//            Post.CodingKeys.postId.rawValue : docId,
+//            Post.CodingKeys.date.rawValue : post.date,
+//            Post.CodingKeys.title.rawValue : post.title,
+//            Post.CodingKeys.content.rawValue : post.content,
+//            Post.CodingKeys.images.rawValue: post.images,
+//            Post.CodingKeys.platforms.rawValue: platformStrings,
+//            Post.CodingKeys.recommendation.rawValue: post.recommendation,
+//            Post.CodingKeys.isDraft.rawValue: post.isDraft
+//        ]
+//        
+//        try await document.setData(data, merge: false)
+//    }
     
     func deletePost(userID: String, postID: String) async throws {
         try await postCollection(userId: userID).document(postID).delete()
@@ -92,33 +161,50 @@ extension UserManager {
         return posts
     }
     
-    func updatePostStatus (userID: String, post: Post) async throws {
+    func getPost(userID: String, postId: String) async throws -> Post? {
+        return try await postDocument(userId: userID, postId: postId).getDocument().data(as: Post.self)
+    }
+    
+    func updatePost(userID: String, post: Post) async throws {
         try postDocument(userId: userID, postId: post.postId).setData(from: post, merge: true, encoder: encoder())
     }
     
-    func getAllPostsSortedByDate(userID: String, descending: Bool, referenceDate: Date) async throws -> [Post] {
+    func getRecentPosts(userID: String, descending: Bool, referenceDate: Date) async throws -> (yesterdayPosts: [Post], todayPosts: [Post], tomorrowPosts: [Post]) {
         let calendar = Calendar.current
+        
+        // Define start and end of yesterday, today, and tomorrow
         let startOfYesterday = calendar.startOfDay(for: calendar.date(byAdding: .day, value: -1, to: referenceDate)!)
-        let endOfTomorrow = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: referenceDate))!
-
+        let startOfToday = calendar.startOfDay(for: referenceDate)
+        let endOfTomorrow = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: calendar.date(byAdding: .day, value: 1, to: referenceDate)!)!
+        
+        // Fetch
         let snapshot = try await postCollection(userId: userID)
             .whereField(Post.CodingKeys.isDraft.rawValue, isEqualTo: false)
             .whereField(Post.CodingKeys.date.rawValue, isGreaterThanOrEqualTo: startOfYesterday)
             .whereField(Post.CodingKeys.date.rawValue, isLessThanOrEqualTo: endOfTomorrow)
             .order(by: Post.CodingKeys.date.rawValue, descending: descending)
             .getDocuments()
-
+        
+        // Map to posts
         let posts = try snapshot.documents.compactMap { document in
             try document.data(as: Post.self)
         }
-
-        return posts
+        
+        // Categorize posts
+        let yesterdayPosts = posts.filter { post in
+            calendar.isDate(post.date, inSameDayAs: startOfYesterday)
+        }
+        
+        let todayPosts = posts.filter { post in
+            calendar.isDate(post.date, inSameDayAs: startOfToday)
+        }
+        
+        let tomorrowPosts = posts.filter { post in
+            calendar.isDate(post.date, inSameDayAs: calendar.date(byAdding: .day, value: 1, to: startOfToday)!)
+        }
+        
+        return (yesterdayPosts, todayPosts, tomorrowPosts)
     }
-    
-    func getPost(userID: String, postId: String) async throws -> Post? {
-        return try await postDocument(userId: userID, postId: postId).getDocument().data(as: Post.self)
-    }
-
     
     func getAllDraftPostsSortedBydate(userID: String) async throws -> [Post] {
         let snapshot = try await postCollection(userId: userID)
@@ -152,7 +238,6 @@ extension UserManager {
         let data: [String:Any] = [
             Event.CodingKeys.eventId.rawValue: docId,
             Event.CodingKeys.title.rawValue: event.title,
-            Event.CodingKeys.content.rawValue: event.content,
             Event.CodingKeys.startDate.rawValue: event.startDate,
             Event.CodingKeys.endDate.rawValue: event.endDate
         ]

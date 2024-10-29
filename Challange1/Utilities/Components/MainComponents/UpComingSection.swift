@@ -8,104 +8,54 @@
 
 import SwiftUI
 
-struct  UpcomingSection: View {
-    
+struct UpcomingSection: View {
+    let items: [Any] // Array to hold both Post and Event types
+    @ObservedObject var vm: AgendaViewModel
+
     init() {
-         
-           if let babyBlue = UIColor(named: "BabyBlue") {
-               UIPageControl.appearance().currentPageIndicatorTintColor = babyBlue
-             
-               UIPageControl.appearance().pageIndicatorTintColor = UIColor(named: "GrayColor")
-           }
-       }
+        if let babyBlue = UIColor(named: "BabyBlue") {
+            UIPageControl.appearance().currentPageIndicatorTintColor = babyBlue
+            UIPageControl.appearance().pageIndicatorTintColor = UIColor(named: "GrayColor")
+        }
+        // Sample data for testing, replace this with your actual data
+        self.items = [
+            Post(postId: "1", title: "Post Title", content: "coco", date: Date(), images: [], platforms: [], recommendation: "", isDraft: false),
+            Event(eventId: "1", title: "Saudi National Day", startDate: Date(), endDate: Date()),
+            Event(eventId: "3", title: "Saudi day", startDate: Date(), endDate: Date()),
+            Post(postId: "1", title: "Post Title", content: "tenttnet", date: Date(), images: [], platforms: [], recommendation: "", isDraft: false),
+            Event(eventId: "3", title: "Saudi day", startDate: Date(), endDate: Date()),
+
+        ]
+        
+        self.vm = AgendaViewModel()
+    }
     
     var body: some View {
-        VStack(alignment:.leading){
+        VStack(alignment: .leading) {
             Text("Upcoming")
                 .font(.title3)
                 .fontWeight(.bold)
-                .padding(.bottom,-190)
-                
-            TabView{
-                PostRow(postTitle: "Post Title", postDate: "20.9.2024",
-                        postRemainDate: "Tomorrow",
-                        imageName: "document.fill"
-                        
-                ) {
-                    
-                    print("Post tapped")
-                }.padding()
-               
-                PostRow(postTitle: "Saudi National Day", postDate: "20.9.2024",
-                        postRemainDate: "In 3 days",
-                        imageName: "note"
-                ) {
-                    
-                    print("Post tapped")
-                }
-               
-                PostRow(postTitle: "Post Title", postDate: "20.9.2024",
-                        postRemainDate: "In 3 days",
-                        imageName: "document.fill"
-                ) {
-                    
-                    print("Post tapped")
-                }
-               
-            }.tabViewStyle(.page(indexDisplayMode: .always))
+                .padding(.bottom, -190)
             
-                .indexViewStyle(.page(backgroundDisplayMode: .interactive))
-                .accentColor(Color("BabyBlue"))
-                .frame(height: 150)
-                .padding(.top,-10)
-                       
+            TabView {
+                ForEach(items.indices, id: \.self) { index in
+                    let item = items[index]
+                    UpcomingCard(item: item, vm: vm)
+                        .padding()
+                }
+            }
+            .tabViewStyle(.page(indexDisplayMode: .always))
+            .indexViewStyle(.page(backgroundDisplayMode: .interactive))
+            .accentColor(Color("BabyBlue"))
+            .frame(height: 150)
+            .padding(.top, -10)
         }
     }
 }
-
-#Preview {
-    UpcomingSection()
-}
-
-
-struct PostRow: View {
-    var postTitle: String
-    var postDate: String
-    var postRemainDate : String
-    var imageName: String
-    var onTap: () -> Void
-
-    var body: some View {
     
-        HStack {
-            VStack(alignment: .center) {
-                Image(systemName: imageName)
-                    .foregroundStyle(Color("BabyBlue"))
-                    .font(.system(size: 30))
-                
-                Text(postRemainDate)
-                    .foregroundStyle(Color("BabyBlue"))
-                    .font(.system(size: 14))
-                    .fontWeight(.medium)
-            }
-            .padding()
-            
-            VStack(alignment: .leading) {
-                Text(postTitle)
-                    .font(.system(size: 18))
-                    .fontWeight(.semibold)
-                Text(postDate)
-                    .font(.caption)
-                    .foregroundStyle(Color("GrayText"))
-            }
-        }
-        .frame(width: 350, height: 80, alignment: .leading)
-        .background(Color("BoxColor"))
-        .cornerRadius(18)
-       // .shadow(color: Color.black.opacity(0.1), radius: 0.1, x: 0, y: 0)
-        .onTapGesture {
-            onTap()
-        }
+#Preview {
+    NavigationStack {
+        UpcomingSection()
     }
 }
 

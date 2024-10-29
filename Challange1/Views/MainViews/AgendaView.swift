@@ -38,7 +38,7 @@ struct AgendaView: View {
                                 .multilineTextAlignment(.center) // Center the text
                         }
                         .sheet(isPresented: $showingAddPostView) {
-                            CreatePostView()
+                            CreatePostView(post: nil)
                         }
 //                        NavigationLink(destination: CreatePostView()) {
 //                            Text("+")
@@ -53,13 +53,13 @@ struct AgendaView: View {
                         
                     }
                     
-                    AppBar(EventsCount: vm.events?.count, PostsCount: vm.posts?.count, DraftsCount: vm.draftPosts?.count)
+                    AppBar(EventsCount: vm.thisMonthEvents?.count, PostsCount: vm.thisMonthPosts?.count, DraftsCount: vm.thisMonthDraftPosts?.count)
                         .padding(.top, -15)
                     
                     UpcomingSection()
                         .padding(.top, 10)
                   
-                    CardViewSection(postDataArray: vm.posts ?? [])
+                    CardViewSection(vm: vm)
                         .padding(.top, 5)
                 }
                 .padding(.horizontal, 20)
@@ -68,9 +68,13 @@ struct AgendaView: View {
         .onAppear() {
             Task {
                 if let userID = UserDefaults.standard.string(forKey: "userID") {
-                    try await vm.loadPosts(userId: userID)
-                    try await vm.loadEvents(userId: userID)
+//                    try await vm.loadPosts(userId: userID)
+//                    try await vm.loadEvents(userId: userID)
+                    try await vm.loadRecentPosts(userId: userID)
+                    try await vm.loadMonthPostsAndEvents(userId: userID)
                     vm.loadDraftPosts()
+                } else {
+                    print("userID not found")
                 }
             }
         }
