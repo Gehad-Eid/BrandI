@@ -22,6 +22,8 @@ struct ReusableCardView: View {
                 // Title & Platforms
                 HStack {
                     Text(title)
+                        .foregroundStyle(.black)
+                        .fontWeight(.semibold)
                         .padding()
                     Spacer()
                     HStack {
@@ -56,13 +58,12 @@ struct ReusableCardView: View {
                 .shadow(color: Color.black, radius: 0.1, x: 0.5, y: 0.5)
             }
         }
-//        .buttonStyle(PlainButtonStyle())
     }
 }
 
 
 #Preview {
     NavigationStack {
-        ReusableCardView(title: "", platforms: [], description: "", destination: AnyView(Text("dfghj")))
+        ReusableCardView(title: "plaplapla", platforms: [], description: "", destination: AnyView(Text("dfghj")))
     }
 }

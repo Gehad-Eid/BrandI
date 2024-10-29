@@ -33,26 +33,30 @@ struct SelectPlatforms: View {
             .font(.system(size: 18, weight: .semibold))
         
         HStack(spacing: 20) {
+            // Show only selected platforms when not editing, or all platforms if editing
             ForEach(platformList.indices, id: \.self) { index in
                 let platform = platformList[index]
                 let isSelected = selectedPlatforms.contains(platform)
-                let iconName = isSelected ? selectedImages[index] : images[index]
                 
-                Button(action: {
-                    if isEditingEnabled {
-                        togglePlatformSelection(platform)
+                if isEditingEnabled || isSelected {
+                    let iconName = isSelected ? selectedImages[index] : images[index]
+                    
+                    Button(action: {
+                        if isEditingEnabled {
+                            togglePlatformSelection(platform)
+                        }
+                    }) {
+                        Image(iconName)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 50, height: 50)
+                            .clipped()
+                            .cornerRadius(10)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 10)
+                                    .stroke(Color.clear, lineWidth: 2)
+                            )
                     }
-                }) {
-                    Image(iconName)
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 50, height: 50)
-                        .clipped()
-                        .cornerRadius(10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(/*isSelected ? Color.blue : */Color.clear, lineWidth: 2)
-                        )
                 }
             }
         }
@@ -68,3 +72,4 @@ struct SelectPlatforms: View {
         }
     }
 }
+

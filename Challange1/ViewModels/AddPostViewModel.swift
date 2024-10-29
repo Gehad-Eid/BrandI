@@ -18,6 +18,7 @@ final class AddPostViewModel: ObservableObject {
     @Published var isDraft: Bool = false
     @Published var imageList: [UIImage] = []
     
+    // Add New Post
     func addPost(userId: String) {
         let post = Post(postId: "", title: postTitle, content: postContent, date: selectedDate, platforms: selectedPlatforms, isDraft: isDraft)
         Task {
@@ -25,8 +26,30 @@ final class AddPostViewModel: ObservableObject {
         }
     }
     
+    // Update a post
+    func updatePost(userId: String, postId: String) {
+        let updatedPost = Post(
+            postId: postId,
+            title: postTitle,
+            content: postContent,
+            date: selectedDate,
+            platforms: selectedPlatforms,
+            isDraft: isDraft
+        )
+        
+        Task {
+            do {
+                try await UserManager.shared.updatePost(userID: userId, post: updatedPost)
+            } catch {
+                // Handle error (e.g., show an alert)
+                print("Failed to update post: \(error)")
+            }
+        }
+    }
+    
+    // Add New Event
     func addEvent(userId: String) {
-        let event = Event(eventId: "", title: postTitle, content: postContent, startDate: selectedDate, endDate: selectedDate)
+        let event = Event(eventId: "", title: postTitle, startDate: selectedDate, endDate: selectedDate)
         Task {
             try await UserManager.shared.addNewevent(userID: userId, event: event)
         }

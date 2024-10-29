@@ -15,6 +15,8 @@ struct CreatePostView: View {
     @State private var selectedPlatforms: [Platform] = []
     @State private var isEditingEnabled: Bool = true
     
+    let post: Post?
+    
     @StateObject var vm = AddPostViewModel()
     
     var body: some View {
@@ -23,62 +25,13 @@ struct CreatePostView: View {
                 VStack {
                     VStack(alignment: .leading) {
                         VStack {
-                            // Title Section
-                            HStack {
-                                TextField("Title", text: $vm.postTitle)
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 10)
-                                    .background(Color.clear)
-                                    .font(.title2)
-                                    .disabled(!isEditingEnabled)
-                                    .onChange(of: vm.postTitle) { newValue in
-                                        if vm.postTitle.count > 20 {
-                                            vm.postTitle = String(vm.postTitle.prefix(20))
-                                        }
-                                    }
-                                
-                                Spacer()
-                                
-                                Text("\(vm.postTitle.count)/20")
-                                    .font(.caption)
-                                    .foregroundColor(.gray)
-                                    .padding(.trailing)
-                            }
-                            
-                            Divider()
-                                .background(Color.gray)
-                                .padding(.horizontal)
-                            
-                            // Content Section
-                            VStack {
-                                TextField("Write your content here", text: $vm.postContent, axis: .vertical)
-                                       .padding(.horizontal, 12)
-                                       .padding(.vertical, 12) // to keep it aligned with placeholder
-                                       .lineLimit(7)
-                                       .frame(height: 200, alignment: .top)
-                                       .onChange(of: vm.postContent) { newValue in
-                                           if vm.postContent.count > 300 {
-                                               vm.postContent = String(vm.postContent.prefix(300))
-                                           }
-                                       }
-                                
-                                Spacer()
-                                
-                                HStack {
-                                    Spacer()
-                                    Text("\(vm.postContent.count)/300")
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
-                                        .padding(.trailing)
-                                }
-                            }
+                            titleSection
+                            contentSection
                         }
-                        
                         .padding()
                         .background(Color.gray.opacity(0.1))
                         .cornerRadius(15)
                         .padding()
-                        
                         
                         // Photo selection section
                         PhotoView(selectedImages: $vm.imageList, isEditingEnabled: $isEditingEnabled)
@@ -106,23 +59,18 @@ struct CreatePostView: View {
                                 }) {
                                     Text("Publish")
                                         .padding()
-                                    //  .frame(maxWidth: .infinity)
                                         .background(Color.red.opacity(0.2))
                                         .cornerRadius(10)
                                 }
                             }
                         }
                         .padding(.top, 10)
-                        
-                        //PlatformSection()
                     }
                     .padding()
                     Spacer()
-                    
-                    
                 }
             }
-            .navigationTitle(isEditingEnabled ? "Add Post" : "Post")
+            .navigationTitle(vm.postTitle.isEmpty ? "New Post" : vm.postTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -130,12 +78,17 @@ struct CreatePostView: View {
                         Button("Cancel") {
                             presentationMode.wrappedValue.dismiss()
                         }
-                        .foregroundColor(Color.black)
+                        .foregroundColor(.black)
                     } else {
-                        Button("Edit") {
-                            isEditingEnabled = true
+                        Button(action: {
+                            presentationMode.wrappedValue.dismiss()
+                        }) {
+                            HStack {
+                                Image(systemName: "chevron.backward")
+                                Text("Back")
+                            }
+                            .foregroundColor(Color("BabyBlue"))
                         }
-                        .foregroundColor(.babyBlue)
                     }
                 }
                 
@@ -145,14 +98,96 @@ struct CreatePostView: View {
                             isEditingEnabled = false // Disable editing when "Add" is pressed
                             
                             if let userID = UserDefaults.standard.string(forKey: "userID") {
-                                vm.addPost(userId: userID)
-                                print("userID: \(userID)")
+                                
+                                if post != nil , let postId = post?.postId {
+                                    vm.updatePost(userId: userID, postId: postId)
+                                    print("postId: \(postId)")
+                                } else {
+                                    vm.addPost(userId: userID)
+                                    print("userID: \(userID)")
+                                }
+                                
                             } else {
                                 print("vm.addPost(userId: userID!) failed")
                             }
                         }
                         .foregroundColor(Color("BabyBlue"))
+                    } else {
+                        Button("Edit") {
+                            isEditingEnabled = true
+                        }
+                        .foregroundColor(Color("BabyBlue"))
                     }
+                }
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+        .onAppear() {
+            if post != nil {
+                isEditingEnabled = false
+                
+                vm.postTitle = post?.title ?? ""
+                vm.postContent = post?.content ?? ""
+                vm.imageList = post?.images as! [UIImage]
+                vm.selectedDate = post?.date ?? Date()
+                vm.selectedPlatforms = post?.platforms ?? []
+            }
+        }
+    }
+    
+    private var titleSection: some View {
+        Group {
+            if isEditingEnabled {
+                HStack {
+                    TextField("Title", text: $vm.postTitle)
+                        .padding(.horizontal)
+                        .padding(.vertical, 10)
+                        .background(Color.clear)
+                        .font(.title2)
+                        .disabled(!isEditingEnabled)
+                        .onChange(of: vm.postTitle) { newValue in
+                            if vm.postTitle.count > 20 {
+                                vm.postTitle = String(vm.postTitle.prefix(20))
+                            }
+                        }
+                    
+                    Spacer()
+                    
+                    Text("\(vm.postTitle.count)/20")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding(.trailing)
+                }
+                
+                
+                Divider()
+                    .background(Color.gray)
+                    .padding(.horizontal)
+            }
+        }
+    }
+    
+    private var contentSection: some View {
+        VStack {
+            TextField("Write your content here", text: $vm.postContent, axis: .vertical)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 12)
+                .lineLimit(7)
+                .frame(height: 200, alignment: .top)
+                .onChange(of: vm.postContent) { newValue in
+                    if vm.postContent.count > 300 {
+                        vm.postContent = String(vm.postContent.prefix(300))
+                    }
+                }
+            
+            Spacer()
+            if isEditingEnabled {
+                HStack {
+                    Spacer()
+                    Text("\(vm.postContent.count)/300")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding(.trailing)
                 }
             }
         }
@@ -160,147 +195,8 @@ struct CreatePostView: View {
 }
 
 #Preview {
-    CreatePostView()
+    CreatePostView(post: Post(postId: "1", title: "Ppo title", content: "content her babe", date: Date(), images: [], platforms: [.linkedin, .twitter], recommendation: "", isDraft: false))
 }
 
-//struct PlatformSection :View {
-//    @State private var selectedImagesIndices: Set<Int> = []
-//    @State private var selectedDate: Date? = Date() // Tracks the selected date
-//    @State private var isDatePickerPresented = false // Controls the presentation of DatePicker
-//    @State private var isTapped = false
-//
-//    let images = [
-//        "insta_choosen",
-//        "linkedin_choosen",
-//        "tiktok_choosen",
-//        "x_choosen"
-//    ]
-//
-//    let selectedImages = [
-//        "instaEnable",
-//        "linkedinEnable",
-//        "tiktokEnable",
-//        "xEnable"
-//    ]
-//    var body: some View {
-//
-//        VStack(alignment: .leading, spacing: 15) {
-//            Text("Select Date")
-//                .font(.system(size: 18, weight: .semibold))
-//
-//            Text(selectedDate != nil ? dateToString(selectedDate!) : "Select Date")
-//
-//
-//                .frame(width:150, height: 40)
-//                .foregroundColor(selectedDate != nil ? .gray : .white)
-//                .background(selectedDate != nil ? Color.clear : Color("BabyBlue")) // Background color changes based on date selection
-//                .cornerRadius(8)
-//                .overlay(
-//                    RoundedRectangle(cornerRadius: 8)
-//                        .stroke(Color.gray, lineWidth: 1) // Gray border
-//                )
-//                .onTapGesture {
-//                    isDatePickerPresented = true
-//                }
-//                .sheet(isPresented: $isDatePickerPresented) {
-//                    VStack {
-//                        DatePicker(
-//                            "Select a date",
-//                            selection: Binding(
-//                                get: { selectedDate ?? Date() },  // Provides current or default date
-//                                set: { selectedDate = $0 }        // Updates the selected date
-//                            ),
-//                            displayedComponents: .date
-//                        )
-//                        .datePickerStyle(GraphicalDatePickerStyle())
-//                        .labelsHidden()
-//
-//                        Button("Done") {
-//                            isDatePickerPresented = false
-//                        }
-//                        .padding()
-//                    }
-//                    .padding()
-//                }
-//        }
-//        .padding(.bottom,20)
-//
-//
-//
-//        //Platform
-//        Text("Select Your Platform")
-//            .font(.system(size: 18, weight: .semibold))
-//        HStack(spacing: 40) {
-//            ForEach(0..<4) { index in
-//                Button(action: {
-//                    // Toggle the selection state for the clicked image index
-//                    if selectedImagesIndices.contains(index) {
-//                        selectedImagesIndices.remove(index) // Deselect if already selected
-//                    } else {
-//                        selectedImagesIndices.insert(index) // Select if not already selected
-//                    }
-//                }) {
-//
-//                    Image(selectedImagesIndices.contains(index) ? selectedImages[index] : images[index])
-//                        .resizable()
-//                        .scaledToFill()
-//                        .frame(width: 50, height: 50)
-//                        .clipped()
-//                        .cornerRadius(10)
-//                }
-//            }
-//        }
-//        .padding(.top,5)
-//
-//        BoostPerformanceButton()
-//            .padding(.top,10)
-//    }
-//}
-//
-//
-//// Function to format the date as "Jun 10, 2024"
-//private func dateToString(_ date: Date) -> String {
-//    let dateFormatter = DateFormatter()
-//    dateFormatter.dateFormat = "MMM d, yyyy"
-//    return dateFormatter.string(from: date)
-//}
-//#Preview {
-//    PlatformSection()
-//}
-//
-//
-//
-//
-//struct BoostPerformanceButton: View {
-//    var body: some View {
-//        Button(action: {
-//            // Action when button is tapped
-//            print("Boost Your Performance button tapped!")
-//        }) {
-//            HStack {
-//                Image("Vector")
-//                    .resizable()
-//                    .frame(width: 10,height: 10)
-//                    .font(.title)
-//                    .foregroundColor(.white)
-//                Text("Boost Your Performance")
-//                    .fontWeight(.semibold)
-//                    .foregroundColor(.white)
-//                    .font(.system(size: 16))
-//            }
-//            .frame(width:360 , height: 60)
-//
-//            .background(Color("BabyBlue"))
-//            .cornerRadius(15)
-//        }
-//
-//
-//
-//    }
-//}
-//
-//#Preview {
-//    BoostPerformanceButton()
-//}
 
 

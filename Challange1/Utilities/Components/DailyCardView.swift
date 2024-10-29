@@ -22,7 +22,8 @@ struct DailyCardView: View {
     }
 
     private var noPostsMessage: some View {
-        Text("No posts today 😊")
+        //TODO: change withthe icon
+        Text("No posts this day 😊")
             .font(.headline)
             .foregroundColor(.gray)
             .padding()

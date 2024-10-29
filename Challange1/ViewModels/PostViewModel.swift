@@ -20,7 +20,7 @@ final class PostViewModel: ObservableObject {
         let updatedPost = post.toggleIsDraft()
         
         Task {
-            try await UserManager.shared.updatePostStatus(userID: userId, post: updatedPost)
+            try await UserManager.shared.updatePost(userID: userId, post: updatedPost)
         }
     }
     
