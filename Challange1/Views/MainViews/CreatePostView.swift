@@ -14,63 +14,34 @@ struct CreatePostView: View {
     @State private var selectedDate: Date? = Date()
     @State private var selectedPlatforms: [Platform] = []
     @State private var isEditingEnabled: Bool = true
+    @State private var selectedTab: String = "Add Post"
     
-    let post: Post?
+    @State var post: Post?
     
     @StateObject var vm = AddPostViewModel()
     
     var body: some View {
         NavigationView {
-            ScrollView {
-                VStack {
-                    VStack(alignment: .leading) {
-                        VStack {
-                            titleSection
-                            contentSection
-                        }
-                        .padding()
-                        .background(Color.gray.opacity(0.1))
-                        .cornerRadius(15)
-                        .padding()
-                        
-                        // Photo selection section
-                        PhotoView(selectedImages: $vm.imageList, isEditingEnabled: $isEditingEnabled)
-                        
-                        // Date selection section
-                        SelecteDateView(selectedDate: $vm.selectedDate, isEditingEnabled: $isEditingEnabled)
-                        
-                        // Platform selection section
-                        SelectPlatforms(selectedPlatforms: $vm.selectedPlatforms, isEditingEnabled: $isEditingEnabled)
-                        
-                        HStack {
-                            Button(action: {
-                                // Perform boost action
-                            }) {
-                                Text("Check Performance")
-                                    .padding()
-                                    .frame(maxWidth: .infinity)
-                                    .background(Color.blue.opacity(0.2))
-                                    .cornerRadius(10)
-                            }
-                            
-                            if !isEditingEnabled {
-                                Button(action: {
-                                    // TODO: Handle publish action
-                                }) {
-                                    Text("Publish")
-                                        .padding()
-                                        .background(Color.red.opacity(0.2))
-                                        .cornerRadius(10)
-                                }
-                            }
-                        }
-                        .padding(.top, 10)
+            VStack {
+                if isEditingEnabled, post == nil {
+                    Picker("Select Option", selection: $selectedTab) {
+                        Text("Post").tag("Add Post")
+                        Text("Event").tag("Add Event")
                     }
-                    .padding()
-                    Spacer()
+                    .pickerStyle(SegmentedPickerStyle())
+                    .padding(.horizontal)
+                    .padding(.top)
+                }
+                
+                ScrollView {
+                    if selectedTab == "Add Post" {
+                        addPostSection
+                    } else {
+                        addEventSection
+                    }
                 }
             }
-            .navigationTitle(vm.postTitle.isEmpty ? "New Post" : vm.postTitle)
+            .navigationTitle((vm.postTitle.isEmpty || isEditingEnabled) ? "Add New" : vm.postTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -95,16 +66,27 @@ struct CreatePostView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if isEditingEnabled {
                         Button("Add") {
-                            isEditingEnabled = false // Disable editing when "Add" is pressed
+                            isEditingEnabled = false
                             
                             if let userID = UserDefaults.standard.string(forKey: "userID") {
                                 
-                                if post != nil , let postId = post?.postId {
-                                    vm.updatePost(userId: userID, postId: postId)
-                                    print("postId: \(postId)")
+                                if selectedTab == "Add Post" {
+                                    if post != nil , let postId = post?.postId {
+                                        print("postId: \(post)")
+                                        vm.updatePost(userId: userID, postId: postId)
+                                        print("postId: \(postId)")
+                                    } else {
+                                        vm.addPost(userId: userID)
+                                    }
+                                    
                                 } else {
-                                    vm.addPost(userId: userID)
-                                    print("userID: \(userID)")
+                                    if post != nil , let postId = post?.postId {
+                                        vm.updatePost(userId: userID, postId: postId)
+                                        print("postId: \(postId)")
+                                    } else {
+                                        vm.addEvent(userId: userID)
+                                        print("addEvent - userID: \(userID)")
+                                    }
                                 }
                                 
                             } else {
@@ -133,15 +115,22 @@ struct CreatePostView: View {
                 vm.selectedPlatforms = post?.platforms ?? []
             }
         }
+        .onChange(of: vm.postId) { newPostId in
+            if !newPostId.isEmpty {
+                self.post = Post(postId: newPostId, title: vm.postTitle, content: vm.postContent, date: vm.selectedDate, platforms: vm.selectedPlatforms, isDraft: vm.isDraft)
+            }
+        }
     }
     
+    
+    //MARK: View Sections
     private var titleSection: some View {
         Group {
             if isEditingEnabled {
                 HStack {
                     TextField("Title", text: $vm.postTitle)
-                        .padding(.horizontal)
-                        .padding(.vertical, 10)
+                    //                        .padding(.horizontal)
+                    //                        .padding(.vertical, 10)
                         .background(Color.clear)
                         .font(.title2)
                         .disabled(!isEditingEnabled)
@@ -159,10 +148,11 @@ struct CreatePostView: View {
                         .padding(.trailing)
                 }
                 
-                
-                Divider()
-                    .background(Color.gray)
-                    .padding(.horizontal)
+                if selectedTab == "Add Post" {
+                    Divider()
+                        .background(Color.gray)
+                        .padding(.horizontal)
+                }
             }
         }
     }
@@ -170,7 +160,7 @@ struct CreatePostView: View {
     private var contentSection: some View {
         VStack {
             TextField("Write your content here", text: $vm.postContent, axis: .vertical)
-                .padding(.horizontal, 12)
+            //                .padding(.horizontal, 12)
                 .padding(.vertical, 12)
                 .lineLimit(7)
                 .frame(height: 200, alignment: .top)
@@ -192,11 +182,97 @@ struct CreatePostView: View {
             }
         }
     }
+    
+    private var addPostSection: some View {
+        VStack(alignment: .leading) {
+            VStack {
+                titleSection
+                contentSection
+            }
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(15)
+            
+            // Photo selection section
+            PhotoView(selectedImages: $vm.imageList, isEditingEnabled: $isEditingEnabled)
+            
+            // Date selection section
+            SelecteDateView(selectedDate: $vm.selectedDate, isEditingEnabled: $isEditingEnabled)
+            
+            // Platform selection section
+            SelectPlatforms(selectedPlatforms: $vm.selectedPlatforms, isEditingEnabled: $isEditingEnabled)
+            
+            HStack {
+                Button(action: {
+                    // TODO: Handle boost action
+                }) {
+                    Text("Check Performance")
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.blue.opacity(0.2))
+                        .cornerRadius(10)
+                }
+                
+                if !isEditingEnabled {
+                    Button(action: {
+                        // TODO: Handle publish action
+                    }) {
+                        Text("Publish")
+                            .padding()
+                            .background(Color.red.opacity(0.2))
+                            .cornerRadius(10)
+                    }
+                }
+            }
+            .padding(.top, 10)
+        }
+        .padding()
+    }
+    
+    private var addEventSection: some View {
+        VStack(alignment: .leading) {
+            VStack {
+                titleSection
+            }
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(15)
+            .padding()
+            
+            // Date selection section
+            SelecteDateView(selectedDate: $vm.selectedDate, isEditingEnabled: $isEditingEnabled)
+            
+            // Date selection section
+            SelecteDateView(selectedDate: $vm.selectedDate, isEditingEnabled: $isEditingEnabled)
+            
+        }
+        .padding()
+    }
 }
 
 #Preview {
     CreatePostView(post: Post(postId: "1", title: "Ppo title", content: "content her babe", date: Date(), images: [], platforms: [.linkedin, .twitter], recommendation: "", isDraft: false))
 }
 
-
-
+//VStack {
+//TextField("Title", text: $vm.postTitle)
+//    .padding(.horizontal)
+//    
+//    .background(Color.clear)
+//    .font(.title2)
+//    .disabled(!isEditingEnabled)
+//    .onChange(of: vm.postTitle) { newValue in
+//        if vm.postTitle.count > 20 {
+//            vm.postTitle = String(vm.postTitle.prefix(20))
+//        }
+//    }
+//                    
+//HStack {
+//    Spacer()
+//    Text("\(vm.postTitle.count)/20")
+//        .font(.caption)
+//        .foregroundColor(.gray)
+//        .padding(.trailing)
+//}
+//}
+//
