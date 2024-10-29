@@ -74,6 +74,11 @@ extension FirebaseAuthManager {
     @discardableResult
     func createUser(email: String, password: String) async throws -> AuthDataResultModel {
         let authDataResult = try await Auth.auth().createUser(withEmail: email, password: password)
+        
+        // Save the user ID in UserDefaults
+        let userID = authDataResult.user.uid
+        UserDefaults.standard.set(userID, forKey: "userID")
+        
         return AuthDataResultModel(user: authDataResult.user)
     }
     
