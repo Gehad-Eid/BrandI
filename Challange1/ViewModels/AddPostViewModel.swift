@@ -18,11 +18,17 @@ final class AddPostViewModel: ObservableObject {
     @Published var isDraft: Bool = false
     @Published var imageList: [UIImage] = []
     
+    @Published var startDate = Date()
+    @Published var endDate = Date()
+    
+    @Published var postId = ""
+    
     // Add New Post
     func addPost(userId: String) {
         let post = Post(postId: "", title: postTitle, content: postContent, date: selectedDate, platforms: selectedPlatforms, isDraft: isDraft)
         Task {
-            try await UserManager.shared.addNewPost(userID: userId, post: post)
+            postId = try await UserManager.shared.addNewPost(userID: userId, post: post)
+            print("postId in vm: \(postId)")
         }
     }
     
@@ -49,7 +55,7 @@ final class AddPostViewModel: ObservableObject {
     
     // Add New Event
     func addEvent(userId: String) {
-        let event = Event(eventId: "", title: postTitle, startDate: selectedDate, endDate: selectedDate)
+        let event = Event(eventId: "", title: postTitle, startDate: startDate, endDate: endDate)
         Task {
             try await UserManager.shared.addNewevent(userID: userId, event: event)
         }

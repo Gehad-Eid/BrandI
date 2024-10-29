@@ -63,11 +63,7 @@ struct SelecteDateView: View {
             .foregroundColor(.gray)
             .background(Color.clear)
             .cornerRadius(8)
-//            .overlay(
-//                RoundedRectangle(cornerRadius: 8)
-//                    .stroke(Color.gray, lineWidth: 1)
-//            )
-            .datePickerStyle(.compact) // Compact style to keep it inline
+            .datePickerStyle(.compact)
             .labelsHidden() // Hides default label for a cleaner look
         
 //        Text(dateToString(selectedDate))

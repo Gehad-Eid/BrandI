@@ -71,7 +71,7 @@ final class UserManager {
         let allPosts = try snapshot.documents.compactMap { document in
             try document.data(as: Post.self)
         }
-        print("allPosts:  \(allPosts)")
+        
         // Filter posts into published and draft
         let publishedPosts = allPosts.filter { !($0.isDraft ?? false) }
         let draftPosts = allPosts.filter { $0.isDraft ?? true }
@@ -87,7 +87,7 @@ final class UserManager {
         let events = try eventSnapshot.documents.compactMap { document in
             try document.data(as: Event.self)
         }
-        print("events:  \(events)")
+        
         return (publishedPosts, draftPosts, events)
     }
 }
@@ -102,7 +102,7 @@ extension UserManager {
         postCollection(userId: userId).document(postId)
     }
     
-    func addNewPost(userID: String, post: Post) async throws {
+    func addNewPost(userID: String, post: Post) async throws -> String{
         let document = postCollection(userId: userID).document()
         let docId = document.documentID
 
@@ -121,6 +121,8 @@ extension UserManager {
         ]
         
         try await document.setData(data, merge: false)
+        
+        return docId
     }
 //        func addNewPost(userID: String, post: Post) async throws {
 //        var docId: String
