@@ -85,7 +85,7 @@ struct AddNoteIntent: AppIntent {
         let viewModel = await SiriViewModel()
           
         // Create a new note with the provided title, content, and image data
-        let newNote = Post(postId:"",title: noteTitle, content: noteContent, date:Date(), images:nil )
+        let newNote = Post(postId:"",title: noteTitle, content: noteContent, date:Date(), images:nil, isDraft: true )
 
         // Save the note using the viewModel
         try await viewModel.writeValuesToUserDefaults(note: newNote)

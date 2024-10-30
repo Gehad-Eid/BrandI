@@ -36,7 +36,7 @@ struct DailyCardView: View {
                 title: post.title,
                 platforms: post.platforms ?? [],
                 description: post.content,
-                destination: AnyView(PostView(post: post, userId: ""))
+                destination: AnyView(CreatePostView(post: post))
             )
             .offset(y: CGFloat(index * 60)) // the Offset is based on index
         }

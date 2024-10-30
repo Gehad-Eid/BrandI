@@ -65,6 +65,7 @@ struct SelecteDateView: View {
             .cornerRadius(8)
             .datePickerStyle(.compact)
             .labelsHidden() // Hides default label for a cleaner look
+            .disabled(!isEditingEnabled)
         
 //        Text(dateToString(selectedDate))
 //            .frame(width: 150, height: 40)

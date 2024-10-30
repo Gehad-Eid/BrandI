@@ -56,7 +56,7 @@ struct AgendaView: View {
                     AppBar(EventsCount: vm.thisMonthEvents?.count, PostsCount: vm.thisMonthPosts?.count, DraftsCount: vm.thisMonthDraftPosts?.count)
                         .padding(.top, -15)
                     
-                    UpcomingSection()
+                    UpcomingSection(vm: vm)
                         .padding(.top, 10)
                   
                     CardViewSection(vm: vm)
@@ -68,11 +68,13 @@ struct AgendaView: View {
         .onAppear() {
             Task {
                 if let userID = UserDefaults.standard.string(forKey: "userID") {
-//                    try await vm.loadPosts(userId: userID)
-//                    try await vm.loadEvents(userId: userID)
-                    try await vm.loadRecentPosts(userId: userID)
+                    try await vm.loadPosts(userId: userID)
+                    try await vm.loadEvents(userId: userID)
                     try await vm.loadMonthPostsAndEvents(userId: userID)
+                    try await vm.loadRecentPosts(userId: userID)
+
                     vm.loadDraftPosts()
+                    vm.loadUpcomingPostsAndEvents()
                 } else {
                     print("userID not found")
                 }
