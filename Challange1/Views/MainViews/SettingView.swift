@@ -24,11 +24,11 @@ struct SettingsView: View {
                 List {
                     
                     Section {
-                        // TODO: pretty suer that should shange to account at least !!
-                        settingsRow(iconName: "envelope", title: "Email", destination: ChangeEmail(/*vm: vm*/))
+                        // TODO: pretty suer that should change to account at least !!
+                        settingsRow(iconName: "envelope", title: "Profile", destination: ChangeEmail(/*vm: vm*/))
                         
-                        // TODO: pretty suer that should shange !!
-                        settingsRow(iconName: "key.fill", title: "Password", destination: PasswordChangeView(vm: vm))
+                        // TODO: pretty suer that should change !!
+                        settingsRow(iconName: "key.fill", title: "Change Password", destination: PasswordChangeView(vm: vm))
                         
                         // API Integration
                         settingsRow(iconName: "link", title: "Integration", destination: ProfileView())

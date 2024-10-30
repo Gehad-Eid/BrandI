@@ -17,13 +17,14 @@ struct CreatePostView: View {
     @State private var selectedTab: String = "Add Post"
     
     @State var post: Post?
+    @State var event: Event?
     
     @StateObject var vm = AddPostViewModel()
     
     var body: some View {
         NavigationView {
             VStack {
-                if isEditingEnabled, post == nil {
+                if isEditingEnabled, post == nil, event == nil {
                     Picker("Select Option", selection: $selectedTab) {
                         Text("Post").tag("Add Post")
                         Text("Event").tag("Add Event")
@@ -34,14 +35,14 @@ struct CreatePostView: View {
                 }
                 
                 ScrollView {
-                    if selectedTab == "Add Post" {
+                    if selectedTab == "Add Post", event == nil {
                         addPostSection
-                    } else {
+                    } else if selectedTab == "Add Event", post == nil {
                         addEventSection
                     }
                 }
             }
-            .navigationTitle((vm.postTitle.isEmpty || isEditingEnabled) ? "Add New" : vm.postTitle)
+            .navigationTitle((vm.title.isEmpty || isEditingEnabled) ? "Add New" : vm.title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -80,9 +81,9 @@ struct CreatePostView: View {
                                     }
                                     
                                 } else {
-                                    if post != nil , let postId = post?.postId {
-                                        vm.updatePost(userId: userID, postId: postId)
-                                        print("postId: \(postId)")
+                                    if event != nil , let eventId = event?.eventId {
+                                        vm.updateEvent(userId: userID, eventId: eventId)
+                                        print("eventId: \(eventId)")
                                     } else {
                                         vm.addEvent(userId: userID)
                                         print("addEvent - userID: \(userID)")
@@ -94,6 +95,7 @@ struct CreatePostView: View {
                             }
                         }
                         .foregroundColor(Color("BabyBlue"))
+                        
                     } else {
                         Button("Edit") {
                             isEditingEnabled = true
@@ -107,17 +109,32 @@ struct CreatePostView: View {
         .onAppear() {
             if post != nil {
                 isEditingEnabled = false
+                selectedTab = "Add Post"
                 
-                vm.postTitle = post?.title ?? ""
+                vm.title = post?.title ?? ""
                 vm.postContent = post?.content ?? ""
-                vm.imageList = post?.images as! [UIImage]
+                //TODO: make it from data
+//                vm.imageList = post?.images as! [UIImage]
                 vm.selectedDate = post?.date ?? Date()
                 vm.selectedPlatforms = post?.platforms ?? []
+            }
+            else if event != nil {
+                isEditingEnabled = false
+                selectedTab = "Add Event"
+                
+                vm.title = event?.title ?? ""
+                vm.startDate = event?.startDate ?? Date()
+                vm.endDate = event?.endDate ?? Date()
             }
         }
         .onChange(of: vm.postId) { newPostId in
             if !newPostId.isEmpty {
-                self.post = Post(postId: newPostId, title: vm.postTitle, content: vm.postContent, date: vm.selectedDate, platforms: vm.selectedPlatforms, isDraft: vm.isDraft)
+                self.post = Post(postId: newPostId, title: vm.title, content: vm.postContent, date: vm.selectedDate, platforms: vm.selectedPlatforms, isDraft: vm.isDraft)
+            }
+        }
+        .onChange(of: vm.eventId) { newEventId in
+            if !newEventId.isEmpty {
+                self.event = Event(eventId: newEventId, title: vm.title, startDate: vm.startDate, endDate: vm.endDate)
             }
         }
     }
@@ -126,23 +143,23 @@ struct CreatePostView: View {
     //MARK: View Sections
     private var titleSection: some View {
         Group {
-            if isEditingEnabled {
+            if isEditingEnabled || (event != nil && !isEditingEnabled) {
                 HStack {
-                    TextField("Title", text: $vm.postTitle)
+                    TextField("Title", text: $vm.title)
                     //                        .padding(.horizontal)
                     //                        .padding(.vertical, 10)
                         .background(Color.clear)
                         .font(.title2)
-                        .disabled(!isEditingEnabled)
-                        .onChange(of: vm.postTitle) { newValue in
-                            if vm.postTitle.count > 20 {
-                                vm.postTitle = String(vm.postTitle.prefix(20))
+                        .disabled((event != nil && !isEditingEnabled) ? true : !isEditingEnabled)
+                        .onChange(of: vm.title) { newValue in
+                            if vm.title.count > 20 {
+                                vm.title = String(vm.title.prefix(20))
                             }
                         }
                     
                     Spacer()
                     
-                    Text("\(vm.postTitle.count)/20")
+                    Text("\(vm.title.count)/20")
                         .font(.caption)
                         .foregroundColor(.gray)
                         .padding(.trailing)
@@ -164,6 +181,7 @@ struct CreatePostView: View {
                 .padding(.vertical, 12)
                 .lineLimit(7)
                 .frame(height: 200, alignment: .top)
+                .disabled(!isEditingEnabled)
                 .onChange(of: vm.postContent) { newValue in
                     if vm.postContent.count > 300 {
                         vm.postContent = String(vm.postContent.prefix(300))
@@ -240,10 +258,10 @@ struct CreatePostView: View {
             .padding()
             
             // Date selection section
-            SelecteDateView(selectedDate: $vm.selectedDate, isEditingEnabled: $isEditingEnabled)
+            SelecteDateView(selectedDate: $vm.startDate, isEditingEnabled: $isEditingEnabled)
             
             // Date selection section
-            SelecteDateView(selectedDate: $vm.selectedDate, isEditingEnabled: $isEditingEnabled)
+            SelecteDateView(selectedDate: $vm.endDate, isEditingEnabled: $isEditingEnabled)
             
         }
         .padding()

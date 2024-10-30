@@ -20,17 +20,17 @@ struct AddPostView: View {
                 VStack(alignment: .leading, spacing: 20) {
                     // Title Section with Character Limit
                     VStack(alignment: .leading) {
-                        TextField("Post Title", text: $vm.postTitle)
+                        TextField("Post Title", text: $vm.title)
                             .font(.title)
                             .bold()
-                            .onChange(of: vm.postTitle) { newValue in
-                                if vm.postTitle.count > 25 {
-                                    vm.postTitle = String(vm.postTitle.prefix(25))
+                            .onChange(of: vm.title) { newValue in
+                                if vm.title.count > 25 {
+                                    vm.title = String(vm.title.prefix(25))
                                 }
                             }
                             .padding(.bottom, 5)
                         
-                        Text("\(vm.postTitle.count)/25")
+                        Text("\(vm.title.count)/25")
                             .font(.caption)
                             .foregroundColor(.gray)
                     }

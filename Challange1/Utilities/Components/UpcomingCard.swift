@@ -13,8 +13,9 @@ struct UpcomingCard: View {
 
     var body: some View {
         let post = item as? Post
+        let event = item as? Event
         
-        NavigationLink(destination: CreatePostView(post: post)) {
+        NavigationLink(destination: CreatePostView(post: post, event: event)) {
             HStack {
                 VStack(alignment: .center) {
                     Image(systemName: vm.getImageName(for: item))
