@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct WeeklyScrollView: View {
-    @ObservedObject var viewModel = TaskViewModel()
+    @ObservedObject var calenerviewModel = CalenderViewModel()
 
     var body: some View {
         VStack {
@@ -17,14 +17,14 @@ struct WeeklyScrollView: View {
            
             HStack {
                 Button(action: {
-                    viewModel.previousMonth()
+                    calenerviewModel.previousMonth()
                 }) {
                     Image(systemName:"chevron.backward")
                         .foregroundColor(.babyBlue)
                 }
                 Spacer()
                 Button(action: {
-                    viewModel.nextMonth()
+                    calenerviewModel.nextMonth()
                 }) {
                     Image(systemName:"chevron.right")
                         .foregroundColor(.babyBlue)
@@ -34,23 +34,23 @@ struct WeeklyScrollView: View {
            
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 16) {
-                    ForEach(viewModel.currentMonthDates, id: \.self) { date in
+                    ForEach(calenerviewModel.currentMonthDates, id: \.self) { date in
                         VStack(spacing: 10) {
                             // Day abbreviation (e.g., Sat)
-                            Text(viewModel.dateToString(date: date, format: "E"))
+                            Text(calenerviewModel.dateToString(date: date, format: "E"))
                                 .font(.system(size: 14))
                                 .fontWeight(.semibold)
                                 .foregroundColor(.black)
                             
                             // Date (e.g., 28)
-                            Text(viewModel.dateToString(date: date, format: "dd"))
+                            Text(calenerviewModel.dateToString(date: date, format: "dd"))
                                 .font(.system(size: 14))
                                 .fontWeight(.bold)
-                                .foregroundColor(viewModel.isToday(date: date) ? .white : .black)
-                                .padding(2) 
+                                .foregroundColor(calenerviewModel.isToday(date: date) ? .white : .black)
+                                .padding(2)
                                 .background(
                                     ZStack {
-                                        if viewModel.isToday(date: date) {
+                                        if calenerviewModel.isToday(date: date) {
                                             RoundedRectangle(cornerRadius: 10)
                                                 .fill(Color("BabyBlue"))
                                                 .frame(width: 35, height: 35) 
@@ -65,7 +65,7 @@ struct WeeklyScrollView: View {
                         )
                         .onTapGesture {
                             withAnimation(.easeInOut) {
-                                viewModel.currentDate = date
+                                calenerviewModel.currentDate = date
                             }
                         }
                     }
@@ -76,7 +76,7 @@ struct WeeklyScrollView: View {
         
             }
             Divider()
-            Text(self.viewModel.currentDate.formatted(.dateTime.year().month(.wide).day().weekday(.wide)))
+            Text(self.calenerviewModel.currentDate.formatted(.dateTime.year().month(.wide).day().weekday(.wide)))
                 .font(.subheadline)
                 .fontWeight(.bold)
                 .foregroundColor(Color.black)

@@ -7,7 +7,10 @@
 import SwiftUI
 import SwiftData
 
-//@MainActor
+
+
+// - Connect with Post View Model
+
 @Model
 class Task1: Identifiable {
     var id: UUID
@@ -23,10 +26,6 @@ class Task1: Identifiable {
     }
 }
 
-//var sampleTask: [Task] = [
-//    .init(title: "Standup", date: Date.now),
-//    .init(title: "UI Design", date: Date.now)
-//    ]
 
 extension Date {
     static func updateHour(_ value: Int) -> Date {

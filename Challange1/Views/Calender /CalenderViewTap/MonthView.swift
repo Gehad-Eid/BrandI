@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct MonthGridView: View {
-    @ObservedObject var viewModel = TaskViewModel()
+    @ObservedObject var calenerviewModel = CalenderViewModel()
     
     let columns = [
         GridItem(.flexible()),
@@ -20,13 +20,13 @@ struct MonthGridView: View {
     
     var body: some View {
         VStack {
-            Text("Year: \(Calendar.current.component(.year, from: viewModel.currentDate))")
+            Text("Year: \(Calendar.current.component(.year, from: calenerviewModel.currentDate))")
                 .font(.title)
                 .padding()
 
             LazyVGrid(columns: columns, spacing: 20) {
-                ForEach(viewModel.allMonths.indices, id: \.self) { index in
-                    MonthView(monthDates: viewModel.allMonths[index])
+                ForEach(calenerviewModel.allMonths.indices, id: \.self) { index in
+                    MonthView(monthDates: calenerviewModel.allMonths[index])
                 }
             }
             .padding()

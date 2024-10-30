@@ -8,7 +8,7 @@
 import SwiftUI
 import SwiftData
 
-struct TaskSheetView: View {
+struct CalenderSheetView: View {
     @State private var taskTitle: String = ""
     @State private var taskDate: Date = .init()
     
@@ -95,7 +95,7 @@ struct TaskSheetView: View {
 }
 
 #Preview {
-    TaskSheetView()
+    CalenderSheetView()
 }
 
 // calender 2

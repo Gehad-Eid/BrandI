@@ -9,7 +9,7 @@
 import SwiftUI
 import SwiftData
 
-struct TaskListView: View {
+struct CalenderListView: View {
     
     @State private var posts: [[String: Any]] = [
         ["title": "Post Title 1", "imageName": "document.fill", "platformList": ["document.fill", "document.fill", "document.fill"]],
@@ -40,7 +40,7 @@ struct TaskListView: View {
         ScrollView {
             VStack(alignment: .leading ,spacing: 44) {
                 ForEach(tasks) { task in
-                    TaskItemView(task: task,platformList: ["","",""])
+                    CalenderItemView(task: task,platformList: ["","",""])
                         .background(alignment: .leading) {
                             if tasks.last?.id != task.id {
                                
@@ -55,6 +55,6 @@ struct TaskListView: View {
 }
 
 #Preview {
-    TaskListView(date: .constant(Date()))
+    CalenderListView(date: .constant(Date()))
         .modelContainer(for: Task1.self)
 }

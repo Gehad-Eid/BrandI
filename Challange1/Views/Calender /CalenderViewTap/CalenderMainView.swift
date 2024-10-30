@@ -9,8 +9,8 @@
 import SwiftUI
 import SwiftData
 
-struct TaskView: View {
-    @StateObject var viewModel = TaskViewModel()
+struct CalenderMainView: View {
+    @StateObject var calenerviewModel = CalenderViewModel()
     @State private var createNewTask: Bool = false
     @State var currentDate: Date = .init()
         
@@ -18,12 +18,12 @@ struct TaskView: View {
         NavigationStack {
             ZStack {
                 VStack(alignment: .leading) {
-                    WeeklyScrollView(viewModel: viewModel)
+                    WeeklyScrollView(calenerviewModel: calenerviewModel)
                         .frame(height: 89)
                         .padding(.top,40)
                    
                    
-                        TaskListView(date: $viewModel.currentDate)
+                    CalenderListView(date: $calenerviewModel.currentDate)
             
                     .scrollIndicators(.hidden)
                     .padding(.top,40)
@@ -32,10 +32,10 @@ struct TaskView: View {
                 .toolbar {
                     ToolbarItem(placement: .navigation) {
                         HStack {
-                            Text(self.viewModel.currentDate.formatted(.dateTime.month(.wide)))
+                            Text(self.calenerviewModel.currentDate.formatted(.dateTime.month(.wide)))
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
-                            Text(self.viewModel.currentDate.formatted(.dateTime.year()))
+                            Text(self.calenerviewModel.currentDate.formatted(.dateTime.year()))
                                 .foregroundColor(Color.black)
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
@@ -50,7 +50,7 @@ struct TaskView: View {
                                 .foregroundColor(.primary)
                         })
                             .sheet(isPresented: $createNewTask) {
-                                TaskSheetView()
+                                CalenderSheetView()
                                     .presentationDetents([.height(380)])
                                     .presentationBackground(.thinMaterial)
                             }
@@ -64,7 +64,7 @@ struct TaskView: View {
 
 #Preview {
     NavigationView {
-        TaskView()
+        CalenderMainView()
             .modelContainer(for: Task1.self)
     }
 }
