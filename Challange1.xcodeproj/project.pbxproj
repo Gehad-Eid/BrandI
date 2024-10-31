@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1045EFA22CD2031200992620 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 1045EFA12CD2031200992620 /* SDWebImageSwiftUI */; };
 		B897CFE42CA93D62002CC428 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = B897CFE32CA93D62002CC428 /* FirebaseAnalytics */; };
 		B897CFE62CA93D62002CC428 /* FirebaseAppCheck in Frameworks */ = {isa = PBXBuildFile; productRef = B897CFE52CA93D62002CC428 /* FirebaseAppCheck */; };
 		B897CFE82CA93D62002CC428 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = B897CFE72CA93D62002CC428 /* FirebaseAuth */; };
@@ -102,6 +103,7 @@
 				B8CBA3782CBBAF5500288719 /* Alamofire in Frameworks */,
 				B897CFEE2CA93D62002CC428 /* FirebaseFunctions in Frameworks */,
 				B897CFF02CA93D62002CC428 /* FirebaseStorage in Frameworks */,
+				1045EFA22CD2031200992620 /* SDWebImageSwiftUI in Frameworks */,
 				B897CFEC2CA93D62002CC428 /* FirebaseFirestore in Frameworks */,
 				B897CFE42CA93D62002CC428 /* FirebaseAnalytics in Frameworks */,
 			);
@@ -174,6 +176,7 @@
 				B8CBA3242CAE7BF300288719 /* GoogleSignIn */,
 				B8CBA3262CAE7BF300288719 /* GoogleSignInSwift */,
 				B8CBA3772CBBAF5500288719 /* Alamofire */,
+				1045EFA12CD2031200992620 /* SDWebImageSwiftUI */,
 			);
 			productName = Challange1;
 			productReference = B897CFA92CA92E60002CC428 /* Challange1.app */;
@@ -261,6 +264,7 @@
 				B897CFE22CA93D62002CC428 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				B8CBA3232CAE7BF300288719 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 				B8CBA3762CBBAF5500288719 /* XCRemoteSwiftPackageReference "Alamofire" */,
+				1045EFA02CD2031200992620 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B897CFAA2CA92E60002CC428 /* Products */;
@@ -633,6 +637,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1045EFA02CD2031200992620 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.2;
+			};
+		};
 		B897CFE22CA93D62002CC428 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
@@ -660,6 +672,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1045EFA12CD2031200992620 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1045EFA02CD2031200992620 /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
 		B897CFE32CA93D62002CC428 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = B897CFE22CA93D62002CC428 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
