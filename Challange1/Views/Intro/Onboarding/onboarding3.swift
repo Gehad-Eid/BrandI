@@ -35,7 +35,7 @@ struct onboarding3: View {
                 AnimatedImage(name: "Siri 2.gif")
                     .resizable()
                     .frame(width: 142 , height: 255 )
-                    .padding(.bottom,90)
+                    .padding(.top,10)
                    
                 
                 
@@ -43,9 +43,10 @@ struct onboarding3: View {
                     .fontWeight(.regular)
                     .multilineTextAlignment(.center)
                     .font(.title3)
+                    .padding(.top,50)
                    
             }
-        }
+        } .edgesIgnoringSafeArea(.all)
         
             
     }

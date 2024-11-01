@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import SDWebImageSwiftUI
 struct Splash: View {
     
     @Binding var isFirstTimeUser: Bool
@@ -18,19 +18,10 @@ struct Splash: View {
     var body: some View {
         VStack {
             //TODO: add app icon
-            Image("Icon")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .opacity(isVisible ? 1 : 0) // Set opacity based on visibility
-                .animation(.easeIn(duration: 1), value: isVisible) // Animate the opacity
-            
-            //TODO: add app name
-            Text("AppName")
-                .bold()
-                .opacity(isVisible ? 1 : 0) // Set opacity based on visibility
-                .animation(.easeIn(duration: 1).delay(0.5), value: isVisible) // Animate with a delay
-        }
-        .padding()
+            AnimatedImage(name: "Spladh screen1.gif")
+             
+        }.ignoresSafeArea()
+     
         .onAppear {
             // Trigger the animation when the view appears
             withAnimation {

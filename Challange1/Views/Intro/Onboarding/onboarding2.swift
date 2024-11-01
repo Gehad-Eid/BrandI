@@ -12,6 +12,13 @@ struct onboarding2: View {
    
     var body: some View {
         ZStack{
+            LinearGradient(
+                colors: [Color.white, Color.babyBlue.opacity(0.7)],
+                startPoint: .trailing,
+                endPoint: .init(x:0, y: 0)
+            )
+            .edgesIgnoringSafeArea(.all)
+            
             Image("Vector 318")
                 .resizable()
                 .frame(width: 30 , height: 30 )
@@ -39,7 +46,7 @@ struct onboarding2: View {
                     .lineLimit(2)
                    
             }
-        }
+        } .edgesIgnoringSafeArea(.all)
             
     }
 }

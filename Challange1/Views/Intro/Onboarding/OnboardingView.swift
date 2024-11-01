@@ -7,13 +7,14 @@
 
 import SwiftUI
 
+
 struct OnboardingView: View {
     @State private var currentPage = 0
-    
     @Binding var isFirstTimeUser: Bool
-
+    
     var body: some View {
         VStack {
+            // Onboarding TabView
             TabView(selection: $currentPage) {
                 onboarding1()
                     .tag(0)
@@ -22,28 +23,40 @@ struct OnboardingView: View {
                 onboarding3()
                     .tag(2)
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .always)) // Swipeable pages with page indicators
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)) // Hide default indicator
             .animation(.easeInOut, value: currentPage)
-
-            // Button to move to the main content after the last page
+            .edgesIgnoringSafeArea(.all)
+            
+            // Custom Progress Indicator
+            HStack(spacing: 8) {
+                ForEach(0..<3) { index in
+                    Circle()
+                        .frame(width: 8, height: 8)
+                        .foregroundColor(currentPage == index ? .babyBlue : .gray)
+                        .scaleEffect(currentPage == index ? 1.2 : 1.0)
+                        .animation(.easeInOut, value: currentPage)
+                }
+            }
+            .padding(.bottom, 20)
+            
+            // Button to navigate to main content or next page
             Button(action: {
                 if currentPage == 2 {
-//                    isOnboardingCompleted = true
                     completeOnboarding()
                 } else {
                     currentPage += 1
                 }
             }) {
-                Text(currentPage == 2 ? "Get Started" : "   ")
+                Text(currentPage == 2 ? "Get Started" : "Next")
                     .bold()
                     .padding()
                     .foregroundColor(.white)
                     .background(currentPage == 2 ? Color.blue : Color.clear)
                     .cornerRadius(10)
             }
-            .padding(.top, 20)
+            .padding(.bottom, 20)
         }
-        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     
     private func completeOnboarding() {
@@ -52,7 +65,7 @@ struct OnboardingView: View {
     }
 }
 
-// A parent view for preview purposes
+// Preview setup
 struct OnboardingViewWrapper: View {
     @State private var isFirstTimeUser = false
     
@@ -64,5 +77,3 @@ struct OnboardingViewWrapper: View {
 #Preview {
     OnboardingViewWrapper()
 }
-
-

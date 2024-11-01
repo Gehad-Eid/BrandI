@@ -87,8 +87,8 @@ struct SignUp: View {
             
             // Apple and Gmail Sign In Buttons
             HStack(spacing: 16) {
-                CustomSocialButton(icon: "applelogo" )
-                CustomSocialButton(icon: "envelope.fill")
+                CustomSocialButton(icon: "Apple" )
+                CustomSocialButton(icon: "Google")
             }
             HStack {
                 Text("Already have an account? ")
@@ -163,8 +163,12 @@ struct CustomSocialButton: View {
             // Social button action
         }) {
             HStack {
-                Image(systemName: icon)
-                    .foregroundColor(.black)
+                Image(icon)
+                    .resizable()
+                    .frame(width: 30,height:30)
+                   
+                    
+                    
                 
             }
             .frame(width: 130, height: 25)

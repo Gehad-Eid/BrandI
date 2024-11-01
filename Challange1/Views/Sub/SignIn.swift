@@ -71,8 +71,8 @@ struct SignIn: View {
             
             // Apple and Gmail Sign In Buttons
             HStack(spacing: 16) {
-                CustomSocialButton(icon: "applelogo" )
-                CustomSocialButton(icon: "envelope.fill")
+                CustomSocialButton(icon: "Apple" )
+                CustomSocialButton(icon: "Google")
             }
             HStack {
                 Text("Don’t have an account? ")

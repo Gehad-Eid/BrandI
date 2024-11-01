@@ -13,11 +13,17 @@ struct onboarding1: View {
     var body: some View {
        
         ZStack{
+            LinearGradient(
+                colors: [Color.white, Color.babyBlue.opacity(0.7)],
+                startPoint: .trailing,
+                endPoint: .init(x:0, y: 0)
+            )
+            .edgesIgnoringSafeArea(.all)
             Image("Vector 318")
                 .resizable()
                 .frame(width: 40 , height: 40 )
                 .padding(.leading,270)
-                .padding(.top,190)
+                .padding(.top,400)
             Image("Vector 318")
                 .resizable()
                 .frame(width: 35 , height: 35)
@@ -28,8 +34,9 @@ struct onboarding1: View {
             VStack(alignment: .center){
                 AnimatedImage(name:"AI.gif")
                     .resizable()
-                    .frame(width: 300 , height: 264 )
-                    .padding(.bottom,90)
+                    .frame(width: 250 , height: 200 )
+                    .padding(.bottom,60)
+                    .padding(.trailing,50)
                    
                 
                 
@@ -40,7 +47,7 @@ struct onboarding1: View {
                     .lineLimit(3)
                    
             }
-        }
+        } .edgesIgnoringSafeArea(.all)
         
             
         
