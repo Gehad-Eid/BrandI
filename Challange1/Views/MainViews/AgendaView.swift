@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
-
+import _AppIntents_SwiftUI
 struct AgendaView: View {
     @State private var isButtonOn = true
     @State private var showingAddPostView = false
-    
+    @State private var tipIsShown = true
     @StateObject var vm = AgendaViewModel()
     
     var body: some View {
@@ -40,7 +40,10 @@ struct AgendaView: View {
                             CreatePostView(post: nil)
                         }
                     }
-                    
+                    SiriTipView(
+                        intent: AddNoteIntent(),
+                        isVisible: $tipIsShown
+                    )
                     AppBar(EventsCount: vm.thisMonthEvents?.count, PostsCount: vm.thisMonthPosts?.count, DraftsCount: vm.thisMonthDraftPosts?.count)
                         .padding(.top, -15)
                     
