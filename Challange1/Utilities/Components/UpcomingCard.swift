@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UpcomingCard: View {
     let item: Any
-    @ObservedObject var vm: AgendaViewModel  // For extracting details
+    @ObservedObject var vm: AgendaViewModel 
 
     var body: some View {
         let post = item as? Post
@@ -31,7 +31,7 @@ struct UpcomingCard: View {
                 
                 VStack(alignment: .leading) {
                     Text(vm.getTitle(for: item))
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color("Text"))
                         .font(.system(size: 18))
                         .fontWeight(.semibold)
                     
