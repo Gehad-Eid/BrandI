@@ -12,7 +12,7 @@ struct AgendaView: View {
     @State private var showingAddPostView = false
     
     @StateObject var vm = AgendaViewModel()
-        
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -24,33 +24,21 @@ struct AgendaView: View {
                             .font(.system(size: 40, weight: .bold))
                         Spacer()
                         
-                        // NavigationLink for button click
                         Button(action: {
                             showingAddPostView.toggle()
                         }) {
                             Text("+")
                                 .font(.system(size: 20, weight: .regular))
-                                .foregroundColor(.white)
+                                .foregroundColor(Color("Background"))
                                 .frame(width: 30, height: 30)
                                 .background(Color("BabyBlue"))
                                 .cornerRadius(6.0)
-                                .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 4) // Add shadow
-                                .multilineTextAlignment(.center) // Center the text
+                                .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 4)
+                                .multilineTextAlignment(.center)
                         }
                         .sheet(isPresented: $showingAddPostView) {
                             CreatePostView(post: nil)
                         }
-//                        NavigationLink(destination: CreatePostView()) {
-//                            Text("+")
-//                                .font(.system(size: 20, weight: .regular))
-//                                .foregroundColor(.white)
-//                                .frame(width: 30, height: 30)
-//                                .background(Color("BabyBlue"))
-//                                .cornerRadius(6.0)
-//                                .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 4) // Add shadow
-//                                .multilineTextAlignment(.center) // Center the text
-//                        }
-                        
                     }
                     
                     AppBar(EventsCount: vm.thisMonthEvents?.count, PostsCount: vm.thisMonthPosts?.count, DraftsCount: vm.thisMonthDraftPosts?.count)
@@ -58,7 +46,7 @@ struct AgendaView: View {
                     
                     UpcomingSection(vm: vm)
                         .padding(.top, 10)
-                  
+                    
                     CardViewSection(vm: vm)
                         .padding(.top, 5)
                 }
@@ -72,7 +60,7 @@ struct AgendaView: View {
                     try await vm.loadEvents(userId: userID)
                     try await vm.loadMonthPostsAndEvents(userId: userID)
                     try await vm.loadRecentPosts(userId: userID)
-
+                    
                     vm.loadDraftPosts()
                     vm.loadUpcomingPostsAndEvents()
                 } else {

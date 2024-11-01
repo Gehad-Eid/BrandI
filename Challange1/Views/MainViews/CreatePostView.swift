@@ -111,10 +111,16 @@ struct CreatePostView: View {
                 isEditingEnabled = false
                 selectedTab = "Add Post"
                 
+                Task {
+                    // get the url to uiImage
+                    if let userID = UserDefaults.standard.string(forKey: "userID") {
+                        try await vm.getImageToUIImage(userId: userID, images: post?.images ?? [])
+                    }
+                }
+                
+                vm.imageDataList = post?.images ?? []
                 vm.title = post?.title ?? ""
                 vm.postContent = post?.content ?? ""
-                //TODO: make it from data
-//                vm.imageList = post?.images as! [UIImage]
                 vm.selectedDate = post?.date ?? Date()
                 vm.selectedPlatforms = post?.platforms ?? []
             }
@@ -201,6 +207,7 @@ struct CreatePostView: View {
         }
     }
     
+    // MARK: Add Post Section
     private var addPostSection: some View {
         VStack(alignment: .leading) {
             VStack {
@@ -212,7 +219,7 @@ struct CreatePostView: View {
             .cornerRadius(15)
             
             // Photo selection section
-            PhotoView(selectedImages: $vm.imageList, isEditingEnabled: $isEditingEnabled)
+            PhotoView(selectedUIImagesAndNames: $vm.imageList, selectedImages: $vm.imageDataList, isEditingEnabled: $isEditingEnabled)
             
             // Date selection section
             SelecteDateView(selectedDate: $vm.selectedDate, isEditingEnabled: $isEditingEnabled)
@@ -247,6 +254,7 @@ struct CreatePostView: View {
         .padding()
     }
     
+    // MARK: Add Event Section
     private var addEventSection: some View {
         VStack(alignment: .leading) {
             VStack {
@@ -271,26 +279,3 @@ struct CreatePostView: View {
 #Preview {
     CreatePostView(post: Post(postId: "1", title: "Ppo title", content: "content her babe", date: Date(), images: [], platforms: [.linkedin, .twitter], recommendation: "", isDraft: false))
 }
-
-//VStack {
-//TextField("Title", text: $vm.postTitle)
-//    .padding(.horizontal)
-//    
-//    .background(Color.clear)
-//    .font(.title2)
-//    .disabled(!isEditingEnabled)
-//    .onChange(of: vm.postTitle) { newValue in
-//        if vm.postTitle.count > 20 {
-//            vm.postTitle = String(vm.postTitle.prefix(20))
-//        }
-//    }
-//                    
-//HStack {
-//    Spacer()
-//    Text("\(vm.postTitle.count)/20")
-//        .font(.caption)
-//        .foregroundColor(.gray)
-//        .padding(.trailing)
-//}
-//}
-//

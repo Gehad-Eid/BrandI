@@ -14,7 +14,7 @@ struct ReusableCardView: View {
     var description: String
     var destination: AnyView
 
-    @Environment(\.colorScheme) var colorScheme // Get the color scheme
+    @Environment(\.colorScheme) var colorScheme 
 
     var body: some View {
         NavigationLink(destination: destination) {
@@ -22,12 +22,11 @@ struct ReusableCardView: View {
                 // Title & Platforms
                 HStack {
                     Text(title)
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color("Text"))
                         .fontWeight(.semibold)
                         .padding()
                     Spacer()
                     HStack {
-                        // Display the first three platform icons based on color scheme
                         ForEach(platforms.prefix(3), id: \.self) { platform in
                             Image(platform.iconName(for: colorScheme))
                                 .resizable()
@@ -37,7 +36,8 @@ struct ReusableCardView: View {
                     .padding()
                 }
                 .frame(width: 330, height: 50)
-                .background(Color.white)
+//                .background(Color.white)
+                .background(Color("BoxColor"))
                 .clipShape(TopCornersRoundedRectangle(radius: 18))
                 .shadow(color: Color.black, radius: 1, x: 0.4, y: 0.4)
 
@@ -64,6 +64,6 @@ struct ReusableCardView: View {
 
 #Preview {
     NavigationStack {
-        ReusableCardView(title: "plaplapla", platforms: [], description: "", destination: AnyView(Text("dfghj")))
+        ReusableCardView(title: "plapladfghjkjhnbgvfcdfvgbhjkjhbgvfcpla", platforms: [.instagram,.linkedin, .tiktok, .twitter], description: "", destination: AnyView(Text("dfghj")))
     }
 }
