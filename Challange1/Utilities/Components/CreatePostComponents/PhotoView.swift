@@ -12,7 +12,7 @@ struct PhotoView: View {
     @State private var isShowingPhotoPicker = false
     @Binding var selectedUIImagesAndNames: [(image: UIImage, name: String)]
     @Binding var selectedImages: [ImageData]
-
+    
     
     @Binding var isEditingEnabled: Bool
     
@@ -21,7 +21,8 @@ struct PhotoView: View {
             if selectedUIImagesAndNames.isEmpty , isEditingEnabled {
                 // Show "Add Photo" button when no images are selected
                 Button(action: {
-                    isShowingPhotoPicker = true
+//                    isShowingPhotoPicker = true
+                    checkPhotoLibraryPermission()
                 }) {
                     HStack {
                         Image(systemName: "photo.on.rectangle")
@@ -36,8 +37,8 @@ struct PhotoView: View {
                 // Show selected images in HStack
                 ScrollView(.horizontal) {
                     HStack(spacing: 10) {
-                        ForEach(selectedImages.indices, id: \.self) { index in
-                            if !isEditingEnabled {
+                        if !isEditingEnabled {
+                            ForEach(selectedImages.indices, id: \.self) { index in
                                 AsyncImage(url: URL(string: selectedImages[index].imageUrl)){ image in
                                     image
                                         .resizable()
@@ -52,7 +53,9 @@ struct PhotoView: View {
                                         .cornerRadius(8)
                                 }
                             }
-                            else {
+                        }
+                        else {
+                            ForEach(selectedUIImagesAndNames.indices, id: \.self) { index in
                                 //TODO: improve that + add delete
                                 Image(uiImage: selectedUIImagesAndNames[index].image)
                                     .resizable()
@@ -66,7 +69,8 @@ struct PhotoView: View {
                         if isEditingEnabled {
                             // Plus button to add more photos
                             Button(action: {
-                                isShowingPhotoPicker = true
+//                                isShowingPhotoPicker = true
+                                checkPhotoLibraryPermission()
                             }) {
                                 Image(systemName: "plus")
                                     .foregroundColor(Color.white)
@@ -85,16 +89,38 @@ struct PhotoView: View {
             PhotoPicker(selectedUIImagesAndNames: $selectedUIImagesAndNames)
         }
     }
+    
+    func checkPhotoLibraryPermission() {
+        let status = PHPhotoLibrary.authorizationStatus()
+        switch status {
+        case .authorized:
+            // Permission granted, show the picker
+            isShowingPhotoPicker = true
+        case .denied, .restricted:
+            print("User has denied or restricted access to photos.")
+        case .notDetermined:
+            // Request permission if it hasn't been determined yet
+            PHPhotoLibrary.requestAuthorization { newStatus in
+                if newStatus == .authorized {
+                    DispatchQueue.main.async {
+                        isShowingPhotoPicker = true
+                    }
+                }
+            }
+        default:
+            print("Unknown authorization status.")
+        }
+    }
 }
 
-// Custom PHPickerViewController for selecting images
+
 struct PhotoPicker: UIViewControllerRepresentable {
     @Binding var selectedUIImagesAndNames: [(image: UIImage, name: String)]
     
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration()
-        config.filter = .images // Only show images
-        config.selectionLimit = 0 // Allow multiple selections
+        config.filter = .images
+        config.selectionLimit = 0
         
         let picker = PHPickerViewController(configuration: config)
         picker.delegate = context.coordinator
@@ -116,7 +142,6 @@ struct PhotoPicker: UIViewControllerRepresentable {
         
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             picker.dismiss(animated: true)
-            
             for result in results {
                 if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
                     result.itemProvider.loadObject(ofClass: UIImage.self) { image, error in
@@ -131,17 +156,72 @@ struct PhotoPicker: UIViewControllerRepresentable {
             }
         }
     }
+}
 
+// Custom PHPickerViewController for selecting images
+//struct PhotoPicker: UIViewControllerRepresentable {
+//    @Binding var selectedUIImagesAndNames: [(image: UIImage, name: String)]
+//
+//    func makeUIViewController(context: Context) -> PHPickerViewController {
+//        var config = PHPickerConfiguration()
+//        config.filter = .images // Only show images
+//        config.selectionLimit = 0 // Allow multiple selections
+//
+//        let picker = PHPickerViewController(configuration: config)
+//        picker.delegate = context.coordinator
+//        return picker
+//    }
+//
+//    func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
+//
+//    func makeCoordinator() -> Coordinator {
+//        return Coordinator(self)
+//    }
+//
 //    class Coordinator: NSObject, PHPickerViewControllerDelegate {
 //        var parent: PhotoPicker
-//        
+//
 //        init(_ parent: PhotoPicker) {
 //            self.parent = parent
 //        }
-//        
+//
 //        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
 //            picker.dismiss(animated: true)
-//            
+//
+//            for result in results {
+//                if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
+//                    result.itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+//                        if let uiImage = image as? UIImage {
+//                            DispatchQueue.main.async {
+//                                let filename = result.itemProvider.suggestedName ?? UUID().uuidString + ".jpeg"
+//                                self.parent.selectedUIImagesAndNames.append((image: uiImage, name: filename))
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+
+
+
+
+
+
+
+
+
+
+//    class Coordinator: NSObject, PHPickerViewControllerDelegate {
+//        var parent: PhotoPicker
+//
+//        init(_ parent: PhotoPicker) {
+//            self.parent = parent
+//        }
+//
+//        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+//            picker.dismiss(animated: true)
+//
 //            for result in results {
 //                if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
 //                    result.itemProvider.loadObject(ofClass: UIImage.self) { image, error in
@@ -155,9 +235,10 @@ struct PhotoPicker: UIViewControllerRepresentable {
 //            }
 //        }
 //    }
-}
+//}
 
 #Preview {
     PhotoView(selectedUIImagesAndNames: .constant([]), selectedImages: .constant([]), isEditingEnabled: .constant(false))
 }
+
 

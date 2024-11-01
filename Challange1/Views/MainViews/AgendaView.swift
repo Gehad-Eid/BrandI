@@ -18,42 +18,47 @@ struct AgendaView: View {
             ZStack {
                 Color("Background")
                     .ignoresSafeArea()
-                VStack(alignment: .leading) {
-                    HStack(alignment: .center) {
-                        Text("Agenda")
-                            .font(.system(size: 40, weight: .bold))
-                        Spacer()
+                
+                ScrollView { // ?
+                    VStack(alignment: .leading) {
+                        HStack(alignment: .center) {
+                            Text("Agenda")
+                                .font(.system(size: 40, weight: .bold))
+                            Spacer()
+                            
+                            Button(action: {
+                                showingAddPostView.toggle()
+                            }) {
+                                Text("+")
+                                    .font(.system(size: 20, weight: .regular))
+                                    .foregroundColor(Color("Background"))
+                                    .frame(width: 30, height: 30)
+                                    .background(Color("BabyBlue"))
+                                    .cornerRadius(6.0)
+                                    .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 4)
+                                    .multilineTextAlignment(.center)
+                            }
+                            .sheet(isPresented: $showingAddPostView) {
+                                CreatePostView(post: nil)
+                            }
+                        }
                         
-                        Button(action: {
-                            showingAddPostView.toggle()
-                        }) {
-                            Text("+")
-                                .font(.system(size: 20, weight: .regular))
-                                .foregroundColor(Color("Background"))
-                                .frame(width: 30, height: 30)
-                                .background(Color("BabyBlue"))
-                                .cornerRadius(6.0)
-                                .shadow(color: .gray.opacity(0.5), radius: 5, x: 0, y: 4)
-                                .multilineTextAlignment(.center)
-                        }
-                        .sheet(isPresented: $showingAddPostView) {
-                            CreatePostView(post: nil)
-                        }
+                        SiriTipView(
+                            intent: AddNoteIntent(),
+                            isVisible: $tipIsShown
+                        )
+                        
+                        AppBar(EventsCount: vm.thisMonthEvents?.count, PostsCount: vm.thisMonthPosts?.count, DraftsCount: vm.thisMonthDraftPosts?.count)
+                            .padding(.top, -15)
+                        
+                        UpcomingSection(vm: vm)
+                            .padding(.top, 10)
+                        
+                        CardViewSection(vm: vm)
+                            .padding(.top, 5)
                     }
-                    SiriTipView(
-                        intent: AddNoteIntent(),
-                        isVisible: $tipIsShown
-                    )
-                    AppBar(EventsCount: vm.thisMonthEvents?.count, PostsCount: vm.thisMonthPosts?.count, DraftsCount: vm.thisMonthDraftPosts?.count)
-                        .padding(.top, -15)
-                    
-                    UpcomingSection(vm: vm)
-                        .padding(.top, 10)
-                    
-                    CardViewSection(vm: vm)
-                        .padding(.top, 5)
+                    .padding(.horizontal, 20)
                 }
-                .padding(.horizontal, 20)
             }
         }
         .onAppear() {
