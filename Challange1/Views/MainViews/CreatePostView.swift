@@ -111,12 +111,25 @@ struct CreatePostView: View {
                 isEditingEnabled = false
                 selectedTab = "Add Post"
                 
-                vm.title = post?.title ?? ""
-                vm.postContent = post?.content ?? ""
-                //TODO: make it from data
-//                vm.imageList = post?.images as! [UIImage]
-                vm.selectedDate = post?.date ?? Date()
-                vm.selectedPlatforms = post?.platforms ?? []
+                Task {
+                    // get the url to uiImage
+                    if let userID = UserDefaults.standard.string(forKey: "userID") {
+                        print("start")
+                        try await vm.getImageToUIImage(userId: userID, images: post?.images ?? [])
+                        print("Done")
+                    }
+                }
+                    
+                    vm.title = post?.title ?? ""
+                    vm.postContent = post?.content ?? ""
+                    
+                    //TODO: make it from data
+//                                    vm.imageList = post?.images
+                    
+                    vm.selectedDate = post?.date ?? Date()
+                    vm.selectedPlatforms = post?.platforms ?? []
+                
+                
             }
             else if event != nil {
                 isEditingEnabled = false
@@ -201,6 +214,7 @@ struct CreatePostView: View {
         }
     }
     
+    // MARK: Add Post Section
     private var addPostSection: some View {
         VStack(alignment: .leading) {
             VStack {
@@ -212,7 +226,7 @@ struct CreatePostView: View {
             .cornerRadius(15)
             
             // Photo selection section
-            PhotoView(selectedImages: $vm.imageList, isEditingEnabled: $isEditingEnabled)
+            PhotoView(selectedUIImagesAndNames: $vm.imageList, selectedImages: $vm.imageDataList, isEditingEnabled: $isEditingEnabled)
             
             // Date selection section
             SelecteDateView(selectedDate: $vm.selectedDate, isEditingEnabled: $isEditingEnabled)

@@ -72,6 +72,7 @@ struct AgendaView: View {
                     try await vm.loadEvents(userId: userID)
                     try await vm.loadMonthPostsAndEvents(userId: userID)
                     try await vm.loadRecentPosts(userId: userID)
+                    
 
                     vm.loadDraftPosts()
                     vm.loadUpcomingPostsAndEvents()

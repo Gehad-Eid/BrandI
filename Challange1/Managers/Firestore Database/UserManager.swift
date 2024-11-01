@@ -58,53 +58,43 @@ extension UserManager {
         postCollection(userId: userId).document(postId)
     }
     
-    func addNewPost(userID: String, post: Post) async throws -> String{
+    func createPostIdAndDocument(userID: String) -> (docId: String, doc: DocumentReference) {
         let document = postCollection(userId: userID).document()
         let docId = document.documentID
-
+        
+        return (docId: docId, doc: document)
+    }
+    
+    func addNewPost(userID: String, post: Post, docInfo: (docId: String, doc: DocumentReference)) async throws -> String{
+        
         // Convert platforms to their raw string values
         let platformStrings = post.platforms?.map { $0.rawValue }
         
+        // Convert ImageData array to dictionary array
+        let imageDictionaries = post.images?.map { image in
+            return [
+                ImageData.CodingKeys.imageUrl.rawValue: image.imageUrl,
+                ImageData.CodingKeys.path.rawValue: image.path,
+                ImageData.CodingKeys.name.rawValue: image.name
+            ]
+        }
+        
         let data: [String:Any] = [
-            Post.CodingKeys.postId.rawValue : docId,
+            Post.CodingKeys.postId.rawValue : docInfo.docId,
             Post.CodingKeys.date.rawValue : post.date,
             Post.CodingKeys.title.rawValue : post.title,
             Post.CodingKeys.content.rawValue : post.content,
-            Post.CodingKeys.images.rawValue: post.images,
+            Post.CodingKeys.images.rawValue: imageDictionaries,
+            //Post.CodingKeys.imagesPaths.rawValue: post.imagesPaths,
             Post.CodingKeys.platforms.rawValue: platformStrings,
             Post.CodingKeys.recommendation.rawValue: post.recommendation,
             Post.CodingKeys.isDraft.rawValue: post.isDraft
         ]
         
-        try await document.setData(data, merge: false)
+        try await docInfo.doc.setData(data, merge: false)
         
-        return docId
+        return docInfo.docId
     }
-//        func addNewPost(userID: String, post: Post) async throws {
-//        var docId: String
-//        
-//        if post.postId.isEmpty {
-//            let document = postCollection(userId: userID).document()
-//            docId = document.documentID
-//        } else {
-//            docId = post.postId
-//        }
-//        // Convert platforms to their raw string values
-//        let platformStrings = post.platforms?.map { $0.rawValue }
-//        
-//        let data: [String:Any] = [
-//            Post.CodingKeys.postId.rawValue : docId,
-//            Post.CodingKeys.date.rawValue : post.date,
-//            Post.CodingKeys.title.rawValue : post.title,
-//            Post.CodingKeys.content.rawValue : post.content,
-//            Post.CodingKeys.images.rawValue: post.images,
-//            Post.CodingKeys.platforms.rawValue: platformStrings,
-//            Post.CodingKeys.recommendation.rawValue: post.recommendation,
-//            Post.CodingKeys.isDraft.rawValue: post.isDraft
-//        ]
-//        
-//        try await document.setData(data, merge: false)
-//    }
     
     func deletePost(userID: String, postID: String) async throws {
         try await postCollection(userId: userID).document(postID).delete()

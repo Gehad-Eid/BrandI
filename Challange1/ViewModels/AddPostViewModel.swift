@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import FirebaseFirestore
 
 @MainActor
 final class AddPostViewModel: ObservableObject {
@@ -16,7 +17,9 @@ final class AddPostViewModel: ObservableObject {
     @Published var selectedDate = Date()
     @Published var selectedPlatforms: [Platform] = []
     @Published var isDraft: Bool = false
-    @Published var imageList: [UIImage] = []
+//    @Published var imageList: [UIImage] = []
+    @Published var imageList: [(image: UIImage, name: String)] = []
+    @Published var imageDataList: [ImageData] = []
     
     @Published var startDate = Date()
     @Published var endDate = Date()
@@ -24,60 +27,94 @@ final class AddPostViewModel: ObservableObject {
     @Published var postId = ""
     @Published var eventId = ""
     
-    @Published var uploadedImagePaths: [(path: String, name: String)] = []
+    @Published var newDocInfo: (docId: String, doc: DocumentReference)?
+    @Published var uploadedImages: [ImageData] = []
+//    @Published var uploadedImagesURLs: [String] = []
+    
+    
     
     //Save image to firestore storage
     func saveImagesToFirebase() async throws {
-        var uploadedImages: [(path: String, name: String)] = []
+        var uploadedImages: [ImageData] = []
+//        var uploadedURLs: [String] = []
         
-        for image in imageList {
-            if let data = image.jpegData(compressionQuality: 0.8), let userID = UserDefaults.standard.string(forKey: "userID") {
-                do {
-                    let imageInfo = try await StorageManager.shared.saveImage(data: data, userId: userID)
-                    uploadedImages.append(imageInfo)
-                } catch {
-                    print("Error uploading image: \(error.localizedDescription)")
+        if let userID = UserDefaults.standard.string(forKey: "userID") {
+            // Creat a doc in firestore and save it's ID and doc refrance
+            let docInfo = UserManager.shared.createPostIdAndDocument(userID: userID)
+            
+            for (image, filename) in imageList {
+                if let data = image.jpegData(compressionQuality: 1){
+                    do {
+                        let imageInfo = try await StorageManager.shared.saveImage(data: data, name: filename, userId: userID, postId: docInfo.docId)
+                        
+                        let url = try await StorageManager.shared.getUrlForImage(path: imageInfo.path)
+                        
+                        let imageDataInfo = ImageData(imageUrl: url.absoluteString, path: imageInfo.path, name: imageInfo.name)
+                        
+                        uploadedImages.append(imageDataInfo)
+//                        uploadedURLs.append(url.absoluteString)
+                    } catch {
+                        print("Error uploading image: \(error.localizedDescription)")
+                    }
+                } else {
+                    print("Error converting UIImage to Data")
                 }
-            } else {
-                print("Error converting UIImage to Data")
             }
+            
+            self.newDocInfo = docInfo
         }
-        self.uploadedImagePaths = uploadedImages
+        self.uploadedImages = uploadedImages
+//        self.uploadedImagesURLs = uploadedURLs
     }
-    
-    //
-    
+        
     // Add New Post
     func addPost(userId: String) {
         Task {
+            // Save images in DB and save their URLs
             try await saveImagesToFirebase()
             
-            var imageNames: [String] {
-                uploadedImagePaths.map { $0.name }
+//            var imagePaths: [String] {
+//                uploadedImagePaths.map { $0.path }
+//            }
+            
+            guard let newDocInfo = newDocInfo else {
+                print("Error: newDocInfo is nil")
+                return
             }
             
-            let post = Post(postId: "", title: title, content: postContent, date: selectedDate, images: imageNames, platforms: selectedPlatforms, isDraft: isDraft)
+            let post = Post(postId: newDocInfo.docId,
+                            title: title,
+                            content: postContent,
+                            date: selectedDate,
+                            images: uploadedImages,
+//                            imagesPaths: imagePaths,
+                            platforms: selectedPlatforms,
+                            isDraft: isDraft
+            )
             
-            postId = try await UserManager.shared.addNewPost(userID: userId, post: post)
+            postId = try await UserManager.shared.addNewPost(userID: userId, post: post, docInfo: newDocInfo)
             print("postId in vm: \(postId)")
+            
         }
     }
     
     // Update a post
     func updatePost(userId: String, postId: String) {
         Task {
+            // Save images
             try await saveImagesToFirebase()
             
-            var imageNames: [String] {
-                uploadedImagePaths.map { $0.name }
-            }
+//            var imagesPaths: [String] {
+//                uploadedImagePaths.map { $0.name }
+//            }
             
             let updatedPost = Post(
                 postId: postId,
                 title: title,
                 content: postContent,
                 date: selectedDate,
-                images: imageNames,
+                images: uploadedImages,
+//                imagesPaths: imagesPaths,
                 platforms: selectedPlatforms,
                 isDraft: isDraft
             )
@@ -90,6 +127,60 @@ final class AddPostViewModel: ObservableObject {
             }
         }
     }
+    
+    // Get the images from URL to UIImage
+    private var inProgressImageURLs = Set<String>()
+
+    func getImageToUIImage(userId: String, images: [ImageData]) async throws {
+        var tempImageList: [(image: UIImage, name: String)] = []
+        
+        for imageData in images {
+            // Skip if this URL is already being downloaded
+            if inProgressImageURLs.contains(imageData.imageUrl) { continue }
+            
+            // Mark the URL as in progress
+            inProgressImageURLs.insert(imageData.imageUrl)
+            
+            // Download the image asynchronously
+            do {
+                if let image = try await downloadImage(userId: userId, imagePath: imageData, postId: postId) {
+                    tempImageList.append((image, imageData.name))
+                }
+            } catch {
+                print("Error downloading image: \(error)")
+            }
+            
+            // Remove from in progress set after download completes
+            inProgressImageURLs.remove(imageData.imageUrl)
+        }
+        
+        self.imageList = tempImageList
+    }
+
+    // Helper function to download an image
+    private func downloadImage(userId: String, imagePath: ImageData, postId: String) async throws -> UIImage? {
+        try await StorageManager.shared.getImage(userId: userId, postId: postId, path: imagePath.path)
+    }
+//    func getImageToUIImage(userId: String, images: [ImageData]) async throws {
+//        var tempImageList: [(image: UIImage, name: String)] = []
+//        
+//        for imageData in images {
+//            if let imageURL = URL(string: imageData.imageUrl) {
+//                let image = try await StorageManager.shared.getImage(userId: userId, postId: postId, path: imageData.name)
+//                tempImageList.append((image: image, name: imageData.name))
+//            }
+//        }
+//        self.imageList = tempImageList
+//    }
+//    func getImageToUIImage(userId: String, images: [ImageData]) async throws {
+////        if imageList
+////        if let imageURL = URL(string: path) {
+////            
+////            let imageData = try await StorageManager.shared.getImage(userId: "", postId: "", path: "")
+////        }
+//        var tempImageList: [(image: UIImage, name: String)] = []
+//        
+//    }
     
     // Add New Event
     func addEvent(userId: String) {

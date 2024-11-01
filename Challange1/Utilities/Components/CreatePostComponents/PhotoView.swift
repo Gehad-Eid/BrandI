@@ -10,13 +10,15 @@ import PhotosUI
 
 struct PhotoView: View {
     @State private var isShowingPhotoPicker = false
-    @Binding var selectedImages: [UIImage]
+    @Binding var selectedUIImagesAndNames: [(image: UIImage, name: String)]
+    @Binding var selectedImages: [ImageData]
+
     
     @Binding var isEditingEnabled: Bool
     
     var body: some View {
         VStack {
-            if selectedImages.isEmpty , isEditingEnabled {
+            if selectedUIImagesAndNames.isEmpty , isEditingEnabled {
                 // Show "Add Photo" button when no images are selected
                 Button(action: {
                     isShowingPhotoPicker = true
@@ -34,13 +36,15 @@ struct PhotoView: View {
                 // Show selected images in HStack
                 ScrollView(.horizontal) {
                     HStack(spacing: 10) {
-                        ForEach(selectedImages.indices, id: \.self) { index in
-                            Image(uiImage: selectedImages[index])
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 50, height: 50)
-                                .clipped()
-                                .cornerRadius(8)
+                        ForEach(selectedUIImagesAndNames.indices, id: \.self) { index in
+//                            if let urlString = selectedImages[index].image, URL(string: urlString){
+                            Image(uiImage: selectedUIImagesAndNames[index].image)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 50, height: 50)
+                                    .clipped()
+                                    .cornerRadius(8)
+//                            }
                         }
                         if isEditingEnabled {
                             // Plus button to add more photos
@@ -61,14 +65,14 @@ struct PhotoView: View {
             }
         }
         .sheet(isPresented: $isShowingPhotoPicker) {
-            PhotoPicker(selectedImages: $selectedImages)
+            PhotoPicker(selectedUIImagesAndNames: $selectedUIImagesAndNames)
         }
     }
 }
 
 // Custom PHPickerViewController for selecting images
 struct PhotoPicker: UIViewControllerRepresentable {
-    @Binding var selectedImages: [UIImage]
+    @Binding var selectedUIImagesAndNames: [(image: UIImage, name: String)]
     
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration()
@@ -101,7 +105,8 @@ struct PhotoPicker: UIViewControllerRepresentable {
                     result.itemProvider.loadObject(ofClass: UIImage.self) { image, error in
                         if let uiImage = image as? UIImage {
                             DispatchQueue.main.async {
-                                self.parent.selectedImages.append(uiImage)
+                                let filename = result.itemProvider.suggestedName ?? UUID().uuidString + ".jpeg"
+                                self.parent.selectedUIImagesAndNames.append((image: uiImage, name: filename))
                             }
                         }
                     }
@@ -109,9 +114,33 @@ struct PhotoPicker: UIViewControllerRepresentable {
             }
         }
     }
+
+//    class Coordinator: NSObject, PHPickerViewControllerDelegate {
+//        var parent: PhotoPicker
+//        
+//        init(_ parent: PhotoPicker) {
+//            self.parent = parent
+//        }
+//        
+//        func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+//            picker.dismiss(animated: true)
+//            
+//            for result in results {
+//                if result.itemProvider.canLoadObject(ofClass: UIImage.self) {
+//                    result.itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+//                        if let uiImage = image as? UIImage {
+//                            DispatchQueue.main.async {
+//                                self.parent.selectedImages.append(uiImage)
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
 }
 
 #Preview {
-    PhotoView(selectedImages: .constant([]), isEditingEnabled: .constant(false))
+    PhotoView(selectedUIImagesAndNames: .constant([]), selectedImages: .constant([]), isEditingEnabled: .constant(false))
 }
 
