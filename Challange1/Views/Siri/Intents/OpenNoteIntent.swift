@@ -17,7 +17,9 @@ struct OpenNoteIntent: AppIntent,OpenIntent {
     var target: NoteEntity
     func perform() async throws -> some IntentResult {
         try await SiriViewModel.shared.navigate(to:target.id)
-        return .result()
+        
+        // Add a confirmation dialog to end the loop
+                return .result(dialog: IntentDialog("Here is your post in the app."))
     }
     //to create the summary
     static var parameterSummary: some ParameterSummary {

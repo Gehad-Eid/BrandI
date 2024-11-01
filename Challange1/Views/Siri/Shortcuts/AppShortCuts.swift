@@ -25,13 +25,16 @@ struct AddNoteShortcuts: AppShortcutsProvider {
         
         AppShortcut(
             intent: OpenNoteIntent(),
-            phrases: ["Open my post in  \(.applicationName) ",
+            phrases: ["Open my \(.applicationName) posts",
                       "View my posts in \(.applicationName) ",
+                      "List my posts on \(.applicationName) ",
                       "Show me my posts in  \(.applicationName) ",
                      ],
             shortTitle: "Open post",
             systemImageName: "book"
         )
+    }
+}
         
         //
         /// `GetTrailInfo` allows people to quickly check the conditions on their favorite trails.
@@ -49,5 +52,5 @@ struct AddNoteShortcuts: AppShortcutsProvider {
         //            }
         //        ))
         
-    }
-}
+//    }
+//}

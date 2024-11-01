@@ -6,8 +6,6 @@
 //
 
 import Foundation
-
-import Foundation
 import AppIntents
 
 
@@ -29,7 +27,7 @@ struct NoteEntity: AppEntity {
     
     // Correctly initialize properties
     init(post: Post) {
-        self.id = post.id
+        self.id = post.postId
         self.content = post.content
         self.title = post.title
         
@@ -66,13 +64,12 @@ struct NoteQuery: EntityQuery {
 
 
 extension NoteQuery: EnumerableEntityQuery {
-
-        func allEntities() async throws -> [NoteEntity] {
-            await SiriViewModel.shared.storedNotes.map {
-                NoteEntity(post: $0)
-                
-            }
-        }
     
+    func allEntities() async throws -> [NoteEntity] {
+        await SiriViewModel.shared.storedNotes.map {
+            NoteEntity(post: $0)
+            
+        }
+    }
 }
 

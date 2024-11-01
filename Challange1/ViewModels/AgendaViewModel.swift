@@ -57,8 +57,6 @@ final class AgendaViewModel: ObservableObject {
         self.thisMonthPosts = thisMonthPosts
         self.thisMonthEvents = thisMonthEvents
         self.thisMonthDraftPosts = thisMonthDraftPosts
-        
-        print("thisMonthPosts::: \(thisMonthPosts)")
     }
     
     func loadPostById(userId: String, postId: String) async throws -> Post? {
@@ -70,14 +68,6 @@ final class AgendaViewModel: ObservableObject {
         let currentDate = Date()
         let threeDaysFromNow = Calendar.current.date(byAdding: .day, value: 3, to: currentDate)!
         let fiveDaysFromNow = Calendar.current.date(byAdding: .day, value: 5, to: currentDate)!
-        
-//        let rangeStart = Calendar.current.startOfDay(for: threeDaysFromNow)
-//        let rangeEnd = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: fiveDaysFromNow)!
-//        print("Range Start: \(rangeStart)")
-//        print("Range End: \(rangeEnd)")
-//        
-//        let startOfThreeDaysFromNow = Calendar.current.startOfDay(for: threeDaysFromNow)
-//        let endOfFiveDaysFromNow = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: fiveDaysFromNow)!
 
         // Filter upcoming posts
         var upcomingPosts: [Post] = []
@@ -210,3 +200,13 @@ extension AgendaViewModel {
 //        upcomingItems = filteredUpcomingPosts + filteredUpcomingEvents
 //        print("Upcoming Items: \(upcomingItems)")
 //    }
+
+
+
+//        let rangeStart = Calendar.current.startOfDay(for: threeDaysFromNow)
+//        let rangeEnd = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: fiveDaysFromNow)!
+//        print("Range Start: \(rangeStart)")
+//        print("Range End: \(rangeEnd)")
+//
+//        let startOfThreeDaysFromNow = Calendar.current.startOfDay(for: threeDaysFromNow)
+//        let endOfFiveDaysFromNow = Calendar.current.date(bySettingHour: 23, minute: 59, second: 59, of: fiveDaysFromNow)!

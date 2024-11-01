@@ -130,6 +130,4 @@ class SiriViewModel: ObservableObject, Sendable  {
             print("vm.addPost(userId: userID!) failed")
         }
     }
-    
-
 }

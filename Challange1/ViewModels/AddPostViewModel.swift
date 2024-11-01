@@ -161,26 +161,6 @@ final class AddPostViewModel: ObservableObject {
     private func downloadImage(userId: String, imagePath: ImageData, postId: String) async throws -> UIImage? {
         try await StorageManager.shared.getImage(userId: userId, postId: postId, path: imagePath.path)
     }
-//    func getImageToUIImage(userId: String, images: [ImageData]) async throws {
-//        var tempImageList: [(image: UIImage, name: String)] = []
-//        
-//        for imageData in images {
-//            if let imageURL = URL(string: imageData.imageUrl) {
-//                let image = try await StorageManager.shared.getImage(userId: userId, postId: postId, path: imageData.name)
-//                tempImageList.append((image: image, name: imageData.name))
-//            }
-//        }
-//        self.imageList = tempImageList
-//    }
-//    func getImageToUIImage(userId: String, images: [ImageData]) async throws {
-////        if imageList
-////        if let imageURL = URL(string: path) {
-////            
-////            let imageData = try await StorageManager.shared.getImage(userId: "", postId: "", path: "")
-////        }
-//        var tempImageList: [(image: UIImage, name: String)] = []
-//        
-//    }
     
     // Add New Event
     func addEvent(userId: String) {
@@ -210,3 +190,24 @@ final class AddPostViewModel: ObservableObject {
         }
     }
 }
+
+//    func getImageToUIImage(userId: String, images: [ImageData]) async throws {
+//        var tempImageList: [(image: UIImage, name: String)] = []
+//
+//        for imageData in images {
+//            if let imageURL = URL(string: imageData.imageUrl) {
+//                let image = try await StorageManager.shared.getImage(userId: userId, postId: postId, path: imageData.name)
+//                tempImageList.append((image: image, name: imageData.name))
+//            }
+//        }
+//        self.imageList = tempImageList
+//    }
+//    func getImageToUIImage(userId: String, images: [ImageData]) async throws {
+////        if imageList
+////        if let imageURL = URL(string: path) {
+////
+////            let imageData = try await StorageManager.shared.getImage(userId: "", postId: "", path: "")
+////        }
+//        var tempImageList: [(image: UIImage, name: String)] = []
+//
+//    }

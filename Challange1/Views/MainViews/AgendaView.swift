@@ -29,7 +29,7 @@ struct AgendaView: View {
                         }) {
                             Text("+")
                                 .font(.system(size: 20, weight: .regular))
-                                .foregroundColor(.white)
+                                .foregroundColor(Color("Background"))
                                 .frame(width: 30, height: 30)
                                 .background(Color("BabyBlue"))
                                 .cornerRadius(6.0)
