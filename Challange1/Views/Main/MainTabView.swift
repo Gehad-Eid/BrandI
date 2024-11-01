@@ -21,7 +21,7 @@ struct MainTabView: View {
                     Label("Agenda", systemImage: "house.fill")
                 }
             
-            CalendarView()
+            CalenderMainView()
                 .tabItem {
                     Label("Calendar", systemImage: "calendar")
                 }

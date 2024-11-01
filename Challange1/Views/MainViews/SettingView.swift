@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+import _AppIntents_SwiftUI
 struct SettingsView: View {
     
     @StateObject var vm = SettingsViewModel()
@@ -93,6 +93,11 @@ struct SettingsView: View {
                             .background(RoundedRectangle(cornerRadius: 18)
                                 .fill(Color.white))
                         }
+                        HStack(){
+                            ShortcutsLink()
+                        }.padding(.leading,60)
+                            .padding(.vertical,8)
+                       
                         
                         //                    .alert(isPresented: $showDeleteAlert) {
                         //                        Alert(
