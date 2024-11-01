@@ -13,7 +13,7 @@ struct OpenNoteIntent: AppIntent,OpenIntent {
     static var title: LocalizedStringResource = "Open Note with parameter"
     //the name showen in the parameter that user would like ro select
     @Parameter(title: "Notes")
-    //the entity it mean the options"my notes list "
+    //the entity it mean the options "my notes list"
     var target: NoteEntity
     func perform() async throws -> some IntentResult {
         try await SiriViewModel.shared.navigate(to:target.id)

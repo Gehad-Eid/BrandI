@@ -28,7 +28,6 @@ final class StorageManager {
         
         meta.contentType = "image/jpeg"
         let path = "\(name).jpeg"
-//        let returnedMetaData = try await userReference(userId: userId).child(path).putDataAsync(data, metadata: meta)
         let returnedMetaData = try await userPostReference(userId: userId, postId: postId).child(path).putDataAsync(data, metadata: meta)
         
         guard let returnedPath = returnedMetaData.path, let returnedName = returnedMetaData.name else {
@@ -39,8 +38,6 @@ final class StorageManager {
     }
     
     func getImage(userId: String, postId: String, path: String) async throws -> UIImage {
-        //let data = try await userReference(userId: userId).child(path).data(maxSize: 3 * 1024 * 1024)
-//        let data = try await userPostReference(userId: userId, postId: postId).child(path).data(maxSize: 3 * 1024 * 1024)
         let data = try await storage.child(path).data(maxSize: 10 * 1024 * 1024)
         
         guard let image = UIImage(data: data) else {

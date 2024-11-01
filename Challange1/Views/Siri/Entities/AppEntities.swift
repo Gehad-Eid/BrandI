@@ -40,7 +40,8 @@ struct NoteEntity: AppEntity {
 
 struct NoteQuery: EntityQuery {
     @MainActor
-    func entities(for identifiers: [NoteEntity.ID]) async throws -> [NoteEntity] {
+//    func entities(for identifiers: [NoteEntity.ID]) async throws -> [NoteEntity] {
+    func entities(for identifiers: [String]) async throws -> [NoteEntity] {
         let notes = try await withThrowingTaskGroup(of: Post?.self) { group in
             for id in identifiers {
                 group.addTask {

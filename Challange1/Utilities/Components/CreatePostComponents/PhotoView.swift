@@ -36,16 +36,33 @@ struct PhotoView: View {
                 // Show selected images in HStack
                 ScrollView(.horizontal) {
                     HStack(spacing: 10) {
-                        ForEach(selectedUIImagesAndNames.indices, id: \.self) { index in
-//                            if let urlString = selectedImages[index].image, URL(string: urlString){
-                            Image(uiImage: selectedUIImagesAndNames[index].image)
+                        ForEach(selectedImages.indices, id: \.self) { index in
+                            if !isEditingEnabled {
+                                AsyncImage(url: URL(string: selectedImages[index].imageUrl)){ image in
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 50, height: 50)
+                                        .clipped()
+                                        .cornerRadius(8)
+                                } placeholder: {
+                                    ProgressView()
+                                        .frame(width: 50, height: 50)
+                                        .clipped()
+                                        .cornerRadius(8)
+                                }
+                            }
+                            else {
+                                //TODO: improve that + add delete
+                                Image(uiImage: selectedUIImagesAndNames[index].image)
                                     .resizable()
                                     .scaledToFill()
                                     .frame(width: 50, height: 50)
                                     .clipped()
                                     .cornerRadius(8)
-//                            }
+                            }
                         }
+                        
                         if isEditingEnabled {
                             // Plus button to add more photos
                             Button(action: {

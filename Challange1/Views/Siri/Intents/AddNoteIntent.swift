@@ -16,7 +16,7 @@ struct NoteAddedView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Note Added")
+            Text("Post Added")
                 .font(.headline)
             Text("Title: \(post.title)")
                 .font(.subheadline)

@@ -24,31 +24,30 @@ struct AddNoteShortcuts: AppShortcutsProvider {
         )
         
         AppShortcut(
-                       intent: OpenNoteIntent(),
-                       phrases: ["Open my post in  \(.applicationName) ",
-                    "View my posts in \(.applicationName) ",
-                                 "Show me my posts in  \(.applicationName) ",
-                                
-                                ],
-                       shortTitle: "Open post",
-                       systemImageName: "book"
-                   )
+            intent: OpenNoteIntent(),
+            phrases: ["Open my post in  \(.applicationName) ",
+                      "View my posts in \(.applicationName) ",
+                      "Show me my posts in  \(.applicationName) ",
+                     ],
+            shortTitle: "Open post",
+            systemImageName: "book"
+        )
         
         //
         /// `GetTrailInfo` allows people to quickly check the conditions on their favorite trails.
-//        AppShortcut(intent: GetTrailInfo(), phrases: [
-//            "Get \(\.$post) conditions with \(.applicationName)",
-//            "Get conditions on \(\.$post) with \(.applicationName)"
-//        ],
-//        shortTitle: "Get Conditions",
-//        systemImageName: "cloud.rainbow.half",
-//        parameterPresentation: ParameterPresentation(
-//            for: \.$post,
-//            summary: Summary("Get \(\.$post) conditions"),
-//            optionsCollections: {
-//                OptionsCollection(NoteQuery(), title: "Favorite Trails", systemImageName: "cloud.rainbow.half")
-//            }
-//        ))
+        //        AppShortcut(intent: GetTrailInfo(), phrases: [
+        //            "Get \(\.$post) conditions with \(.applicationName)",
+        //            "Get conditions on \(\.$post) with \(.applicationName)"
+        //        ],
+        //        shortTitle: "Get Conditions",
+        //        systemImageName: "cloud.rainbow.half",
+        //        parameterPresentation: ParameterPresentation(
+        //            for: \.$post,
+        //            summary: Summary("Get \(\.$post) conditions"),
+        //            optionsCollections: {
+        //                OptionsCollection(NoteQuery(), title: "Favorite Trails", systemImageName: "cloud.rainbow.half")
+        //            }
+        //        ))
         
     }
 }

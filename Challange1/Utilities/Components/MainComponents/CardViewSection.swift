@@ -10,40 +10,7 @@ import SwiftUI
 struct CardViewSection: View {
     @ObservedObject var vm: AgendaViewModel
     @State private var selectedTab = 1
-    
-//    = [
-//        Post(
-//            postId: "1",
-//            title: "Coffee Poster ☕️",
-//            content: "☕✨ Happy Coffee Day! ✨☕ Today, we celebrate the brew that fuels our mornings...",
-//            date: Date(),
-//            images: ["coffeeImage"],
-//            platforms: [.instagram, .facebook, .linkedin],
-//            recommendation: "Keep up the caffeine content for more engagement!",
-//            isDraft: false
-//        ),
-//        Post(
-//            postId: "2",
-//            title: "Tea Poster 🍵",
-//            content: "🍵✨ Tea time is a moment to relax, unwind, and sip the calming flavors of your favorite brew...",
-//            date: Date(),
-//            images: ["teaImage"],
-//            platforms: [.twitter, .snapchat],
-//            recommendation: "Add an emoji or two for fun!",
-//            isDraft: false
-//        ),
-//        Post(
-//            postId: "3",
-//            title: "Juice Poster 🥤",
-//            content: "🥤✨ Freshly squeezed juice to brighten up your day and give you that boost of energy...",
-//            date: Date(),
-//            images: ["juiceImage"],
-//            platforms: [.tiktok, .instagram, .facebook],
-//            recommendation: "Highlight the health benefits more!",
-//            isDraft: false
-//        )
-//    ]
-    
+        
     var body: some View {
         VStack{
             HStack{
