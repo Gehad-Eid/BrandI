@@ -13,60 +13,48 @@ import SwiftUI
 
 struct NoteAddedView: View {
     let post: Post
-
+    
+    
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Post Added")
-                .font(.headline)
-            Text("Title: \(post.title)")
-                .font(.subheadline)
-            Text("Content: \(post.content)")
-                .font(.body)
-//            if let imageData = post.images, let uiImage = UIImage(data: imageData) {
-//                         Image(uiImage: uiImage)
-//                             .resizable()
-//                             .aspectRatio(contentMode: .fit)
-//                             .frame(height: 200)
-//                             .cornerRadius(10)
-//                     } else {
-//                         Text("No Image Available")
-//                             .font(.body)
-//                             .foregroundColor(.gray)
-//                     }
-            Spacer()
+      
+            VStack(spacing: 0) {
+                // Title & Platforms
+                HStack {
+                    Text(post.title)
+                        .foregroundStyle(Color("Text"))
+                        .fontWeight(.semibold)
+                        .padding()
+                    Spacer()
+                   
+                }
+                .frame(width: 330, height: 50)
+                              .background(Color.white)
+                .background(Color("BoxColor"))
+                .clipShape(TopCornersRoundedRectangle(radius: 18))
+              
+                
+                // Details
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text(post.content)
+                            .foregroundColor(Color.white)
+                            .padding(.top, 16)
+                            .padding(.leading, 16)
+                        Spacer()
+                    }
+                    Spacer()
+                }
+                .frame(width: 330, height: 180)
+                .background(Color("BabyBlue"))
+                .clipShape(BottomCornersRoundedRectangle(radius: 18))
+                
+            }.padding(.vertical, 16)
         }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(10)
-        .shadow(radius: 5)
-    }
+    
+            
+    
+    
 }
-//here with deafult siri view
-//struct AddNoteIntent: AppIntent {
-//    static let title: LocalizedStringResource = "Add a note with Siri"
-//
-//    @Parameter(title: "Note Title")
-//    var noteTitle: String
-//
-//    @Parameter(title: "Note Content")
-//    var noteContent: String
-//
-//    // This method will be triggered by Siri to add the note
-//    func perform() async throws -> some IntentResult & ProvidesDialog {
-//        // Create a MainViewModel instance
-//        let viewModel = MainViewModel()
-//
-//        // Create a new note with the provided title and content
-//        let newNote = Note(title: noteTitle, content: noteContent)
-//
-//        // Save the note using the viewModel
-//        viewModel.writeValuesToUserDefaults(note: newNote)
-//
-//        // Provide feedback to the user through Siri
-//        return .result(dialog: "Your post has been saved.")
-//    }
-//}
-
 //here with custom view
 
 struct AddNoteIntent: AppIntent {
@@ -91,7 +79,7 @@ struct AddNoteIntent: AppIntent {
         try await viewModel.writeValuesToUserDefaults(note: newNote)
 
         // Provide feedback to the user through Siri
-        let dialog = IntentDialog("Your note has been saved successfully.")
+        let dialog = IntentDialog("Your post has been saved successfully.")
 
         // Return a custom SwiftUI view showing the note
         let snippetView = NoteAddedView(post: newNote)

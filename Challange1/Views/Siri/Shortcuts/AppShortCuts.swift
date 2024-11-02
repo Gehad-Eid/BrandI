@@ -19,7 +19,7 @@ struct AddNoteShortcuts: AppShortcutsProvider {
                 "Start a new \(.applicationName) post",
                 "Write a new \(.applicationName) post"
             ],
-            shortTitle: "Add a note",
+            shortTitle: "Create a post",
             systemImageName: "pencil"
         )
         

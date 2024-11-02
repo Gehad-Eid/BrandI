@@ -10,16 +10,16 @@ import SwiftUI
 
 struct ReusableCardView: View {
     var title: String
-    var platforms: [Platform]
-    var description: String
-    var destination: AnyView
+      var platforms: [Platform]
+      var description: String
+      var destination: AnyView
 
-    @Environment(\.colorScheme) var colorScheme 
+      @Environment(\.colorScheme) var colorScheme
 
-    var body: some View {
-        NavigationLink(destination: destination) {
-            VStack(spacing: 0) {
-                // Title & Platforms
+      var body: some View {
+          NavigationLink(destination: destination) {
+              VStack(spacing: 0) {
+                  // Title & Platforms
                 HStack {
                     Text(title)
                         .foregroundStyle(Color("Text"))

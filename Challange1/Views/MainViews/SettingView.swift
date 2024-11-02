@@ -25,16 +25,24 @@ struct SettingsView: View {
                     
                     Section {
                         // TODO: pretty suer that should change to account at least !!
-                        settingsRow(iconName: "envelope", title: "Profile", destination: ChangeEmail(/*vm: vm*/))
+                        settingsRow(iconName: "envelope", title: "Profile", destination: ChangeEmail(/*vm: vm*/),
+                        isSystemImage: true)
                         
                         // TODO: pretty suer that should change !!
-                        settingsRow(iconName: "key.fill", title: "Change Password", destination: PasswordChangeView(vm: vm))
+                        settingsRow(iconName: "key.fill", title: "Change Password", destination: PasswordChangeView(vm: vm),
+                                    isSystemImage: true
+                        )
                         
                         // API Integration
-                        settingsRow(iconName: "link", title: "Integration", destination: ProfileView())
+                        settingsRow(iconName: "link", title: "Linked Accounts", destination: IntegrationView(),
+                                    isSystemImage: true)
                         
                         // Identity - AI
-                        settingsRow(iconName: "touchid", title: "My Identity", destination: BrandIdentityView())
+                        settingsRow(iconName: "light", title: "My Brand Identity",
+                                    destination: BrandIdentityView(),
+                                    
+                                    isSystemImage: false
+                        )
                         
                     }
                     
@@ -156,11 +164,20 @@ struct SettingsView: View {
 
 // Reusable Row for Settings Items
 @ViewBuilder
-private func settingsRow<Destination: View>(iconName: String, title: String, destination: Destination) -> some View {
+private func settingsRow<Destination: View>(iconName: String, title: String, destination: Destination,isSystemImage: Bool = true
+) -> some View {
     NavigationLink(destination: destination) {
         HStack {
-            Image(systemName: iconName)
-                .foregroundColor(.babyBlue)
+                  if isSystemImage {
+                      Image(systemName: iconName)
+                          .foregroundColor(.babyBlue)
+                  } else {
+                      Image(iconName)
+                          .resizable()
+                          .scaledToFit()
+                          .frame(width: 24, height: 24)
+                          .foregroundColor(.babyBlue)
+                  }
             Text(title)
                 .font(.system(size: 18, weight: .medium))
                 .padding(.leading, 10)

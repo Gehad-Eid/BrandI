@@ -14,11 +14,11 @@ struct IntegrationView: View {
                 .font(.title)
                 .foregroundColor(.primary)
             
-        } .padding(.top, -350)
+        } .padding(.top, -330)
             VStack(spacing: 16) {
                 
-                IntegrationViewCompnents(icon: Image("Intagram icon Dark"), labelText: "Instagram")
-                IntegrationViewCompnents(icon: Image("Tiktok icon Dark"), labelText: "TikTok")
+                IntegrationViewCompnents(icon: Image("Intagram icon Light"), labelText: "Instagram")
+                IntegrationViewCompnents(icon: Image("Tiktok icon Light"), labelText: "TikTok")
                 
             }
             .padding()
@@ -52,7 +52,7 @@ struct IntegrationViewCompnents: View {
             }) {
                 Text(isConnected ? "Disconnect" : "Connect")
                     .foregroundColor(isConnected ? .red : .gray)
-                    .padding(.vertical, 5)
+                    .padding(.vertical, 3)
                     .padding(.horizontal, 16)
                   
             }
