@@ -8,7 +8,7 @@
 
 import SwiftUI
 
-enum Platform: String, Codable, CaseIterable {
+enum Platform: String, Codable, Hashable, CaseIterable {
     case instagram = "Instagram"
     case twitter = "Twitter"
     case linkedin = "LinkedIn"

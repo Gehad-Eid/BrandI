@@ -5,9 +5,9 @@
 //  Created by sumaiya on 27/10/2567 BE.
 //
 
-import SwiftUI
-import PhotosUI
-import AppIntents
+//import SwiftUI
+//import PhotosUI
+//import AppIntents
 
 //
 //struct NoteView: View {

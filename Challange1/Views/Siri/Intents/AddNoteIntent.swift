@@ -11,7 +11,7 @@ import SwiftUI
 
 
 
-struct NoteAddedView: View {
+struct PostAddedView: View {
     let post: Post
 
     var body: some View {
@@ -22,17 +22,6 @@ struct NoteAddedView: View {
                 .font(.subheadline)
             Text("Content: \(post.content)")
                 .font(.body)
-//            if let imageData = post.images, let uiImage = UIImage(data: imageData) {
-//                         Image(uiImage: uiImage)
-//                             .resizable()
-//                             .aspectRatio(contentMode: .fit)
-//                             .frame(height: 200)
-//                             .cornerRadius(10)
-//                     } else {
-//                         Text("No Image Available")
-//                             .font(.body)
-//                             .foregroundColor(.gray)
-//                     }
             Spacer()
         }
         .padding()
@@ -69,14 +58,14 @@ struct NoteAddedView: View {
 
 //here with custom view
 
-struct AddNoteIntent: AppIntent {
-    static let title: LocalizedStringResource = "Add a note with Siri"
+struct AddPostIntent: AppIntent {
+    static let title: LocalizedStringResource = "Add a post with Siri"
     
-    @Parameter(title: "Note Title")
-    var noteTitle: String
+    @Parameter(title: "Post Title")
+    var postTitle: String
     
-    @Parameter(title: "Note Content")
-    var noteContent: String
+    @Parameter(title: "Post Content")
+    var postContent: String
     
     
 
@@ -85,16 +74,16 @@ struct AddNoteIntent: AppIntent {
         let viewModel = await SiriViewModel()
           
         // Create a new note with the provided title, content, and image data
-        let newNote = Post(postId:"",title: noteTitle, content: noteContent, date:Date(), images:nil, isDraft: true )
+        let newNote = Post(postId:"",title: postTitle, content: postContent, date:Date(), images:nil, isDraft: true )
 
         // Save the note using the viewModel
-        try await viewModel.writeValuesToUserDefaults(note: newNote)
+        try await viewModel.addPostToDB(note: newNote)
 
         // Provide feedback to the user through Siri
-        let dialog = IntentDialog("Your note has been saved successfully.")
+        let dialog = IntentDialog("Your post has been uploaded successfully.")
 
         // Return a custom SwiftUI view showing the note
-        let snippetView = NoteAddedView(post: newNote)
+        let snippetView = PostAddedView(post: newNote)
 
         return .result(dialog: dialog, view: snippetView)
     }
