@@ -76,9 +76,10 @@ class SiriViewModel: ObservableObject, Sendable  {
             DispatchQueue.main.async {
                 self.selectedPost = post
                 self.showPostDetail = true
-                print("Navigating to post with title: \(post.title)")
+                print("Navigating to post with title: \(post.title), \(post.content)")
             }
         }
+    }
 //        guard let userID = UserDefaults.standard.string(forKey: "userID") else { return }
 //        
         // to get the post by id
@@ -99,7 +100,7 @@ class SiriViewModel: ObservableObject, Sendable  {
 //                print("Navigating to note with title: \(note.title)")
 //            }
 //        }
-    }
+//    }
 
 
 

@@ -9,12 +9,11 @@
 import SwiftUI
 
 struct WeeklyScrollView: View {
-    @ObservedObject var calenerviewModel = CalenderViewModel()
+    @ObservedObject var calenerviewModel : CalenderViewModel
+    @ObservedObject var agendaViewModel: AgendaViewModel
 
     var body: some View {
         VStack {
-           
-           
             HStack {
                 Button(action: {
                     calenerviewModel.previousMonth()
@@ -40,13 +39,13 @@ struct WeeklyScrollView: View {
                             Text(calenerviewModel.dateToString(date: date, format: "E"))
                                 .font(.system(size: 14))
                                 .fontWeight(.semibold)
-                                .foregroundColor(.black)
+                                .foregroundColor(Color("Text"))
                             
                             // Date (e.g., 28)
                             Text(calenerviewModel.dateToString(date: date, format: "dd"))
                                 .font(.system(size: 14))
                                 .fontWeight(.bold)
-                                .foregroundColor(calenerviewModel.isToday(date: date) ? .white : .black)
+                                .foregroundColor(calenerviewModel.isToday(date: date) ? .white : Color("Text"))
                                 .padding(2)
                                 .background(
                                     ZStack {
@@ -66,29 +65,25 @@ struct WeeklyScrollView: View {
                         .onTapGesture {
                             withAnimation(.easeInOut) {
                                 calenerviewModel.currentDate = date
+                                agendaViewModel.getAllInDay(date: date)
                             }
                         }
                     }
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 10)
-                
-        
             }
+            
             Divider()
+            
             Text(self.calenerviewModel.currentDate.formatted(.dateTime.year().month(.wide).day().weekday(.wide)))
                 .font(.subheadline)
                 .fontWeight(.bold)
-                .foregroundColor(Color.black)
+                .foregroundColor(Color("Text"))
                 .padding(.horizontal)
+            
             Divider()
                 
         }
     }
-}
-
-
-
-#Preview {
-    WeeklyScrollView()
 }

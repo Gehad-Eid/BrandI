@@ -7,8 +7,6 @@
 
 
 import SwiftUI
-import GoogleSignIn
-import GoogleSignInSwift
 
 struct AuthContainerView: View {
     @State private var isSignUp: Bool = false
@@ -17,60 +15,33 @@ struct AuthContainerView: View {
     @StateObject private var vm = AuthContainerViewModel()
     
     var body: some View {
-        //        NavigationView {
-        VStack {
-            if isSignUp {
-                SignUpView(isAuthenticated: $isAuthenticated)
-            } else {
-                SignInView(isAuthenticated: $isAuthenticated)
-            }
+        
+        if isSignUp {
+            SignUpView(isAuthenticated: $isAuthenticated)
+        } else {
+            SignInView(isAuthenticated: $isAuthenticated)
+        }
+        
+        // Apple and Gmail Sign In Buttons
+        HStack(spacing: 16) {
+            CustomSocialButton(icon: "Apple", isAuthenticated: $isAuthenticated, vm: vm)
+            CustomSocialButton(icon: "Google", isAuthenticated: $isAuthenticated, vm: vm)
+        }
+        
+        // Toggle between sign In and Up
+        HStack {
+            Text(isSignUp ? "Already have an account?" : "Don't have an account?")
+                .foregroundColor(.gray)
             
-            // Toggle between sign In and Up
             Button(action: {
                 isSignUp.toggle()
             }) {
-                Text(isSignUp ? "Already have an account? Sign In" : "Don't have an account? Sign Up")
-                    .foregroundColor(.blue)
-                    .padding()
+                Text(isSignUp ? "Log in" : "Sign Up")
+                    .foregroundColor(Color("BabyBlue"))
+                
             }
-            
-            GoogleSignInButton(viewModel: GoogleSignInButtonViewModel(scheme: .dark, style: .wide, state: .normal)){
-                Task {
-                    do {
-                        try await vm.signInWithGoogle()
-                        isAuthenticated = true
-                    }
-                    catch {
-                        print (error)
-                    }
-                }
-            }
-            
-            // Sign in with apple
-            Button(action: {
-                Task {
-                    do {
-                        try await vm.signInWithApple()
-                        isAuthenticated = true
-                    }
-                    catch {
-                        print (error)
-                    }
-                }
-            }, label: {
-                SignInWithAppleButtonViewRepresentable(type: .signIn, style: .black)
-                    .allowsTightening(false)
-            })
-            .frame(height: 55)
-            
-            
-//            Spacer()
-            
-            
-        }
-        .padding()
+        }.padding(.top,10)
     }
-    //    }
 }
 
 #Preview {

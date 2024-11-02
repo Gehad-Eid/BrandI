@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 //Pop Up Views For deleting the Post and the Days Post
 struct GenericPopupView: View {
     var title: String

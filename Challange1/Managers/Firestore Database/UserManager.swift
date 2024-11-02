@@ -97,7 +97,9 @@ extension UserManager {
     }
     
     func deletePost(userID: String, postID: String) async throws {
+        print("start ppost")
         try await postCollection(userId: userID).document(postID).delete()
+        print("end post")
     }
     
     func getUserPosts(userID: String) async throws -> [Post] {

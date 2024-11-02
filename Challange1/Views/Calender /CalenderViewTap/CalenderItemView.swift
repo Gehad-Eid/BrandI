@@ -9,12 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct CalenderItemView: View {
-    @Bindable var task: Task1
-    @Environment(\.modelContext) private var context
+    @Environment(\.colorScheme) var colorScheme
     
-    var platformList: [String]
+    let item: Any
     
-    // State to control the swipe offset and delete popup
+    @ObservedObject var vm: AgendaViewModel
+    @ObservedObject var addPostVM: AddPostViewModel
+    
     @State private var offset: CGFloat = 0
     @State private var showDelete: Bool = false
     @State private var showDeletePopup = false
@@ -23,26 +24,13 @@ struct CalenderItemView: View {
         ZStack(alignment: .trailing) {
             // Background delete button
             if showDelete {
-                Button {
-                    showDeletePopup = true // Show delete confirmation popup
-                } label: {
-                    Label("", systemImage: "trash")
-                        .font(.system(size: 30))
-                        .foregroundColor(.white)
-                        .padding()
-                        .frame(height: 100)
-                        .frame(maxWidth: 180)
-                        .background(Color.red)
-                        .cornerRadius(12)
-                }
-                .padding(.trailing, 15)
-                .transition(.move(edge: .trailing))
+                DeleteButton
             }
             
             // Main content with swipe-to-delete functionality
             HStack(spacing: 10) {
                 VStack(alignment: .center) {
-                    Image(systemName: "document.fill")
+                    Image(systemName: vm.getImageName(for: item))
                         .foregroundStyle(Color.white)
                         .font(.system(size: 30))
                 }
@@ -53,21 +41,23 @@ struct CalenderItemView: View {
                     .foregroundColor(.gray)
                     .padding(.vertical)
                 
-                Text(task.title)
+                Text(vm.getTitle(for: item))
                     .font(.system(size: 18))
                     .fontWeight(.semibold)
                     .padding(.horizontal)
                 
                 Spacer()
                 
-                HStack {
-                    ForEach(platformList, id: \.self) { platform in
-                        Image(systemName: "document.fill")
-                            .foregroundStyle(Color.white)
-                            .font(.system(size: 20))
+                if let post = item as? Post {
+                    HStack {
+                        ForEach(post.platforms ?? [], id: \.self) { platform in
+                            Image(platform.iconName(for: colorScheme))
+                                .resizable()
+                                .frame(width: 20, height: 20)
+                        }
                     }
+                    .padding(.trailing)
                 }
-                .padding(.trailing)
             }
             .frame(width: 350, height: 100, alignment: .leading)
             .background(Color("BabyBlue"))
@@ -92,43 +82,72 @@ struct CalenderItemView: View {
                         }
                     }
             )
-         
             .frame(maxWidth: .infinity, maxHeight: 100, alignment: .leading)
             .shadow(color: Color.black.opacity(0.4), radius: 3, x: 2, y: 3)
-            .padding()
+            .padding(.horizontal)
             
             // Delete confirmation popup overlay
             if showDeletePopup {
-                
-                DetetPostPopupView(
-                    onDelete: {
-                        withAnimation {
-                            context.delete(task)
-                            showDeletePopup = false
-                        }
-                    },
-                    onCancel: {
-                        withAnimation {
-                            showDeletePopup = false
-                        }
-                    }
-                )
-                .background(Color.clear)
-                .zIndex(1)
-                .padding(.trailing,60)
+                DeleteAlert
             }
         }
     }
+    
+    private var DeleteAlert: some View {
+        DetetPostPopupView(
+            onDelete: {
+                withAnimation {
+                    if let userID = UserDefaults.standard.string(forKey: "userID") {
+                        if let post = item as? Post {
+                            Task {
+                                try await addPostVM.deletePost(userId: userID, postId: post.postId)
+                            }
+                            //context.delete(post)
+                        } else if let event = item as? Event {
+                            Task {
+//                                try await addPostVM.deletePost(userId: userID, postId: post.postId)
+                            }
+                            
+                            //context.delete(event)
+                        }
+                        
+                        showDeletePopup = false
+                    }
+                    else {
+                        print("userID not found")
+                    }
+                }
+            },
+            onCancel: {
+                withAnimation {
+                    showDeletePopup = false
+                }
+            }
+        )
+        .background(Color.clear)
+        .zIndex(1)
+        .padding(.trailing,60)
+    }
+    
+    
+    private var DeleteButton: some View {
+        Button {
+            showDeletePopup = true // Show delete confirmation popup
+        } label: {
+            Label("", systemImage: "trash")
+                .font(.system(size: 30))
+                .foregroundColor(.white)
+                .padding()
+                .frame(height: 100)
+                .frame(maxWidth: 180)
+                .background(Color.red)
+                .cornerRadius(12)
+        }
+        .padding(.trailing, 15)
+        .transition(.move(edge: .trailing))
+    }
 }
 
-
-
 #Preview {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: Task1.self, configurations: config)
-    
-    let task = Task1(title: "Example Task", date: Date(), isCompleted: false)
-
-    CalenderItemView(task: task, platformList: ["","",""])
-        .modelContainer(container)
+    CalenderItemView(item: Post(postId: "1", title: "Ppo title", content: "content her babe", date: Date(), images: [], platforms: [.linkedin, .twitter], recommendation: "", isDraft: false) , vm: AgendaViewModel(), addPostVM: AddPostViewModel())
 }

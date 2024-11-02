@@ -17,7 +17,6 @@ final class AddPostViewModel: ObservableObject {
     @Published var selectedDate = Date()
     @Published var selectedPlatforms: [Platform] = []
     @Published var isDraft: Bool = false
-//    @Published var imageList: [UIImage] = []
     @Published var imageList: [(image: UIImage, name: String)] = []
     @Published var imageDataList: [ImageData] = []
     
@@ -29,14 +28,12 @@ final class AddPostViewModel: ObservableObject {
     
     @Published var newDocInfo: (docId: String, doc: DocumentReference)?
     @Published var uploadedImages: [ImageData] = []
-//    @Published var uploadedImagesURLs: [String] = []
     
-    
+    private var inProgressImageURLs = Set<String>()
     
     //Save image to firestore storage
     func saveImagesToFirebase() async throws {
         var uploadedImages: [ImageData] = []
-//        var uploadedURLs: [String] = []
         
         if let userID = UserDefaults.standard.string(forKey: "userID") {
             // Creat a doc in firestore and save it's ID and doc refrance
@@ -52,7 +49,6 @@ final class AddPostViewModel: ObservableObject {
                         let imageDataInfo = ImageData(imageUrl: url.absoluteString, path: imageInfo.path, name: imageInfo.name)
                         
                         uploadedImages.append(imageDataInfo)
-//                        uploadedURLs.append(url.absoluteString)
                     } catch {
                         print("Error uploading image: \(error.localizedDescription)")
                     }
@@ -64,7 +60,6 @@ final class AddPostViewModel: ObservableObject {
             self.newDocInfo = docInfo
         }
         self.uploadedImages = uploadedImages
-//        self.uploadedImagesURLs = uploadedURLs
     }
         
     // Add New Post
@@ -72,10 +67,6 @@ final class AddPostViewModel: ObservableObject {
         Task {
             // Save images in DB and save their URLs
             try await saveImagesToFirebase()
-            
-//            var imagePaths: [String] {
-//                uploadedImagePaths.map { $0.path }
-//            }
             
             guard let newDocInfo = newDocInfo else {
                 print("Error: newDocInfo is nil")
@@ -87,7 +78,6 @@ final class AddPostViewModel: ObservableObject {
                             content: postContent,
                             date: selectedDate,
                             images: uploadedImages,
-//                            imagesPaths: imagePaths,
                             platforms: selectedPlatforms,
                             isDraft: isDraft
             )
@@ -95,7 +85,15 @@ final class AddPostViewModel: ObservableObject {
             postId = try await UserManager.shared.addNewPost(userID: userId, post: post, docInfo: newDocInfo)
             print("postId in vm: \(postId)")
             
+            try await AgendaViewModel().loadPosts(userId: userId)
         }
+    }
+    
+    func deletePost(userId: String, postId: String) async throws {
+        print("start")
+        try await StorageManager.shared.deleteImages(userId: userId, postId: postId)
+        try await UserManager.shared.deletePost(userID: userId, postID: postId)
+        print("end")
     }
     
     // Update a post
@@ -103,10 +101,6 @@ final class AddPostViewModel: ObservableObject {
         Task {
             // Save images
             try await saveImagesToFirebase()
-            
-//            var imagesPaths: [String] {
-//                uploadedImagePaths.map { $0.name }
-//            }
             
             let updatedPost = Post(
                 postId: postId,
@@ -122,15 +116,13 @@ final class AddPostViewModel: ObservableObject {
             do {
                 try await UserManager.shared.updatePost(userID: userId, post: updatedPost)
             } catch {
-                // Handle error (e.g., show an alert)
+                // TODO: Handle error
                 print("Failed to update post: \(error)")
             }
         }
     }
     
     // Get the images from URL to UIImage
-    private var inProgressImageURLs = Set<String>()
-
     func getImageToUIImage(userId: String, images: [ImageData]) async throws {
         var tempImageList: [(image: UIImage, name: String)] = []
         
@@ -190,24 +182,3 @@ final class AddPostViewModel: ObservableObject {
         }
     }
 }
-
-//    func getImageToUIImage(userId: String, images: [ImageData]) async throws {
-//        var tempImageList: [(image: UIImage, name: String)] = []
-//
-//        for imageData in images {
-//            if let imageURL = URL(string: imageData.imageUrl) {
-//                let image = try await StorageManager.shared.getImage(userId: userId, postId: postId, path: imageData.name)
-//                tempImageList.append((image: image, name: imageData.name))
-//            }
-//        }
-//        self.imageList = tempImageList
-//    }
-//    func getImageToUIImage(userId: String, images: [ImageData]) async throws {
-////        if imageList
-////        if let imageURL = URL(string: path) {
-////
-////            let imageData = try await StorageManager.shared.getImage(userId: "", postId: "", path: "")
-////        }
-//        var tempImageList: [(image: UIImage, name: String)] = []
-//
-//    }

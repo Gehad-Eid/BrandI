@@ -10,23 +10,24 @@ import SwiftUI
 import SwiftData
 
 struct CalenderMainView: View {
-    @StateObject var calenerviewModel = CalenderViewModel()
     @State var currentDate: Date = .init()
     @State private var showingAddPostView = false
+    
+    @StateObject var calenerviewModel = CalenderViewModel()
+    @StateObject var vm = AgendaViewModel()
+    @StateObject var addPostVM = AddPostViewModel()
 
     var body: some View {
         NavigationStack {
             ZStack {
                 VStack(alignment: .leading) {
-                    WeeklyScrollView(calenerviewModel: calenerviewModel)
+                    WeeklyScrollView(calenerviewModel: calenerviewModel, agendaViewModel: vm)
                         .frame(height: 89)
                         .padding(.top,40)
                    
                    
-                    CalenderListView(date: $calenerviewModel.currentDate)
-            
+                    CalenderListView(date: $calenerviewModel.currentDate, agendaViewModel: vm, addPostVM: addPostVM)
                     .scrollIndicators(.hidden)
-                    .padding(.top,40)
                     
                 }
                 .toolbar {
@@ -36,7 +37,7 @@ struct CalenderMainView: View {
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
                             Text(self.calenerviewModel.currentDate.formatted(.dateTime.year()))
-                                .foregroundColor(Color.black)
+                                .foregroundColor(Color("Text"))
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
                         }
@@ -57,14 +58,20 @@ struct CalenderMainView: View {
                     }
                 }
             }
-            .preferredColorScheme(.light)
         }
-    }
-}
-
-#Preview {
-    NavigationView {
-        CalenderMainView()
-            .modelContainer(for: Task1.self)
+        .onAppear() {
+            Task {
+                if let userID = UserDefaults.standard.string(forKey: "userID") {
+                    try await vm.loadPosts(userId: userID)
+                    try await vm.loadEvents(userId: userID)
+                    
+                    vm.getAll()
+                    vm.getAllInDay(date: calenerviewModel.currentDate)
+                        
+                } else {
+                    print("Failed to retrieve posts: userID not found")
+                }
+            }
+        }
     }
 }

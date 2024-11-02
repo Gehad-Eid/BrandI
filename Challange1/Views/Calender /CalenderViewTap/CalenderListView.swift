@@ -10,51 +10,22 @@ import SwiftUI
 import SwiftData
 
 struct CalenderListView: View {
-    
-    @State private var posts: [[String: Any]] = [
-        ["title": "Post Title 1", "imageName": "document.fill", "platformList": ["document.fill", "document.fill", "document.fill"]],
-        ["title": "Post Title 2", "imageName": "document.fill", "platformList": ["document.fill", "document.fill", "document.fill"]],
-        ["title": "Post Title 3", "imageName": "document.fill", "platformList": ["document.fill", "document.fill", "document.fill"]]
-    ]
-    
+
     @Binding var date: Date
-    @Query private var tasks: [Task1]
-    
-    init(date: Binding<Date>) {
-        self._date = date
-        
-        let calendar = Calendar.current
-        let startDate = calendar.startOfDay(for: date.wrappedValue)
-        let endOfDate = calendar.date(byAdding: .day, value: 1, to: startDate)!
-        let predicate = #Predicate<Task1> {
-            return $0.date >= startDate && $0.date < endOfDate
-        }
-        
-        let sortDescriptor = [
-            SortDescriptor(\Task1.date, order: .forward)
-        ]
-        self._tasks = Query(filter: predicate, sort: sortDescriptor, animation: .snappy)
-    }
+    @ObservedObject var agendaViewModel: AgendaViewModel
+    @ObservedObject var addPostVM: AddPostViewModel
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading ,spacing: 44) {
-                ForEach(tasks) { task in
-                    CalenderItemView(task: task,platformList: ["","",""])
-                        .background(alignment: .leading) {
-                            if tasks.last?.id != task.id {
-                               
-                            }
-                        }
+                ForEach(agendaViewModel.AllPostsAndEventsInDate?.indices ?? 0..<0, id: \.self) { index in
+                    CalenderItemView(item: agendaViewModel.AllPostsAndEventsInDate?[index], vm: agendaViewModel, addPostVM: addPostVM)
                 }
             }
             .padding(.top, 20)
-            .preferredColorScheme(.dark)
         }
+        .padding(.top,40)
     }
 }
 
-#Preview {
-    CalenderListView(date: .constant(Date()))
-        .modelContainer(for: Task1.self)
-}
+
