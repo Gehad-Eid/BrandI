@@ -92,11 +92,7 @@ struct CalenderItemView: View {
                         }
                     }
             )
-            .onTapGesture {
-                withAnimation(.snappy) {
-                    task.isCompleted.toggle()
-                }
-            }
+         
             .frame(maxWidth: .infinity, maxHeight: 100, alignment: .leading)
             .shadow(color: Color.black.opacity(0.4), radius: 3, x: 2, y: 3)
             .padding()

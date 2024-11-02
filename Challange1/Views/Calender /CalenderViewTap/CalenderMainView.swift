@@ -11,9 +11,9 @@ import SwiftData
 
 struct CalenderMainView: View {
     @StateObject var calenerviewModel = CalenderViewModel()
-    @State private var createNewTask: Bool = false
     @State var currentDate: Date = .init()
-        
+    @State private var showingAddPostView = false
+
     var body: some View {
         NavigationStack {
             ZStack {
@@ -44,16 +44,16 @@ struct CalenderMainView: View {
                     
                     ToolbarItem(placement: .topBarTrailing) {
                         Button(action: {
-                            createNewTask = true
+                        
+                            showingAddPostView.toggle()
                         }, label: {
                             Image(systemName: "plus")
-                                .foregroundColor(.primary)
+                                .foregroundColor(.babyBlue)
                         })
-                            .sheet(isPresented: $createNewTask) {
-                                CalenderSheetView()
-                                    .presentationDetents([.height(380)])
-                                    .presentationBackground(.thinMaterial)
+                            .sheet(isPresented: $showingAddPostView) {
+                                CreatePostView(post: nil)
                             }
+                                  
                     }
                 }
             }
