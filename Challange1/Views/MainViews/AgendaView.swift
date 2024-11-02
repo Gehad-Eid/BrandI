@@ -44,7 +44,7 @@ struct AgendaView: View {
                         }
                         
                         SiriTipView(
-                            intent: AddNoteIntent(),
+                            intent: AddPostIntent(),
                             isVisible: $tipIsShown
                         )
                         

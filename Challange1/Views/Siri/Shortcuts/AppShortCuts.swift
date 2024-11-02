@@ -13,7 +13,7 @@ struct AddNoteShortcuts: AppShortcutsProvider {
     static var appShortcuts: [AppShortcut] {
         AppShortcut(
             //the intent will be from App Intent that we will define -- whole the process
-            intent: AddNoteIntent(),
+            intent: AddPostIntent(),
             phrases: [
                 "Create a new \(.applicationName) post",
                 "Start a new \(.applicationName) post",
@@ -24,7 +24,7 @@ struct AddNoteShortcuts: AppShortcutsProvider {
         )
         
         AppShortcut(
-            intent: OpenNoteIntent(),
+            intent: OpenPostIntent(),
             phrases: ["Open my \(.applicationName) posts",
                       "View my posts in \(.applicationName) ",
                       "List my posts on \(.applicationName) ",

@@ -9,22 +9,23 @@ import Foundation
 import AppIntents
 
 
-struct OpenNoteIntent: AppIntent,OpenIntent {
-    static var title: LocalizedStringResource = "Open Note with parameter"
+struct OpenPostIntent: AppIntent, OpenIntent {
+    static var title: LocalizedStringResource = "Open Post with parameter"
     //the name showen in the parameter that user would like ro select
-    @Parameter(title: "Notes")
-    //the entity it mean the options "my notes list"
-    var target: NoteEntity
+    @Parameter(title: "Posts")
+    var target: PostEntity
+    
     func perform() async throws -> some IntentResult {
-        try await SiriViewModel.shared.navigate(to:target.id)
-        
-        // Add a confirmation dialog to end the loop
-                return .result(dialog: IntentDialog("Here is your post in the app."))
+        try await SiriViewModel.shared.navigate(to: target.id)
+        return .result()
+
+//        // Add a confirmation dialog to end the loop
+//                return .result(dialog: IntentDialog("Here is your post in the app."))
     }
+    
     //to create the summary
     static var parameterSummary: some ParameterSummary {
-        Summary("Open\(\.$target)")
-        
+        Summary("Open \(\.$target)")
     }
 }
 
