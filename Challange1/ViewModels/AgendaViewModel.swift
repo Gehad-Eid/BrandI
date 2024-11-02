@@ -14,6 +14,9 @@ final class AgendaViewModel: ObservableObject {
     @Published private(set) var events: [Event]? = nil
     @Published private(set) var draftPosts: [Post]? = nil
     
+    @Published private(set) var AllPostsAndEvents: [Any]? = nil
+    @Published private(set) var AllPostsAndEventsInDate: [Any]? = nil
+    
     @Published private(set) var thisMonthPosts: [Post]? = nil
     @Published private(set) var thisMonthEvents: [Event]? = nil
     @Published private(set) var thisMonthDraftPosts: [Post]? = nil
@@ -68,7 +71,7 @@ final class AgendaViewModel: ObservableObject {
         let currentDate = Date()
         let threeDaysFromNow = Calendar.current.date(byAdding: .day, value: 3, to: currentDate)!
         let fiveDaysFromNow = Calendar.current.date(byAdding: .day, value: 5, to: currentDate)!
-
+        
         // Filter upcoming posts
         var upcomingPosts: [Post] = []
         if let upposts = posts {
@@ -83,6 +86,42 @@ final class AgendaViewModel: ObservableObject {
         
         // Combine upcoming posts and events into one array
         upcomingItems = upcomingPosts + upcomingEvents
+    }
+    
+    func getAll() {
+        let allItems: [Any] = (posts ?? []) + (events ?? [])
+        
+        // Sort by date using a helper function to extract date
+        AllPostsAndEvents = allItems.sorted { first, second in
+            let date1 = extractDate(from: first) ?? Date.distantPast
+            let date2 = extractDate(from: second) ?? Date.distantPast
+            return date1 < date2
+        }
+    }
+    
+    func getAllInDay(date: Date) {
+        let allItemsInDate: [Any] = (posts ?? []) + (events ?? [])
+        
+        // Filter items by the provided date
+        AllPostsAndEventsInDate = allItemsInDate.filter { item in
+            // Extract the date from the item and compare it to the provided date
+            if let itemDate = extractDate(from: item) {
+                // Compare the year, month, and day to ensure they match
+                let calendar = Calendar.current
+                return calendar.isDate(itemDate, inSameDayAs: date)
+            }
+            return false
+        }
+    }
+    
+    // Helper function to extract date based on type
+    private func extractDate(from item: Any) -> Date? {
+        if let post = item as? Post {
+            return post.date
+        } else if let event = item as? Event {
+            return event.startDate
+        }
+        return nil
     }
 }
 

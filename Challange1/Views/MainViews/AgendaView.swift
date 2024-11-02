@@ -7,10 +7,12 @@
 
 import SwiftUI
 import _AppIntents_SwiftUI
+
 struct AgendaView: View {
     @State private var isButtonOn = true
     @State private var showingAddPostView = false
     @State private var tipIsShown = true
+    
     @StateObject var vm = AgendaViewModel()
     
     var body: some View {
@@ -66,7 +68,9 @@ struct AgendaView: View {
                 if let userID = UserDefaults.standard.string(forKey: "userID") {
                     try await vm.loadPosts(userId: userID)
                     try await vm.loadEvents(userId: userID)
+                    
                     try await vm.loadMonthPostsAndEvents(userId: userID)
+                    
                     try await vm.loadRecentPosts(userId: userID)
                     
                     vm.loadDraftPosts()

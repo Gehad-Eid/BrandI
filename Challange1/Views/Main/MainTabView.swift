@@ -23,9 +23,15 @@ struct MainTabView: View {
                 }
                 .tag(0)
             
+//            CalenderMainView()
+//                .tabItem {
+//                    Label("Calendar", image: "Calendar_icon")
+//                }
+//                .tag(1)
+            
             CalenderMainView()
                 .tabItem {
-                    Label("Calendar", image: "Calendar_icon")
+                    Label("Calendar", systemImage: "calendar")
                 }
                 .tag(1)
             

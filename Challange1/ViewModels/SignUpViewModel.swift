@@ -10,6 +10,7 @@ import Foundation
 @MainActor
 final class SignUpViewModel: ObservableObject {
     @Published var email = ""
+    @Published var name = ""
     @Published var password = ""
     @Published var confirmPassword = ""
     

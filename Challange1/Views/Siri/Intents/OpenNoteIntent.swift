@@ -16,6 +16,7 @@ struct OpenPostIntent: AppIntent, OpenIntent {
     var target: PostEntity
     
     func perform() async throws -> some IntentResult {
+        try await SiriViewModel.shared.readValuesFromDB()
         try await SiriViewModel.shared.navigate(to: target.id)
         return .result()
 

@@ -10,11 +10,13 @@ import Foundation
 struct DBUser : Codable {
     let userId: String
     let email: String?
+    let name: String?
     let dateCreated: Date?
     
     init(authUser: AuthDataResultModel) {
         self.userId = authUser.uid
         self.email = authUser.email
+        self.name = ""
         self.dateCreated = Date()
     }
     
@@ -22,6 +24,7 @@ struct DBUser : Codable {
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
         case email = "email"
+        case name = "name"
         case dateCreated = "date_created"
     }
     
@@ -29,6 +32,7 @@ struct DBUser : Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.userId = try container.decode(String.self, forKey: .userId)
         self.email = try container.decodeIfPresent(String.self, forKey: .email)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
     }
     
@@ -36,6 +40,7 @@ struct DBUser : Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(userId, forKey: .userId)
         try container.encodeIfPresent(email, forKey: .email)
+        try container.encodeIfPresent(name, forKey: .name)
         try container.encodeIfPresent(dateCreated, forKey: .dateCreated)
     }
 }

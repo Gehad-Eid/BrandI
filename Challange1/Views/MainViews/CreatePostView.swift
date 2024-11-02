@@ -20,6 +20,7 @@ struct CreatePostView: View {
     @State var event: Event?
     
     @StateObject var vm = AddPostViewModel()
+    @ObservedObject var siriVM = SiriViewModel()
     
     var body: some View {
         NavigationView {
@@ -107,6 +108,10 @@ struct CreatePostView: View {
         }
         .navigationBarBackButtonHidden(true)
         .onAppear() {
+            if siriVM.showPostDetail {
+                post = siriVM.selectedPost
+            }
+            
             if post != nil {
                 isEditingEnabled = false
                 selectedTab = "Add Post"
