@@ -54,10 +54,10 @@ struct AgendaView: View {
                             .padding(.top, -15)
                         
                         UpcomingSection(vm: vm)
-                            .padding(.top, 10)
+                            .padding(.top, 7)
                         
                         CardViewSection(vm: vm)
-                            .padding(.top, 5)
+                            .padding(.top, 4)
                     }
                     .padding(.horizontal, 20)
                 }

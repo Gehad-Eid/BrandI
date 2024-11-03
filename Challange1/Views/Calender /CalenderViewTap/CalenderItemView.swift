@@ -59,7 +59,7 @@ struct CalenderItemView: View {
                     .padding(.trailing)
                 }
             }
-            .frame(width: 350, height: 100, alignment: .leading)
+            .frame(width: 350, height: 60, alignment: .leading)
             .background(Color("BabyBlue"))
             .cornerRadius(12)
             .offset(x: offset)
@@ -83,7 +83,7 @@ struct CalenderItemView: View {
                     }
             )
             .frame(maxWidth: .infinity, maxHeight: 100, alignment: .leading)
-            .shadow(color: Color.black.opacity(0.4), radius: 3, x: 2, y: 3)
+    
             .padding(.horizontal)
             
             // Delete confirmation popup overlay
@@ -138,7 +138,7 @@ struct CalenderItemView: View {
                 .font(.system(size: 30))
                 .foregroundColor(.white)
                 .padding()
-                .frame(height: 100)
+                .frame(height: 60)
                 .frame(maxWidth: 180)
                 .background(Color.red)
                 .cornerRadius(12)
