@@ -22,10 +22,10 @@ struct DailyCardView: View {
     }
 
     private var noPostsMessage: some View {
-        //TODO: change withthe icon
-        Text("No posts this day 😊")
-            .font(.headline)
-            .foregroundColor(.gray)
+        //TODO: fix it with text
+        Image("emptyPosts")
+            .resizable()
+            .frame(width: 330, height: 180)
             .padding()
     }
 
@@ -38,7 +38,7 @@ struct DailyCardView: View {
                 description: post.content,
                 destination: AnyView(CreatePostView(post: post))
             )
-            .offset(y: CGFloat(index * 60)) // the Offset is based on index
+            .offset(y: CGFloat(index * 60))
         }
     }
 }
