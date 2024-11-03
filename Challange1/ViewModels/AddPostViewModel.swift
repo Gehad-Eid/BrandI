@@ -90,10 +90,8 @@ final class AddPostViewModel: ObservableObject {
     }
     
     func deletePost(userId: String, postId: String) async throws {
-        print("start")
         try await StorageManager.shared.deleteImages(userId: userId, postId: postId)
         try await UserManager.shared.deletePost(userID: userId, postID: postId)
-        print("end")
     }
     
     // Update a post
@@ -108,7 +106,6 @@ final class AddPostViewModel: ObservableObject {
                 content: postContent,
                 date: selectedDate,
                 images: uploadedImages,
-//                imagesPaths: imagesPaths,
                 platforms: selectedPlatforms,
                 isDraft: isDraft
             )

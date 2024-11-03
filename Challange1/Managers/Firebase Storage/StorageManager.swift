@@ -70,7 +70,6 @@ final class StorageManager {
     func deleteImages(userId: String, postId: String) async throws {
         do {
             print("start image")
-            //            try await userPostReference(userId: userId, postId: postId).delete()
             
             let postFolderRef = userPostReference(userId: userId, postId: postId)
             
