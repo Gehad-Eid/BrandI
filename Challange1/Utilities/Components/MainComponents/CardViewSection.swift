@@ -46,8 +46,8 @@ struct CardViewSection: View {
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .interactive))
             .accentColor(Color("BabyBlue"))
-            .frame(height: 460)
-            .padding(.top, -80)
+            .frame(height: 530)
+            .padding(.top, -130)
             .onAppear {
                 selectedTab = 1 // Start at the "Today" tab
             }

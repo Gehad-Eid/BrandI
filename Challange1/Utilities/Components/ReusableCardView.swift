@@ -35,11 +35,11 @@ struct ReusableCardView: View {
                     }
                     .padding()
                 }
-                .frame(width: 330, height: 50)
+                .frame(width: 330, height: 40)
 //                .background(Color.white)
-                .background(Color("BoxColor"))
+                .background(Color.white)
                 .clipShape(TopCornersRoundedRectangle(radius: 18))
-                .shadow(color: Color.black, radius: 1, x: 0.4, y: 0.4)
+                .shadow(color: Color.black.opacity(0.9), radius: 1, x: 0.4, y: 0.4)
 
                 // Details
                 VStack(alignment: .leading) {
@@ -52,10 +52,10 @@ struct ReusableCardView: View {
                     }
                     Spacer()
                 }
-                .frame(width: 330, height: 180)
+                .frame(width: 330, height: 160)
                 .background(Color("BabyBlue"))
                 .clipShape(BottomCornersRoundedRectangle(radius: 18))
-                .shadow(color: Color.black, radius: 0.1, x: 0.5, y: 0.5)
+                .shadow(color: Color.black.opacity(0.3), radius: 0.1, x: 0.5, y: 0.5)
             }
         }
     }
