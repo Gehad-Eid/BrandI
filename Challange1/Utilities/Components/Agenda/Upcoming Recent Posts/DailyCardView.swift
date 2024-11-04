@@ -10,25 +10,35 @@ import SwiftUI
 
 struct DailyCardView: View {
     let posts: [Post]
-
+    
     var body: some View {
         ZStack {
             if posts.isEmpty {
-                noPostsMessage
+                    noPostsMessage
             } else {
                 postsView
+                    .padding(.top, -150)
             }
         }
+        
     }
-
+    
     private var noPostsMessage: some View {
-        //TODO: fix it with text
-        Image("emptyPosts")
-            .resizable()
-            .frame(width: 330, height: 180)
-            .padding()
+        VStack(alignment: .center, spacing: 5) {
+            Image("emptyPosts")
+                .resizable()
+                .frame(width: 111, height: 74)
+                .padding()
+            
+            Text("No Posts Scheduled Yet")
+                .foregroundColor(Color("GrayText"))
+                .bold()
+            
+            Text("Tap the \"+\" button to get started")
+                .foregroundColor(Color("GrayText"))
+        }
     }
-
+    
     private var postsView: some View {
         ForEach(0..<min(posts.count, 3), id: \.self) { index in
             let post = posts[index]

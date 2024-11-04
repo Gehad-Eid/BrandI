@@ -14,10 +14,11 @@ struct UpcomingSection: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Upcoming")
+            Text("Upcoming this week")
                 .font(.title3)
                 .fontWeight(.bold)
                 .padding(.bottom, -190)
+//                .foregroundStyle(Color("GrayText"))
             
             TabView {
                 ForEach(vm.upcomingItems?.indices ?? 0..<0, id: \.self) { index in

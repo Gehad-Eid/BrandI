@@ -16,7 +16,7 @@ struct DBUser : Codable {
     init(authUser: AuthDataResultModel) {
         self.userId = authUser.uid
         self.email = authUser.email
-        self.name = ""
+        self.name = authUser.name
         self.dateCreated = Date()
     }
     

@@ -20,17 +20,19 @@ struct GenericPopupView: View {
                 .font(.title2)
                 .fontWeight(.bold)
                 .multilineTextAlignment(.center)
+                .foregroundColor(Color("Text"))
             
             Text(message)
                 .font(.subheadline)
-                .foregroundColor(.gray)
+//                .foregroundColor(.gray)
+                .foregroundColor(Color("GrayText"))
                 .multilineTextAlignment(.center)
                 .padding(.horizontal)
 
             VStack {
                 Button(action: onDelete) {
                     Text("Delete")
-                        .foregroundColor(.white)
+                        .foregroundColor(Color("Text"))
                         .padding()
                         .frame(width: 230, height: 51)
                         .background(Color.babyBlue)
@@ -39,20 +41,20 @@ struct GenericPopupView: View {
 
                 Button(action: onCancel) {
                     Text("Cancel")
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("Text"))
                         .padding()
                         .frame(width: 230, height: 51)
                         .background(Color.clear)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.black, lineWidth: 1)
+                                .stroke(Color("Text"), lineWidth: 1)
                         )
                 }
             }
         }
         .padding()
         .frame(width: 280, height: 258)
-        .background(Color.white)
+        .background(Color("BoxColor"))
         .cornerRadius(12)
         .shadow(radius: 10)
     }
@@ -65,7 +67,7 @@ struct DetetPostPopupView: View {
     var body: some View {
         GenericPopupView(
             title: "Delete this post?",
-            message: "Are you sure you want to delete “Event/Post Title”? This cannot be undone.",
+            message: "Are you sure you want to delete this?", //\nThis action cannot be undone.
             onDelete: onDelete,
             onCancel: onCancel
         )

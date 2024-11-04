@@ -30,7 +30,6 @@ final class SignUpViewModel: ObservableObject {
     @Published var hasNumber = false
     
     @Published var showError = false
-//    @Published var errorMessage = ""
 
     
     var isValidEmail: Bool {
@@ -104,7 +103,7 @@ final class SignUpViewModel: ObservableObject {
             onSuccess()
             
         } catch let error as NSError {
-            handleSignUpError(error)  // Call function to handle specific error codes
+            handleSignUpError(error) 
         }
     }
     

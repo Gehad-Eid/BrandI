@@ -39,6 +39,12 @@ struct ChangeEmail: View {
                 .cornerRadius(10)
                 .padding(.bottom, 20)
             
+            Text("\(vm.user?.name)")
+                .padding()
+                .background(Color(.systemGray6))
+                .cornerRadius(10)
+                .padding(.bottom, 20)
+            
             
             
 //            Button(action: {

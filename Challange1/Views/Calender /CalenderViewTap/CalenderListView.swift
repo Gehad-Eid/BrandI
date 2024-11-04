@@ -7,22 +7,20 @@
 
 
 import SwiftUI
-import SwiftData
 
 struct CalenderListView: View {
 
-    @Binding var date: Date
+    @Binding var showDeletePopup: Bool
+    
+    @Binding var item: Any?
     @ObservedObject var agendaViewModel: AgendaViewModel
     @ObservedObject var addPostVM: AddPostViewModel
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading ,spacing: 16) {
-                ScrollView{
-                    ForEach(agendaViewModel.AllPostsAndEventsInDate?.indices ?? 0..<0, id: \.self) { index in
-                        CalenderItemView(item: agendaViewModel.AllPostsAndEventsInDate?[index], vm: agendaViewModel, addPostVM: addPostVM)
-                        
-                    }
+                ForEach(agendaViewModel.AllPostsAndEventsInDate?.indices ?? 0..<0, id: \.self) { index in
+                    CalenderItemView(item: agendaViewModel.AllPostsAndEventsInDate?[index], vm: agendaViewModel, addPostVM: addPostVM, itemBinding: $item, showDeletePopup: $showDeletePopup)
                 }
             }
             .padding(.top, 20)

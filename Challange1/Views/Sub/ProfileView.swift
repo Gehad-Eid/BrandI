@@ -16,6 +16,7 @@ struct ProfileView: View {
             if let user = vm.user {
                 Text("User \(user.email)")
                 Text("User \(user.userId)")
+                Text("User \(user.name)")
                 Text("User \(user.dateCreated)")
             }
         }

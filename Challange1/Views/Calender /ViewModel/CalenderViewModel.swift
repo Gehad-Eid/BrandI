@@ -15,13 +15,15 @@ class CalenderViewModel: ObservableObject {
     @Published var currentIndex: Int = 0
     @Published var indexToUpdate: Int = 0
     
+//    @Published var currentItem: Any? = nil
+    
     @Published var currentWeek: [Date] = []
     @Published var nextWeek: [Date] = []
     @Published var previousWeek: [Date] = []
     //
     @Published var currentMonthDates: [Date] = []
     @Published var allMonths: [[Date]] = []
-      
+    
     
     init() {
         currentDate = Date()
@@ -34,33 +36,33 @@ class CalenderViewModel: ObservableObject {
     }
     //new
     func isSameMonth(date: Date, referenceDate: Date) -> Bool {
-            let calendar = Calendar.current
-            return calendar.component(.month, from: date) == calendar.component(.month, from: referenceDate) &&
-                   calendar.component(.year, from: date) == calendar.component(.year, from: referenceDate)
-        }
-   
-        func previousMonth() {
-            currentDate = Calendar.current.date(byAdding: .month, value: -1, to: currentDate) ?? currentDate
-            fetchCurrentMonth()
-        }
-        func fetchCurrentMonth() {
-            let calendar = Calendar.current
-            let range = calendar.range(of: .day, in: .month, for: currentDate)!
-            let components = calendar.dateComponents([.year, .month], from: currentDate)
-            
-            currentMonthDates = range.compactMap { day -> Date? in
-                var dateComponents = components
-                dateComponents.day = day
-                return calendar.date(from: dateComponents)
-            }
-        }
+        let calendar = Calendar.current
+        return calendar.component(.month, from: date) == calendar.component(.month, from: referenceDate) &&
+        calendar.component(.year, from: date) == calendar.component(.year, from: referenceDate)
+    }
+    
+    func previousMonth() {
+        currentDate = Calendar.current.date(byAdding: .month, value: -1, to: currentDate) ?? currentDate
+        fetchCurrentMonth()
+    }
+    func fetchCurrentMonth() {
+        let calendar = Calendar.current
+        let range = calendar.range(of: .day, in: .month, for: currentDate)!
+        let components = calendar.dateComponents([.year, .month], from: currentDate)
         
+        currentMonthDates = range.compactMap { day -> Date? in
+            var dateComponents = components
+            dateComponents.day = day
+            return calendar.date(from: dateComponents)
+        }
+    }
+    
     
     // Navigate to the next month and fetch its dates
-       func nextMonth() {
-           currentDate = Calendar.current.date(byAdding: .month, value: 1, to: currentDate) ?? currentDate
-           fetchCurrentMonth()
-       }
+    func nextMonth() {
+        currentDate = Calendar.current.date(byAdding: .month, value: 1, to: currentDate) ?? currentDate
+        fetchCurrentMonth()
+    }
     //
     
     
@@ -76,7 +78,7 @@ class CalenderViewModel: ObservableObject {
         allWeeks.append(newWeek)
     }
     
-
+    
     func isToday(date: Date) -> Bool {
         let calendar = Calendar.current
         return calendar.isDate(currentDate, inSameDayAs: date)
