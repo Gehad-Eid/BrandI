@@ -102,13 +102,10 @@ struct CalenderItemView: View {
                             Task {
                                 try await addPostVM.deletePost(userId: userID, postId: post.postId)
                             }
-                            //context.delete(post)
                         } else if let event = item as? Event {
                             Task {
-//                                try await addPostVM.deletePost(userId: userID, postId: post.postId)
+                                try await addPostVM.deleteEvent(userId: userID, eventId: event.eventId)
                             }
-                            
-                            //context.delete(event)
                         }
                         
                         showDeletePopup = false

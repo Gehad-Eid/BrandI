@@ -97,9 +97,7 @@ extension UserManager {
     }
     
     func deletePost(userID: String, postID: String) async throws {
-        print("start ppost")
         try await postCollection(userId: userID).document(postID).delete()
-        print("end post")
     }
     
     func getUserPosts(userID: String) async throws -> [Post] {
@@ -160,8 +158,14 @@ extension UserManager {
     }
     
     func deleteEvent(userID: String, eventID: String) async throws {
+        print("start event")
         try await eventCollection(userId: userID).document(eventID).delete()
+        print("end event")
     }
+    
+//    func deleteEvent(userID: String, eventID: String) async throws {
+//        try await eventCollection(userId: userID).document(eventID).delete()
+//    }
     
     func updateEvent(userID: String, event: Event) async throws {
         try eventDocument(userId: userID, eventId: event.eventId).setData(from: event, merge: true, encoder: encoder())
