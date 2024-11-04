@@ -160,6 +160,10 @@ final class AddPostViewModel: ObservableObject {
         }
     }
     
+    func deleteEvent(userId: String, eventId: String) async throws {
+        try await UserManager.shared.deleteEvent(userID: userId, eventID: eventId)
+    }
+    
     // Update a event
     func updateEvent(userId: String, eventId: String) {
         let updatedEvent = Event(

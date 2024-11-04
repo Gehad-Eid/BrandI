@@ -16,16 +16,14 @@ struct CustomSocialButton: View {
     var body: some View {
         Button(action: {
             Task {
-                do {
-                    if icon == "google" {
-                        try await vm.signInWithGoogle()
-                    } else if icon == "apple"{
-                        try await vm.signInWithApple()
+                if icon.lowercased() == "google" {
+                    try await vm.signInWithGoogle() {
+                        isAuthenticated = true
                     }
-                    isAuthenticated = true
-                }
-                catch {
-                    print (error)
+                } else if icon.lowercased() == "apple" {
+                    try await vm.signInWithApple() {
+                        isAuthenticated = true
+                    }
                 }
             }
         }) {

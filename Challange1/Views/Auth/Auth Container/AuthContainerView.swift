@@ -23,9 +23,17 @@ struct AuthContainerView: View {
             }
             
             // Apple and Gmail Sign In Buttons
-            HStack(spacing: 16) {
-                CustomSocialButton(icon: "Apple", isAuthenticated: $isAuthenticated, vm: vm)
-                CustomSocialButton(icon: "Google", isAuthenticated: $isAuthenticated, vm: vm)
+            VStack {
+                HStack(spacing: 16) {
+                    CustomSocialButton(icon: "Apple", isAuthenticated: $isAuthenticated, vm: vm)
+                    CustomSocialButton(icon: "Google", isAuthenticated: $isAuthenticated, vm: vm)
+                }
+                
+                if let errorMessage = vm.errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundColor(.red)
+                }
             }
             
             // Toggle between sign In and Up

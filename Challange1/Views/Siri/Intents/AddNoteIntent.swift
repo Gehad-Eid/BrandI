@@ -14,7 +14,6 @@ import SwiftUI
 struct PostAddedView: View {
     let post: Post
     
-    
     var body: some View {
       
             VStack(spacing: 0) {
