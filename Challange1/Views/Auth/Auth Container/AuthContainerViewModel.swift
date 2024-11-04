@@ -5,7 +5,6 @@
 //  Created by Gehad Eid on 18/10/2024.
 //
 
-import Foundation
 import FirebaseAuth
 
 @MainActor
@@ -100,5 +99,4 @@ final class AuthContainerViewModel: ObservableObject {
             errorMessage = "An unexpected error occurred. Please try again."
         }
     }
-
 }
