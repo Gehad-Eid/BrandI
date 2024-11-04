@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 struct CalenderItemView: View {
     @Environment(\.colorScheme) var colorScheme
@@ -16,9 +15,14 @@ struct CalenderItemView: View {
     @ObservedObject var vm: AgendaViewModel
     @ObservedObject var addPostVM: AddPostViewModel
     
+    @Binding var itemBinding: Any?
+    
+    @Binding var showDeletePopup: Bool
+
+    
     @State private var offset: CGFloat = 0
     @State private var showDelete: Bool = false
-    @State private var showDeletePopup = false
+    @State private var showingAddPostView = false
     
     var body: some View {
         ZStack(alignment: .trailing) {
@@ -82,54 +86,22 @@ struct CalenderItemView: View {
                         }
                     }
             )
+            .onTapGesture {
+                showingAddPostView = true
+            }
+            .sheet(isPresented: $showingAddPostView) {
+                CreatePostView(post: item as? Post , event: item as? Event )
+            }
             .frame(maxWidth: .infinity, maxHeight: 100, alignment: .leading)
-    
             .padding(.horizontal)
             
-            // Delete confirmation popup overlay
-            if showDeletePopup {
-                DeleteAlert
-            }
         }
     }
-    
-    private var DeleteAlert: some View {
-        DetetPostPopupView(
-            onDelete: {
-                withAnimation {
-                    if let userID = UserDefaults.standard.string(forKey: "userID") {
-                        if let post = item as? Post {
-                            Task {
-                                try await addPostVM.deletePost(userId: userID, postId: post.postId)
-                            }
-                        } else if let event = item as? Event {
-                            Task {
-                                try await addPostVM.deleteEvent(userId: userID, eventId: event.eventId)
-                            }
-                        }
-                        
-                        showDeletePopup = false
-                    }
-                    else {
-                        print("userID not found")
-                    }
-                }
-            },
-            onCancel: {
-                withAnimation {
-                    showDeletePopup = false
-                }
-            }
-        )
-        .background(Color.clear)
-        .zIndex(1)
-        .padding(.trailing,60)
-    }
-    
-    
+
     private var DeleteButton: some View {
         Button {
             showDeletePopup = true // Show delete confirmation popup
+            itemBinding = item
         } label: {
             Label("", systemImage: "trash")
                 .font(.system(size: 30))
@@ -145,6 +117,6 @@ struct CalenderItemView: View {
     }
 }
 
-#Preview {
-    CalenderItemView(item: Post(postId: "1", title: "Ppo title", content: "content her babe", date: Date(), images: [], platforms: [.linkedin, .twitter], recommendation: "", isDraft: false) , vm: AgendaViewModel(), addPostVM: AddPostViewModel())
-}
+//#Preview {
+//    CalenderItemView(item: Post(postId: "1", title: "Ppo title", content: "content her babe", date: Date(), images: [], platforms: [.linkedin, .twitter], recommendation: "", isDraft: false) , vm: AgendaViewModel(), addPostVM: AddPostViewModel(), calenerviewModel: CalenderViewModel(), showDeletePopup: .constant(false))
+//}

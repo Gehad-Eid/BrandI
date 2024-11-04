@@ -98,7 +98,7 @@ struct PasswordChangeView: View {
                     updateSuccessMessage = "Password updated successfully!"
 
                 } catch {
-                    oldPasswordError = "Failed to update password: \(error.localizedDescription)"
+                    oldPasswordError = "\(error.localizedDescription)"//Failed to update password:
                 }
             }
         }) {

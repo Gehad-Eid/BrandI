@@ -13,14 +13,19 @@ final class AuthContainerViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     func signInWithGoogle(onSuccess: @escaping () -> Void) async throws {
-        let helper = SignInWithGoogleHelper()
-        let tokens = try await helper.signIn()
-        let authDataResult = try await FirebaseAuthManager.shared.signInWithGoogle(tokens: tokens)
-        let user = DBUser(authUser: authDataResult)
-        
         do {
+            let helper = SignInWithGoogleHelper()
+            let tokens = try await helper.signIn()
+            let authDataResult = try await FirebaseAuthManager.shared.signInWithGoogle(tokens: tokens)
+            let user = DBUser(authUser: authDataResult)
+            
+            
             try await UserManager.shared.createNewUser(user: user)
-
+            
+            // Save the user ID in user
+            let userID = user.userId
+            UserDefaults.standard.set(userID, forKey: "userID")
+            
             // Call the onSuccess callback on successful sign-up
             onSuccess()
         } catch let error as NSError {
@@ -30,14 +35,18 @@ final class AuthContainerViewModel: ObservableObject {
     }
     
     func signInWithApple(onSuccess: @escaping () -> Void) async throws {
-        let helper = SignInAppleHelper()
-        let tokens = try await helper.startSignInWithAppleFlow()
-        let authDataResult = try await FirebaseAuthManager.shared.signInWithApple(tokens: tokens)
-        let user = DBUser(authUser: authDataResult)
-        
         do {
+            let helper = SignInAppleHelper()
+            let tokens = try await helper.startSignInWithAppleFlow()
+            let authDataResult = try await FirebaseAuthManager.shared.signInWithApple(tokens: tokens)
+            let user = DBUser(authUser: authDataResult)
+            
             try await UserManager.shared.createNewUser(user: user)
-
+            
+            // Save the user ID in user
+            let userID = user.userId
+            UserDefaults.standard.set(userID, forKey: "userID")
+            
             // Call the onSuccess callback on successful sign-up
             onSuccess()
         } catch let error as NSError {

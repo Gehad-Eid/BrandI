@@ -232,29 +232,29 @@ struct CreatePostView: View {
             // Platform selection section
             SelectPlatforms(selectedPlatforms: $vm.selectedPlatforms, isEditingEnabled: $isEditingEnabled)
             
-            HStack {
-                Button(action: {
-                    // TODO: Handle boost action
-                }) {
-                    Text("Check Performance")
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.blue.opacity(0.2))
-                        .cornerRadius(10)
-                }
-                
-                if !isEditingEnabled {
-                    Button(action: {
-                        // TODO: Handle publish action
-                    }) {
-                        Text("Publish")
-                            .padding()
-                            .background(Color.red.opacity(0.2))
-                            .cornerRadius(10)
-                    }
-                }
-            }
-            .padding(.top, 10)
+//            HStack {
+//                Button(action: {
+//                    // TODO: Handle boost action
+//                }) {
+//                    Text("Check Performance")
+//                        .padding()
+//                        .frame(maxWidth: .infinity)
+//                        .background(Color.blue.opacity(0.2))
+//                        .cornerRadius(10)
+//                }
+//                
+//                if !isEditingEnabled {
+//                    Button(action: {
+//                        // TODO: Handle publish action
+//                    }) {
+//                        Text("Publish")
+//                            .padding()
+//                            .background(Color.red.opacity(0.2))
+//                            .cornerRadius(10)
+//                    }
+//                }
+//            }
+//            .padding(.top, 10)
         }
         .padding()
     }

@@ -16,33 +16,33 @@ struct SettingsView: View {
     @State private var showDeleteAlert = false
     
     @State private var showPasswordPrompt = false
-//    @State private var passwordInput: String = ""
     
     var body: some View {
         ZStack{
             NavigationView {
                 List {
-                    
                     Section {
                         // TODO: pretty suer that should change to account at least !!
-                        settingsRow(iconName: "envelope", title: "Profile", destination: ChangeEmail(/*vm: vm*/),
+                        settingsRow(iconName: "envelope", title: "Profile", destination: EditNameView(/*vm: vm*/),
                         isSystemImage: true)
                         
-                        // TODO: pretty suer that should change !!
-                        settingsRow(iconName: "key.fill", title: "Change Password", destination: PasswordChangeView(vm: vm),
-                                    isSystemImage: true
-                        )
+                        if vm.authProviders.contains(where: { $0 == .email }) {
+                            // TODO: pretty suer that should change !!
+                            settingsRow(iconName: "key.fill", title: "Change Password", destination: PasswordChangeView(vm: vm),
+                                        isSystemImage: true
+                            )
+                        }
                         
-                        // API Integration
-                        settingsRow(iconName: "link", title: "Linked Accounts", destination: IntegrationView(),
-                                    isSystemImage: true)
-                        
-                        // Identity - AI
-                        settingsRow(iconName: "light", title: "My Brand Identity",
-                                    destination: BrandIdentityView(),
-                                    
-                                    isSystemImage: false
-                        )
+//                        // API Integration
+//                        settingsRow(iconName: "link", title: "Linked Accounts", destination: IntegrationView(),
+//                                    isSystemImage: true)
+//                        
+//                        // Identity - AI
+//                        settingsRow(iconName: "light", title: "My Brand Identity",
+//                                    destination: BrandIdentityView(),
+//                                    
+//                                    isSystemImage: false
+//                        )
                         
                     }
                     
@@ -72,11 +72,8 @@ struct SettingsView: View {
                                 message: Text("Do you really want to sign out?"),
                                 primaryButton: .destructive(Text("Sign Out")) {
                                     Task {
-                                        do {
-                                            try vm.signOut()
+                                        try vm.signOut(){
                                             isAuthenticated = false
-                                        } catch {
-                                            print("Error signing out: \(error)")
                                         }
                                     }
                                 },
@@ -105,47 +102,6 @@ struct SettingsView: View {
                             ShortcutsLink()
                         }.padding(.leading,60)
                             .padding(.vertical,8)
-                       
-                        
-                        //                    .alert(isPresented: $showDeleteAlert) {
-                        //                        Alert(
-                        //                            title: Text("Delete Account"),
-                        //                            message: Text("Enter your password to confirm deletion."),
-                        //                            primaryButton: .default(Text("Confirm")) {
-                        //                                showPasswordPrompt = true  // Show password input
-                        //                            },
-                        //                            secondaryButton: .cancel()
-                        //                        )
-                        //                    }
-                        //                    .sheet(isPresented: $showPasswordPrompt) {
-                        //                        VStack {
-                        //                            Text("Confirm Deletion")
-                        //                                .font(.headline)
-                        //                            SecureField("Password", text: $passwordInput)
-                        //                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                        //                                .padding()
-                        //
-                        //                            Button("Delete Account") {
-                        //                                Task {
-                        //                                    do {
-                        //                                        // Validate the password before deleting
-                        ////                                        if await vm.validatePassword(passwordInput) {
-                        ////                                            try await vm.deleteAccount()
-                        ////                                            isAuthenticated = false
-                        ////                                        } else {
-                        ////                                            // Handle incorrect password
-                        ////                                            print("Incorrect password.")
-                        ////                                            // Optionally, show an alert here for incorrect password
-                        ////                                        }
-                        //                                    } catch {
-                        //                                        print("Failed to delete account: \(error.localizedDescription)")
-                        //                                    }
-                        //                                }
-                        //                            }
-                        //                            .padding()
-                        //                        }
-                        //                        .padding()
-                        //                    }
                     }
                 }
                 .scrollContentBackground(.hidden)
@@ -157,6 +113,9 @@ struct SettingsView: View {
             if showDeleteAlert {
                 confirmPassPopUp(showDeleteAlert: $showDeleteAlert, isAuthenticated: $isAuthenticated, vm: vm)
             }
+        }
+        .onAppear(){
+            vm.loadAuthProviders()
         }
     }
 }
@@ -185,7 +144,7 @@ private func settingsRow<Destination: View>(iconName: String, title: String, des
         }
         .padding()
         .background(RoundedRectangle(cornerRadius: 18)
-            .fill(Color.white))
+            .fill(Color("BoxColor")))
     }
 }
 

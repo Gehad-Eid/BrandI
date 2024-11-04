@@ -5,7 +5,6 @@
 //  Created by Gehad Eid on 26/10/2024.
 //
 
-
 import SwiftUI
 
 struct ReusableCardView: View {
@@ -35,9 +34,8 @@ struct ReusableCardView: View {
                     }
                     .padding()
                 }
-                .frame(width: 330, height: 40)
-//                .background(Color.white)
-                .background(Color.white)
+                .frame(width: 330, height: 47)
+                .background(Color("BoxColor"))
                 .clipShape(TopCornersRoundedRectangle(radius: 18))
                 .shadow(color: Color.black.opacity(0.9), radius: 1, x: 0.4, y: 0.4)
 
@@ -45,14 +43,14 @@ struct ReusableCardView: View {
                 VStack(alignment: .leading) {
                     HStack {
                         Text(description)
-                            .foregroundColor(Color.white)
+                            .foregroundColor(Color("GrayText"))
                             .padding(.top, 16)
                             .padding(.leading, 16)
                         Spacer()
                     }
                     Spacer()
                 }
-                .frame(width: 330, height: 160)
+                .frame(width: 330, height: 153)
                 .background(Color("BabyBlue"))
                 .clipShape(BottomCornersRoundedRectangle(radius: 18))
                 .shadow(color: Color.black.opacity(0.3), radius: 0.1, x: 0.5, y: 0.5)

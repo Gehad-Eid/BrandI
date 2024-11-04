@@ -17,8 +17,13 @@ final class SettingsViewModel : ObservableObject {
         }
     }
     
-    func signOut() throws {
-        try FirebaseAuthManager.shared.signOut()
+    func signOut(onSuccess: @escaping () -> Void) throws {
+        do {
+            try FirebaseAuthManager.shared.signOut()
+            onSuccess()
+        } catch {
+            print("Error signing out: \(error)")
+        }
     }
     
     func deleteAccount() async throws {

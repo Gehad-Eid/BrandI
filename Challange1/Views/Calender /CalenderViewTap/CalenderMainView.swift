@@ -12,22 +12,31 @@ import SwiftData
 struct CalenderMainView: View {
     @State var currentDate: Date = .init()
     @State private var showingAddPostView = false
+    @State private var showDeletePopup = false
     
-    @StateObject var calenerviewModel = CalenderViewModel()
-    @StateObject var vm = AgendaViewModel()
+    @ObservedObject var calenerviewModel: CalenderViewModel
     @StateObject var addPostVM = AddPostViewModel()
+    @StateObject var vm = AgendaViewModel()
+    
+    @State var item: Any? = nil
 
     var body: some View {
         NavigationStack {
             ZStack {
+                // Delete confirmation popup overlay
+                if showDeletePopup {
+                    DeleteAlert(addPostVM: addPostVM, showDeletePopup: $showDeletePopup, item: item as Any)
+                        .zIndex(1)
+                }
+                
                 VStack(alignment: .leading) {
                     WeeklyScrollView(calenerviewModel: calenerviewModel, agendaViewModel: vm)
                         .frame(height: 89)
                         .padding(.top,40)
-                   
-                   
-                    CalenderListView(date: $calenerviewModel.currentDate, agendaViewModel: vm, addPostVM: addPostVM)
-                    .scrollIndicators(.hidden)
+                    
+                    
+                    CalenderListView(showDeletePopup: $showDeletePopup, item: $item, agendaViewModel: vm, addPostVM: addPostVM)
+                        .scrollIndicators(.hidden)
                     
                 }
                 .toolbar {
@@ -45,16 +54,14 @@ struct CalenderMainView: View {
                     
                     ToolbarItem(placement: .topBarTrailing) {
                         Button(action: {
-                        
                             showingAddPostView.toggle()
                         }, label: {
                             Image(systemName: "plus")
                                 .foregroundColor(.babyBlue)
                         })
-                            .sheet(isPresented: $showingAddPostView) {
-                                CreatePostView(post: nil)
-                            }
-                                  
+                        .sheet(isPresented: $showingAddPostView) {
+                            CreatePostView(post: nil)
+                        }
                     }
                 }
             }

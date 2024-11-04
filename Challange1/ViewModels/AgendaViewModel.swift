@@ -88,6 +88,34 @@ final class AgendaViewModel: ObservableObject {
         upcomingItems = upcomingPosts + upcomingEvents
     }
     
+    /// Returns a dictionary where the keys are days (2, 3, 4, 5, and 6)
+    /// and the values are tuples with counts of posts and events on that day.
+    func getCountsForUpcomingDays() -> [Int: (postCount: Int, eventCount: Int, date: Date)] {
+        var counts: [Int: (postCount: Int, eventCount: Int, date: Date)] = [:]
+        let calendar = Calendar.current
+        
+        for daysAhead in 2...6 {
+            // Calculate the target date
+            let targetDate = calendar.date(byAdding: .day, value: daysAhead, to: Date())!
+            
+            // Filter posts for the target day
+            let postCount = posts?.filter { post in
+                calendar.isDate(post.date, inSameDayAs: targetDate)
+            }.count ?? 0
+            
+            // Filter events for the target day
+            let eventCount = events?.filter { event in
+                calendar.isDate(event.startDate, inSameDayAs: targetDate)
+            }.count ?? 0
+            
+            // Store the counts and date in the dictionary
+            counts[daysAhead] = (postCount, eventCount, targetDate)
+        }
+        
+        return counts
+    }
+
+    
     func getAll() {
         let allItems: [Any] = (posts ?? []) + (events ?? [])
         
@@ -122,6 +150,22 @@ final class AgendaViewModel: ObservableObject {
             return event.startDate
         }
         return nil
+    }
+    
+    func getFormattedDate(forDayOffset offset: Int) -> (formattedDate: String?, date: Date?) {
+        let calendar = Calendar.current
+        
+        // Ensure offset is between 0 and 2
+        guard (0...2).contains(offset) else { return (nil, nil) }
+        
+        // Calculate the offset (-1 for yesterday, 0 for today, +1 for tomorrow)
+        let dateOffset = offset - 1
+        guard let date = calendar.date(byAdding: .day, value: dateOffset, to: Date()) else { return (nil, nil) }
+        
+        // Format the date
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, MMM d"
+        return (formatter.string(from: date), date)
     }
 }
 
