@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct UpcomingRecentPostsView: View {
+  
     @ObservedObject var vm: AgendaViewModel
     @ObservedObject var calenerviewModel: CalenderViewModel
     @Binding var mainTabSelection: Int
@@ -43,9 +44,16 @@ struct UpcomingRecentPostsView: View {
             .tabViewStyle(.page(indexDisplayMode: .always))
             .indexViewStyle(.page(backgroundDisplayMode: .interactive))
             
+            
 //            // Custom Page Indicator
 //            PageIndicator(currentPage: $selectedDay, numberOfPages: vm.getCountsForUpcomingDays().count)
 //                .padding(.top, 8)
-        }
+        }.onAppear {
+            setupAppearance()
+          }
     }
+    func setupAppearance() {
+        UIPageControl.appearance().currentPageIndicatorTintColor = .babyBlue
+        UIPageControl.appearance().pageIndicatorTintColor = UIColor.black.withAlphaComponent(0.2)
+      }
 }

@@ -17,7 +17,7 @@ struct SignUpView: View {
     @State private var isAgree: Bool = false
     
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 12) {
             Text("Sign up")
                 .font(.title)
                 .fontWeight(.bold)

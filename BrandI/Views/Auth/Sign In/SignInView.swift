@@ -14,7 +14,7 @@ struct SignInView: View {
     @Binding var isAuthenticated: Bool
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: 10) {
             Text("Sign in")
                 .font(.title)
                 .fontWeight(.bold)
@@ -69,7 +69,8 @@ struct SignInView: View {
             // Divider with "Or"
             orDivider(text: "Sign In With")
         }
-        .padding(.vertical,8)
+        .padding(.bottom,8)
+        .padding(.top,30)
         .padding(.horizontal,20)
     }
 }
