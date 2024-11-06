@@ -8,34 +8,35 @@
 import Foundation
 import AppIntents
 
-//struct GetTrailInfo: AppIntent {
-//    
-//    static var title: LocalizedStringResource = "Get Post Information"
-//    static var description = IntentDescription("Provides complete details on a post",
-//                                               categoryName: "Discover")
-//    
-//   
-//    static var parameterSummary: some ParameterSummary {
-//        Summary("Get information on \(\.$post)")
-//    }
-//
-//   
-//    @Parameter(title: "Posts", description: "The post to get information on.")
-//    var post: NoteEntity
-//    
-//    @Dependency
-//    private var siriViewModel: SiriViewModel
-//    
-//   
-//    func perform() async throws -> some IntentResult & ReturnsValue<NoteEntity> & ProvidesDialog & ShowsSnippetView {
-//        let trailData = await siriViewModel.trail(with: post.id)
-//       
-//        let snippet = NoteDetailView(note: trailData!)
-//        
-//        let dialog = IntentDialog(full: "The latest conditions reported for \(post.title) ",
-//                                  supporting: "Here's the latest information on trail conditions.")
-//        
-//        return .result(value: post, dialog: dialog, view: snippet)
-//    }
-//}
+
+struct GetPostInfo: AppIntent {
+    
+    static var title: LocalizedStringResource = "Get Post Details"
+    static var description = IntentDescription("Provides complete details on a post")
+                                       
+    static var parameterSummary: some ParameterSummary {
+        Summary("Get information on \(\.$getpost)")
+    }
+
+    @Parameter(title: "Post", description: "The post to get information on.")
+    var getpost: PostEntity
+    
+    func perform() async throws -> some IntentResult & ReturnsValue<PostEntity> & ProvidesDialog & ShowsSnippetView {
+       
+        let postData = await SiriViewModel.shared.trail(with: getpost.id)
+        
+        guard let postData else {
+            throw NSError(domain: "com.example.AppIntents", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to load post details"])
+        }
+        
+        let snippet = PostAddedView(post: postData)
+        
+        let dialog = IntentDialog(
+            full: "You’re viewing the latest details for \(getpost.title)!",
+            supporting: "Here’s everything you need to know about  \(getpost.title)."
+        )
+
+        return .result(value: getpost, dialog: dialog, view: snippet)
+    }
+}
 

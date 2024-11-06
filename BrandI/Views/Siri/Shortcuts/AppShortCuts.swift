@@ -23,34 +23,46 @@ struct AddNoteShortcuts: AppShortcutsProvider {
             systemImageName: "pencil"
         )
         
-        AppShortcut(
-            intent: OpenPostIntent(),
-            phrases: ["Open my \(.applicationName) posts",
-                      "View my posts in \(.applicationName) ",
-                      "List my posts on \(.applicationName) ",
-                      "Show me my posts in  \(.applicationName) ",
-                     ],
-            shortTitle: "Open post",
-            systemImageName: "book"
-        )
+//        AppShortcut(
+//            intent: OpenPostIntent(),
+//            phrases: ["Open my \(.applicationName) posts",
+//                      "View my posts in \(.applicationName) ",
+//                      "List my posts on \(.applicationName) ",
+//                      "Show me my posts in  \(.applicationName) ",
+//                     ],
+//            shortTitle: "Open post",
+//            systemImageName: "book"
+//        )
+        
+        //Get Post Info
+        
+        AppShortcut(intent: GetPostInfo(),
+                    phrases: [
+            "Open \(\.$getpost) in \(.applicationName)",
+            "Open my \(.applicationName) post",
+            "Get post on \(\.$getpost) with \(.applicationName)",
+            "Get my post in \(.applicationName)",
+            "List my posts on \(.applicationName)",
+            "View my posts in \(.applicationName) ",
+        ],
+        shortTitle: "Get Post",
+        systemImageName: "note.text",
+                    
+        parameterPresentation: ParameterPresentation(
+            for: \.$getpost,
+            summary: Summary("Get \(\.$getpost) "),
+            optionsCollections: {
+                OptionsCollection(PostQuery(), title: "Posts", systemImageName: "note.text")
+            }
+        ))
+        
+        
+        
+        
+        
+        
     }
 }
         
-        //
-        /// `GetTrailInfo` allows people to quickly check the conditions on their favorite trails.
-        //        AppShortcut(intent: GetTrailInfo(), phrases: [
-        //            "Get \(\.$post) conditions with \(.applicationName)",
-        //            "Get conditions on \(\.$post) with \(.applicationName)"
-        //        ],
-        //        shortTitle: "Get Conditions",
-        //        systemImageName: "cloud.rainbow.half",
-        //        parameterPresentation: ParameterPresentation(
-        //            for: \.$post,
-        //            summary: Summary("Get \(\.$post) conditions"),
-        //            optionsCollections: {
-        //                OptionsCollection(NoteQuery(), title: "Favorite Trails", systemImageName: "cloud.rainbow.half")
-        //            }
-        //        ))
         
-//    }
-//}
+        

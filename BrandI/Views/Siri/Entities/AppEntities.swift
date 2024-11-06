@@ -11,8 +11,9 @@ import AppIntents
 
 struct PostEntity: AppEntity {
     
-    @Property(title: "Post Name")
+    @Property(title: "Post title")
     var title: String
+    @Property(title: "Content")
     var content: String
     var id: String
     
@@ -38,6 +39,10 @@ struct PostEntity: AppEntity {
 struct PostQuery: EntityQuery {
     @MainActor
     func entities(for identifiers: [PostEntity.ID]) async throws -> [PostEntity] {
+        // Load data if `storedPosts` is empty
+            if SiriViewModel.shared.storedPosts.isEmpty {
+                try await SiriViewModel.shared.readValuesFromDB()
+            }
         // Iterate over the identifiers and use trail(with:) to find the notes
         let posts = try await withThrowingTaskGroup(of: Post?.self) { group in
             for id in identifiers {

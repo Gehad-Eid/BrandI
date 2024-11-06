@@ -10,9 +10,9 @@ import AppIntents
 
 
 struct OpenPostIntent: AppIntent, OpenIntent {
-    static var title: LocalizedStringResource = "Open Post with parameter"
+    static var title: LocalizedStringResource = "Open Post"
     //the name showen in the parameter that user would like ro select
-    @Parameter(title: "Posts")
+    @Parameter(title: "Post title")
     var target: PostEntity
     
     func perform() async throws -> some IntentResult {

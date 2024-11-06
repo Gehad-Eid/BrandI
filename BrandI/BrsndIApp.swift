@@ -10,12 +10,29 @@ import FirebaseCore
 
 @main
 struct BrandIApp: App {
-    
+   
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
+    var vm = AgendaViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .onAppear{
+                    Task {
+                        if let userID = UserDefaults.standard.string(forKey: "userID") {
+                            try await vm.loadPosts(userId: userID)
+                            try await vm.loadEvents(userId: userID)
+                            
+                            try await vm.loadMonthPostsAndEvents(userId: userID)
+                            
+                            try await vm.loadRecentPosts(userId: userID)
+                            
+                            vm.loadDraftPosts()
+                            vm.loadUpcomingPostsAndEvents()
+                        } else {
+                            print("userID not found")
+                        }
+                    }
+                }
         }
     }
 }
