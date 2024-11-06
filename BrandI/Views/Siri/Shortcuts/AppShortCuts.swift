@@ -45,7 +45,7 @@ struct AddNoteShortcuts: AppShortcutsProvider {
             "List my posts on \(.applicationName)",
             "View my posts in \(.applicationName) ",
         ],
-        shortTitle: "Get Post",
+        shortTitle: "Open Post",
         systemImageName: "note.text",
                     
         parameterPresentation: ParameterPresentation(
