@@ -15,6 +15,7 @@ struct SignUpView: View {
     @State private var isPasswordVisible: Bool = false
     @State private var isConfirmPasswordVisible: Bool = false
     @State private var isAgree: Bool = false
+    @State private var isPolicyShowen: Bool = false
     
     var body: some View {
         VStack(spacing: 12) {
@@ -128,9 +129,23 @@ struct SignUpView: View {
                         .cornerRadius(8)
                 }
                 
-                Text("I agree with terms and conditions and privacy policy")
+                Text("I agree with terms and conditions and")
                     .font(.caption)
                     .foregroundColor(vm.isAgree || !vm.showError ? .gray : .red)
+                
+                Button(action: {
+                    isPolicyShowen = true
+                }){
+                    Text("privacy policy")
+                        .font(.caption)
+                        .foregroundColor(vm.isAgree || !vm.showError ? .blue : .red)
+                        .underline()
+                }
+                .sheet(isPresented: $isPolicyShowen){
+                    NavigationView {
+                        PrivacyPolicyView()
+                    }
+                }
             }
             
             // Sign Up Button
