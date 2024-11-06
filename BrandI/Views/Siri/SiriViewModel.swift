@@ -36,7 +36,7 @@ import Observation
             storedPosts = agendaVM.posts ?? []
             
             print("Successfully fetched \(storedPosts.count) posts for userID: \(userID)")
-           // print("💖💖💖💖💖💖💖💖 SiriViewModel.shared.storedPosts: \(SiriViewModel.shared.storedPosts)")
+      
             
             for post in storedPosts {
                 print("Post ID: \(post.postId), Title: \(post.title), Content: \(post.content)")
