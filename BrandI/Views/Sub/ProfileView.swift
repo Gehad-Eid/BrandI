@@ -9,12 +9,11 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @StateObject private var vm = MainViewModel()
-    
+    @EnvironmentObject var vm: MainViewModel
+
     var body: some View {
         List {
             if let user = vm.user {
-                
                 
                 Text("User \(user.email!)")
                 Text("User \(user.userId)")

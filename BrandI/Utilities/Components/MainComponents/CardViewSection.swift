@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct CardViewSection: View {
-    @ObservedObject var vm: AgendaViewModel
+    @EnvironmentObject var vm: AgendaViewModel
+
+//    @ObservedObject var vm: AgendaViewModel
     @State private var selectedTab = 1
     @Binding var mainTabSelection: Int
     
@@ -157,5 +159,5 @@ struct CardViewSection: View {
 //}
 
 #Preview {
-    CardViewSection(vm: AgendaViewModel(), mainTabSelection: .constant(0))
+    CardViewSection(/*vm: AgendaViewModel(),*/ mainTabSelection: .constant(0))
 }

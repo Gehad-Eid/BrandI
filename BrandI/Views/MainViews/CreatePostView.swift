@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct CreatePostView: View {
+    @EnvironmentObject var vm: AddPostViewModel
     @Environment(\.presentationMode) var presentationMode
     
     @State private var content: String = ""
@@ -19,7 +20,6 @@ struct CreatePostView: View {
     @State var post: Post?
     @State var event: Event?
     
-    @StateObject var vm = AddPostViewModel()
     @ObservedObject var siriVM = SiriViewModel()
     
     var body: some View {

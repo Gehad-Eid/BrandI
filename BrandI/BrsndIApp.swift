@@ -10,12 +10,18 @@ import FirebaseCore
 
 @main
 struct BrandIApp: App {
-    
+    @StateObject private var mainViewModel = MainViewModel()
+    @StateObject private var addPostViewModel = AddPostViewModel()
+    @StateObject private var agendaViewModel = AgendaViewModel()
+
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(mainViewModel)
+                .environmentObject(addPostViewModel)
+                .environmentObject(agendaViewModel)
         }
     }
 }

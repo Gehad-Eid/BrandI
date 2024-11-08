@@ -11,6 +11,7 @@ import SwiftUI
 struct AuthContainerView: View {
     @State private var isSignUp: Bool = false
     @Binding var isAuthenticated: Bool
+    @Binding var showSignInSheet: Bool
     
     @StateObject private var vm = AuthContainerViewModel()
     
@@ -50,9 +51,15 @@ struct AuthContainerView: View {
                 }
             }.padding(.top,10)
         }
+        .onChange(of: isAuthenticated) { authenticated in
+            if authenticated {
+                isAuthenticated = true
+                showSignInSheet = false
+            }
+        }
     }
 }
 
 #Preview {
-    AuthContainerView(isAuthenticated: .constant(false))
+    AuthContainerView(isAuthenticated: .constant(false), showSignInSheet: .constant(false))
 }

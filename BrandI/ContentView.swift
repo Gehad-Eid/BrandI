@@ -17,12 +17,13 @@ struct ContentView: View {
         if isFirstTimeUser {
             OnboardingView(isFirstTimeUser: $isFirstTimeUser)
         }
-        else if isAuthenticated, doneSplash {
+        else if /*isAuthenticated,*/ doneSplash {
             MainTabView(isAuthenticated: $isAuthenticated)
         }
-        else if !isAuthenticated, doneSplash {
-            AuthContainerView(isAuthenticated: $isAuthenticated)
-        }
+//        else if !isAuthenticated, doneSplash {
+////            AuthContainerView(isAuthenticated: $isAuthenticated)
+//            AuthContainerView(isAuthenticated: $isAuthenticated)
+//        }
         else {
             Splash(isFirstTimeUser: $isFirstTimeUser, isAuthenticated: $isAuthenticated, doneSplash: $doneSplash)
         }

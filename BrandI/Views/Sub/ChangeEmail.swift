@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct ChangeEmail: View {
+    @EnvironmentObject var vm: MainViewModel
+    
     @State private var newEmail: String = ""
 //    @ObservedObject var vm: SettingsViewModel
-    @StateObject private var vm = MainViewModel()
-
     @State private var showAlert = false
     @State private var alertMessage = ""
 

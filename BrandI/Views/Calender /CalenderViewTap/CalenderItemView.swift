@@ -9,11 +9,13 @@ import SwiftUI
 
 struct CalenderItemView: View {
     @Environment(\.colorScheme) var colorScheme
+    @EnvironmentObject var vm: AgendaViewModel
+
     
     let item: Any
     
-    @ObservedObject var vm: AgendaViewModel
-    @ObservedObject var addPostVM: AddPostViewModel
+//    @ObservedObject var vm: AgendaViewModel
+//    @EnvironmentObject var addPostVM: AddPostViewModel
     
     @Binding var itemBinding: Any?
     

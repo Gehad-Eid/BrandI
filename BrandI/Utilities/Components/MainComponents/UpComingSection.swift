@@ -9,8 +9,10 @@
 import SwiftUI
 
 struct UpcomingSection: View {
+    @EnvironmentObject var vm: AgendaViewModel
+
 //    let items: [Any] // Array to hold both Post and Event types
-    @ObservedObject var vm: AgendaViewModel
+//    @ObservedObject var vm: AgendaViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -23,7 +25,7 @@ struct UpcomingSection: View {
             TabView {
                 ForEach(vm.upcomingItems?.indices ?? 0..<0, id: \.self) { index in
                     if let item = vm.upcomingItems?[index] {
-                        UpcomingCard(item: item, vm: vm)
+                        UpcomingCard(item: item/*, vm: vm*/)
                             .padding()
                     }
                 }
@@ -45,7 +47,7 @@ struct UpcomingSection: View {
     
 #Preview {
     NavigationStack {
-        UpcomingSection(vm: AgendaViewModel())
+        UpcomingSection(/*vm: AgendaViewModel()*/)
     }
 }
 
