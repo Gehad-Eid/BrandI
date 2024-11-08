@@ -14,99 +14,137 @@ struct SettingsView: View {
     @Binding var isAuthenticated: Bool
     
     @State private var showSignOutAlert = false
+    @State private var showSignInSheet = false
     @State private var showDeleteAlert = false
     
     @State private var showPasswordPrompt = false
+    
+    @State private var counter = 0
     
     var body: some View {
         ZStack{
             NavigationView {
                 List {
-                    Section {
-                        // TODO: pretty suer that should change to account at least !!
-                        settingsRow(iconName: "envelope", title: "Profile", destination: EditNameView(/*vm: vm*/),
-                        isSystemImage: true)
-                        
-                        if vm.authProviders.contains(where: { $0 == .email }) {
-                            // TODO: pretty suer that should change !!
-                            settingsRow(iconName: "key.fill", title: "Change Password", destination: PasswordChangeView(vm: vm),
-                                        isSystemImage: true
-                            )
-                        }
-                        
-//                        // API Integration
-//                        settingsRow(iconName: "link", title: "Linked Accounts", destination: IntegrationView(),
-//                                    isSystemImage: true)
-//                        
-//                        // Identity - AI
-//                        settingsRow(iconName: "light", title: "My Brand Identity",
-//                                    destination: BrandIdentityView(),
-//                                    
-//                                    isSystemImage: false
-//                        )
-                        
-                    }
-                    
-                    // Sign Out
-                    Section {
-                        Button()
-                        {
-                            showSignOutAlert = true
-                        } label: {
-                            HStack {
-                                Image(systemName: "arrowshape.turn.up.left")
-                                    .foregroundColor(.babyBlue)
-                                
-                                Text("Sign Out")
-                                    .font(.system(size: 18, weight: .medium))
-                                    .padding(.leading, 10)
-                                    .foregroundColor(Color("Text")) // ADDED
-                                Spacer()
-                            }
-                            .padding()
-//                            .background(RoundedRectangle(cornerRadius: 18)
-//                                .fill(Color.white))
-                        }
-                        .alert(isPresented: $showSignOutAlert) {
-                            Alert(
-                                title: Text("Are you sure?"),
-                                message: Text("Do you really want to sign out?"),
-                                primaryButton: .destructive(Text("Sign Out")) {
-                                    Task {
-                                        try vm.signOut(){
-                                            isAuthenticated = false
-                                        }
-                                    }
-                                },
-                                secondaryButton: .cancel()
-                            )
-                        }
-                        
-                        // Delete Account 
-                        Button(role: .destructive)
-                        {
-                            showDeleteAlert = true
+                    if isAuthenticated /*let userID = UserDefaults.standard.string(forKey: "userID")*/ {
+                        Section {
+                            // TODO: pretty suer that should change to account at least !!
+                            settingsRow(iconName: "envelope", title: "Profile", destination: EditNameView(/*vm: vm*/),
+                                        isSystemImage: true)
                             
-                        } label: {
-                            HStack {
-                                Image(systemName: "trash.fill")
-                                Text("Delete Account")
-                                    .font(.system(size: 18, weight: .medium))
-                                    .padding(.leading, 10)
-                                Spacer()
+                            if vm.authProviders.contains(where: { $0 == .email }) {
+                                // TODO: pretty suer that should change !!
+                                settingsRow(iconName: "key.fill", title: "Change Password", destination: PasswordChangeView(vm: vm),
+                                            isSystemImage: true
+                                )
                             }
-                            .padding()
-//                            .background(RoundedRectangle(cornerRadius: 18)
-//                                .fill(Color.white))
+                            
+                            //                        // API Integration
+                            //                        settingsRow(iconName: "link", title: "Linked Accounts", destination: IntegrationView(),
+                            //                                    isSystemImage: true)
+                            //
+                            //                        // Identity - AI
+                            //                        settingsRow(iconName: "light", title: "My Brand Identity",
+                            //                                    destination: BrandIdentityView(),
+                            //
+                            //                                    isSystemImage: false
+                            //                        )
+                            
                         }
                         
-                        VStack {
-                            ShortcutsLink()
-                                .frame(maxWidth: .infinity, alignment: .center) // Center the ShortcutsLink
+                        // Sign Out
+                        Section {
+                            Button()
+                            {
+                                showSignOutAlert = true
+                            } label: {
+                                HStack {
+                                    Image(systemName: "arrowshape.turn.up.left")
+                                        .foregroundColor(.babyBlue)
+                                    
+                                    Text("Sign Out")
+                                        .font(.system(size: 18, weight: .medium))
+                                        .padding(.leading, 10)
+                                        .foregroundColor(Color("Text")) // ADDED
+                                    Spacer()
+                                }
+                                .padding()
+                                //                            .background(RoundedRectangle(cornerRadius: 18)
+                                //                                .fill(Color.white))
+                            }
+                            .alert(isPresented: $showSignOutAlert) {
+                                Alert(
+                                    title: Text("Are you sure?"),
+                                    message: Text("Do you really want to sign out?"),
+                                    primaryButton: .destructive(Text("Sign Out")) {
+                                        Task {
+                                            try vm.signOut(){
+                                                isAuthenticated = false
+                                            }
+                                        }
+                                    },
+                                    secondaryButton: .cancel()
+                                )
+                            }
+                            
+                            // Delete Account
+                            Button(role: .destructive)
+                            {
+                                showDeleteAlert = true
+                                
+                            } label: {
+                                HStack {
+                                    Image(systemName: "trash.fill")
+                                    Text("Delete Account")
+                                        .font(.system(size: 18, weight: .medium))
+                                        .padding(.leading, 10)
+                                    Spacer()
+                                }
+                                .padding()
+                                //                            .background(RoundedRectangle(cornerRadius: 18)
+                                //                                .fill(Color.white))
+                            }
+                            
+                            VStack {
+                                ShortcutsLink()
+                                    .frame(maxWidth: .infinity, alignment: .center) // Center the ShortcutsLink
+                            }
+                            .frame(maxWidth: .infinity) // Make VStack take the full width
+                            //                        .padding(.leading,60)
+                            //                        .padding(.vertical,8)
                         }
-                        .frame(maxWidth: .infinity) // Make VStack take the full width
-//                        .padding(.leading,60)
-//                        .padding(.vertical,8)
+                    }
+                    else {
+                        VStack {
+                            Text("Sign in to enjoy the full functionality of the app and access your account and settings.")
+                                .foregroundColor(.gray)
+                                .multilineTextAlignment(.center)
+                                .padding()
+                            
+                            Button()
+                            {
+                                showSignInSheet = true
+                            } label: {
+                                HStack {
+                                    Image(systemName: "arrowshape.turn.up.right")
+                                        .foregroundColor(.babyBlue)
+                                    
+                                    Text("Sign In")
+                                        .font(.system(size: 18, weight: .medium))
+                                        .padding(.leading, 10)
+                                        .foregroundColor(Color("Text")) // ADDED
+                                    Spacer()
+                                }
+                                .padding()
+                            }
+                            .sheet(isPresented: $showSignInSheet) {
+                                AuthContainerView(isAuthenticated: $isAuthenticated, showSignInSheet: $showSignInSheet)
+                            }
+//                            .onChange(of: isAuthenticated) { authenticated in
+//                                if authenticated {
+//                                    showSignInSheet = false
+//                                }
+//                            }
+                        }
                     }
                 }
                 .scrollContentBackground(.hidden)

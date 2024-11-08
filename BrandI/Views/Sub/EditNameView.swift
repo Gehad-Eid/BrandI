@@ -9,12 +9,12 @@ import SwiftUI
 
 
 struct EditNameView: View {
+    @EnvironmentObject var vm: MainViewModel
+
     @State private var fullName: String = ""
     @State private var account: String = ""
     @State private var password: String = ""
     
-    @StateObject private var vm = MainViewModel()
-
     var body: some View {
         NavigationView {
             VStack(alignment: .leading){

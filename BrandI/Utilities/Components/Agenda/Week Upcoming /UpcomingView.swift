@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct UpcomingView: View {
+    @EnvironmentObject var vm: AgendaViewModel
+
     @ObservedObject var calenerviewModel: CalenderViewModel
-    @ObservedObject var vm: AgendaViewModel
+//    @ObservedObject var vm: AgendaViewModel
     @Binding var mainTabSelection: Int
 
     @State private var selectedDay = 0

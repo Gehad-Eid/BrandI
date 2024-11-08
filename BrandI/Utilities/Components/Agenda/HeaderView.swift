@@ -10,6 +10,8 @@ import SwiftUI
 
 struct HeaderView: View {
     @Binding var showingAddPostView: Bool
+    @Binding var isAuthenticated: Bool
+    @State private var showSignInSheet = false
 
     var body: some View {
         HStack {
@@ -19,7 +21,11 @@ struct HeaderView: View {
             Spacer()
             
             Button(action: {
-                showingAddPostView.toggle()
+                if isAuthenticated {
+                    showingAddPostView.toggle()
+                } else {
+                    showSignInSheet = true
+                }
             }) {
                 Text("+")
                     .font(.system(size: 20, weight: .bold))
@@ -31,6 +37,9 @@ struct HeaderView: View {
             }
             .sheet(isPresented: $showingAddPostView) {
                 CreatePostView(post: nil)
+            }
+            .sheet(isPresented: $showSignInSheet) {
+                AuthContainerView(isAuthenticated: $isAuthenticated, showSignInSheet: $showSignInSheet)
             }
         }
     }

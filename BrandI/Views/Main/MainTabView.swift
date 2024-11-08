@@ -11,20 +11,21 @@ import SwiftUI
 import SwiftUI
 
 struct MainTabView: View {
+    @EnvironmentObject var vm: MainViewModel
+    
     @Binding var isAuthenticated: Bool
-    @StateObject private var vm = MainViewModel()
     @StateObject private var calenerviewModel = CalenderViewModel()
     @State private var selectedTab = 0
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            AgendaView(calenerviewModel: calenerviewModel, mainTabSelection: $selectedTab)
+            AgendaView(calenerviewModel: calenerviewModel, mainTabSelection: $selectedTab, isAuthenticated: $isAuthenticated)
                 .tabItem {
                     Label("Agenda", systemImage: "house.fill")
                 }
                 .tag(0)
             
-            CalenderMainView(calenerviewModel: calenerviewModel)
+            CalenderMainView(isAuthenticated: $isAuthenticated, calenerviewModel: calenerviewModel)
                 .tabItem {
                     Label("Calendar", systemImage: "calendar")
                 }

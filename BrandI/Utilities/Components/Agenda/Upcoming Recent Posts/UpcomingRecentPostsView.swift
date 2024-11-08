@@ -9,12 +9,13 @@
 import SwiftUI
 
 struct UpcomingRecentPostsView: View {
-  
-    @ObservedObject var vm: AgendaViewModel
+    @EnvironmentObject var vm: AgendaViewModel
+    
     @ObservedObject var calenerviewModel: CalenderViewModel
     @Binding var mainTabSelection: Int
 
     @State private var selectedDay = 1
+    @Binding var isAuthenticated: Bool
 
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
@@ -34,16 +35,28 @@ struct UpcomingRecentPostsView: View {
             }
             .zIndex(1)
             
-            // Post Cards
-            TabView(selection: $selectedDay) {
-                DailyCardView(posts: vm.yesterdayPosts ?? []).tag(0)
-                DailyCardView(posts: vm.todayPosts ?? []).tag(1)
-                DailyCardView(posts: vm.tomorrowPosts ?? []).tag(2)
+            if isAuthenticated {
+                // Post Cards
+                TabView(selection: $selectedDay) {
+                    DailyCardView(posts: vm.yesterdayPosts ?? []).tag(0)
+                    DailyCardView(posts: vm.todayPosts ?? []).tag(1)
+                    DailyCardView(posts: vm.tomorrowPosts ?? []).tag(2)
+                }
+                .frame(height: 390, alignment: .top)
+                .tabViewStyle(.page(indexDisplayMode: .always))
+                .indexViewStyle(.page(backgroundDisplayMode: .interactive))
+                
+            } else {
+                // Post Cards
+                TabView(selection: $selectedDay) {
+                    DailyCardView(posts: []).tag(0)
+                    DailyCardView(posts: []).tag(1)
+                    DailyCardView(posts: []).tag(2)
+                }
+                .frame(height: 390, alignment: .top)
+                .tabViewStyle(.page(indexDisplayMode: .always))
+                .indexViewStyle(.page(backgroundDisplayMode: .interactive))
             }
-            .frame(height: 390, alignment: .top)
-            .tabViewStyle(.page(indexDisplayMode: .always))
-            .indexViewStyle(.page(backgroundDisplayMode: .interactive))
-            
             
 //            // Custom Page Indicator
 //            PageIndicator(currentPage: $selectedDay, numberOfPages: vm.getCountsForUpcomingDays().count)

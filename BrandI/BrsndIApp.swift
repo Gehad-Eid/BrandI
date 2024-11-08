@@ -10,12 +10,19 @@ import FirebaseCore
 
 @main
 struct BrandIApp: App {
+    @StateObject private var mainViewModel = MainViewModel()
+    @StateObject private var addPostViewModel = AddPostViewModel()
+    @StateObject private var agendaViewModel = AgendaViewModel()
+
    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
     var vm = AgendaViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(mainViewModel)
+                .environmentObject(addPostViewModel)
+                .environmentObject(agendaViewModel)
                 .onAppear{
                     Task {
                         if let userID = UserDefaults.standard.string(forKey: "userID") {

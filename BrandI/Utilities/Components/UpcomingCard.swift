@@ -8,8 +8,10 @@
 import SwiftUI
 
 struct UpcomingCard: View {
+    @EnvironmentObject var vm: AgendaViewModel
+
     let item: Any
-    @ObservedObject var vm: AgendaViewModel 
+//    @ObservedObject var vm: AgendaViewModel 
 
     var body: some View {
         let post = item as? Post

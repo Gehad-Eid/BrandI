@@ -10,8 +10,10 @@ import SwiftUI
 
 
 struct WeeklyScrollView: View {
-    @ObservedObject var calenerviewModel: CalenderViewModel
-    @ObservedObject var agendaViewModel: AgendaViewModel
+    @EnvironmentObject var agendaViewModel: AgendaViewModel
+
+    @ObservedObject var calenerviewModel : CalenderViewModel
+//    @ObservedObject var agendaViewModel: AgendaViewModel
 
     var body: some View {
         VStack {

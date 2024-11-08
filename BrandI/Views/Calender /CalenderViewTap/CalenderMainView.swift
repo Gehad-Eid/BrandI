@@ -10,13 +10,18 @@ import SwiftUI
 import SwiftData
 
 struct CalenderMainView: View {
+//    @Environment var addPostVM: AddPostViewModel
+    @EnvironmentObject var vm: AgendaViewModel
+    
+    @Binding var isAuthenticated: Bool
+    
     @State var currentDate: Date = .init()
     @State private var showingAddPostView = false
     @State private var showDeletePopup = false
+    @State private var showSignInSheet = false
     
     @ObservedObject var calenerviewModel: CalenderViewModel
-    @StateObject var addPostVM = AddPostViewModel()
-    @StateObject var vm = AgendaViewModel()
+//    @StateObject var vm = AgendaViewModel()
     
     @State var item: Any? = nil
 
@@ -25,19 +30,24 @@ struct CalenderMainView: View {
             ZStack {
                 // Delete confirmation popup overlay
                 if showDeletePopup {
-                    DeleteAlert(addPostVM: addPostVM, showDeletePopup: $showDeletePopup, item: item as Any)
+                    DeleteAlert(/*addPostVM: addPostVM,*/ showDeletePopup: $showDeletePopup, item: item as Any)
                         .zIndex(1)
                 }
                 
                 VStack(alignment: .leading) {
-                    WeeklyScrollView(calenerviewModel: calenerviewModel, agendaViewModel: vm)
+                    WeeklyScrollView(calenerviewModel: calenerviewModel/*, agendaViewModel: vm*/)
                         .frame(height: 89)
                         .padding(.top,40)
                     
-                    
-                    CalenderListView(showDeletePopup: $showDeletePopup, item: $item, agendaViewModel: vm, addPostVM: addPostVM)
-                        .scrollIndicators(.hidden)
-                    
+                    if isAuthenticated {
+                        CalenderListView(showDeletePopup: $showDeletePopup, item: $item/*, agendaViewModel: vm, addPostVM: addPostVM*/)
+                            .scrollIndicators(.hidden)
+                    } else {
+                        VStack {
+                            EmptyView()
+                            Spacer()
+                        }
+                    }
                 }
                 .toolbar {
                     ToolbarItem(placement: .navigation) {
@@ -54,13 +64,20 @@ struct CalenderMainView: View {
                     
                     ToolbarItem(placement: .topBarTrailing) {
                         Button(action: {
-                            showingAddPostView.toggle()
+                            if isAuthenticated {
+                                showingAddPostView.toggle()
+                            } else {
+                                showSignInSheet = true
+                            }
                         }, label: {
                             Image(systemName: "plus")
                                 .foregroundColor(.babyBlue)
                         })
                         .sheet(isPresented: $showingAddPostView) {
                             CreatePostView(post: nil)
+                        }
+                        .sheet(isPresented: $showSignInSheet) {
+                            AuthContainerView(isAuthenticated: $isAuthenticated, showSignInSheet: $showSignInSheet)
                         }
                     }
                 }
