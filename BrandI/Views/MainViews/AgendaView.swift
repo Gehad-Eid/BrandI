@@ -35,7 +35,9 @@ struct AgendaView: View {
                                 intent: AddPostIntent(),
                                 isVisible: $tipIsShown
                             )
-                            
+                            .accessibilityLabel("Add Post Shortcut") // Add VoiceOver accessibility label
+                                       .accessibilityHint("Use Siri to quickly add a post") // Hint for VoiceOver
+                                       .accessibilityAddTraits(.isButton) // VoiceOver will treat it like a button
                             // Month details
                             MonthInfoView(EventsCount: vm.thisMonthEvents?.count ?? 0, PostsCount: vm.thisMonthPosts?.count ?? 0, DraftsCount: vm.thisMonthDraftPosts?.count ?? 0)
                             
