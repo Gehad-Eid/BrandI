@@ -26,9 +26,10 @@ struct PostAddedView: View {
                     Spacer()
                    
                 }
+                .background(Color("BoxColor"))
                 .frame(width: 330, height: 50)
                               .background(Color.white)
-                .background(Color("BoxColor"))
+                              .shadow(radius: 10, x: 0, y: 10)
                 .clipShape(TopCornersRoundedRectangle(radius: 18))
               
                 
@@ -36,7 +37,7 @@ struct PostAddedView: View {
                 VStack(alignment: .leading) {
                     HStack {
                         Text(post.content)
-                            .foregroundColor(Color.white)
+                            .foregroundColor(Color.black)
                             .padding(.top, 16)
                             .padding(.leading, 16)
                         Spacer()

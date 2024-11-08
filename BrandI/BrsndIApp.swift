@@ -14,14 +14,32 @@ struct BrandIApp: App {
     @StateObject private var addPostViewModel = AddPostViewModel()
     @StateObject private var agendaViewModel = AgendaViewModel()
 
+   
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    
+    var vm = AgendaViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(mainViewModel)
                 .environmentObject(addPostViewModel)
                 .environmentObject(agendaViewModel)
+                .onAppear{
+                    Task {
+                        if let userID = UserDefaults.standard.string(forKey: "userID") {
+                            try await vm.loadPosts(userId: userID)
+                            try await vm.loadEvents(userId: userID)
+                            
+                            try await vm.loadMonthPostsAndEvents(userId: userID)
+                            
+                            try await vm.loadRecentPosts(userId: userID)
+                            
+                            vm.loadDraftPosts()
+                            vm.loadUpcomingPostsAndEvents()
+                        } else {
+                            print("userID not found")
+                        }
+                    }
+                }
         }
     }
 }

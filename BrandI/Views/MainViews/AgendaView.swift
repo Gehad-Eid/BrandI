@@ -10,7 +10,7 @@ import _AppIntents_SwiftUI
 
 struct AgendaView: View {
     @EnvironmentObject var vm: AgendaViewModel
-
+    
     @State private var isButtonOn = true
     @State private var showingAddPostView = false
     @State private var tipIsShown = true
@@ -19,7 +19,7 @@ struct AgendaView: View {
     @Binding var mainTabSelection: Int
     @Binding var isAuthenticated: Bool
     
-//    @StateObject var vm = AgendaViewModel()
+    //    @StateObject var vm = AgendaViewModel()
     
     var body: some View {
         NavigationStack {
@@ -32,14 +32,17 @@ struct AgendaView: View {
                         VStack(alignment: .leading) {
                             // Header
                             HeaderView(showingAddPostView: $showingAddPostView, isAuthenticated: $isAuthenticated)
-                            
-//                            // Siri notification
-//                            SiriTipView (
-//                                intent: AddPostIntent(),
-//                                isVisible: $tipIsShown
-//                            )
+
                             
                             if isAuthenticated {
+                                // Siri notification
+                                SiriTipView (
+                                    intent: AddPostIntent(),
+                                    isVisible: $tipIsShown
+                                )
+                                .accessibilityLabel("Add Post Shortcut") // Add VoiceOver accessibility label
+                                .accessibilityHint("Use Siri to quickly add a post") // Hint for VoiceOver
+                                .accessibilityAddTraits(.isButton) // VoiceOver will treat it like a button
                                 // Month details
                                 MonthInfoView(EventsCount: vm.thisMonthEvents?.count ?? 0, PostsCount: vm.thisMonthPosts?.count ?? 0, DraftsCount: vm.thisMonthDraftPosts?.count ?? 0)
                                 

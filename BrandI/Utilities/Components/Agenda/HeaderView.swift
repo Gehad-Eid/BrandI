@@ -33,6 +33,7 @@ struct HeaderView: View {
                     .frame(width: 30, height: 30)
                     .background(Color("BabyBlue"))
                     .cornerRadius(9)
+                    .accessibilityLabel(Text("Press the button to create a post"))
             }
             .sheet(isPresented: $showingAddPostView) {
                 CreatePostView(post: nil)

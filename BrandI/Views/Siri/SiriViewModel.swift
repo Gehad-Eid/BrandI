@@ -7,12 +7,13 @@
 
 import Foundation
 import SwiftUICore
+import Observation
 
 @MainActor
-class SiriViewModel: ObservableObject, Sendable  {
-    @Published var storedPosts: [Post] = []
-    @Published var selectedPost: Post?
-    @Published var showPostDetail: Bool = false
+@Observable class SiriViewModel: ObservableObject, Sendable  {
+    var storedPosts: [Post] = []
+    var selectedPost: Post?
+    var showPostDetail: Bool = false
 
     static let shared = SiriViewModel()
     
@@ -35,6 +36,7 @@ class SiriViewModel: ObservableObject, Sendable  {
             storedPosts = agendaVM.posts ?? []
             
             print("Successfully fetched \(storedPosts.count) posts for userID: \(userID)")
+      
             
             for post in storedPosts {
                 print("Post ID: \(post.postId), Title: \(post.title), Content: \(post.content)")
@@ -64,10 +66,22 @@ class SiriViewModel: ObservableObject, Sendable  {
     @MainActor
     func trail(with identifier: String) async -> Post? {
         if storedPosts.isEmpty {
-            try? await readValuesFromDB() // Fetch from Firebase if needed
+            do {
+                try await readValuesFromDB()
+                print("💖 Posts loaded from Firebase.")
+            } catch {
+                print("❌ Failed to load posts from Firebase: \(error)")
+                return nil
+            }
         }
-        return storedPosts.first { $0.postId == identifier }
+        
+        guard let post = storedPosts.first(where: { $0.postId == identifier }) else {
+            print("❌ No post found with identifier: \(identifier)")
+            return nil
+        }
+        return post
     }
+
 
 
     

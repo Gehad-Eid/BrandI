@@ -154,6 +154,7 @@ struct CreatePostView: View {
     
     //MARK: View Sections
     private var titleSection: some View {
+        
         Group {
             if isEditingEnabled || (event != nil && !isEditingEnabled) {
                 HStack {
