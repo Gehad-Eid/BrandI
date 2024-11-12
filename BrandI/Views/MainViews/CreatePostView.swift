@@ -283,6 +283,12 @@ struct CreatePostView: View {
     }
 }
 
-#Preview {
-    CreatePostView(post: Post(postId: "1", title: "Ppo title", content: "content her babe", date: Date(), images: [], platforms: [.linkedin, .twitter], recommendation: "", isDraft: false))
+struct CreatePostView_Previews: PreviewProvider {
+    static var previews: some View {
+        // Create a mock AddPostViewModel instance for preview
+        let mockViewModel = AddPostViewModel()
+        
+        return CreatePostView(post: Post(postId: "1", title: "Post Title", content: "Content goes here", date: Date(), images: [], platforms: [.linkedin, .twitter], recommendation: "", isDraft: false))
+            .environmentObject(mockViewModel) // Inject the mock environment object
+    }
 }

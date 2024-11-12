@@ -18,7 +18,7 @@ struct Splash: View {
     var body: some View {
         VStack {
             //TODO: add app icon
-            AnimatedImage(name: "Spladh screen1.gif")
+            SpriteKitAnimationView()
              
         }.ignoresSafeArea()
      

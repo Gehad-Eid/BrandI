@@ -50,6 +50,7 @@ struct CalenderItemView: View {
                 Text(vm.getTitle(for: item))
                     .font(.system(size: 18))
                     .fontWeight(.semibold)
+                    .foregroundColor(.white)
                     .padding(.horizontal)
                 
                 Spacer()
@@ -59,10 +60,11 @@ struct CalenderItemView: View {
                         ForEach(post.platforms ?? [], id: \.self) { platform in
                             Image(platform.iconName(for: colorScheme))
                                 .resizable()
-                                .frame(width: 20, height: 20)
+                                .frame(width: 18, height: 18)
                         }
                     }
                     .padding(.trailing)
+                    .padding(.top, -15)
                 }
             }
             .frame(width: 350, height: 60, alignment: .leading)
