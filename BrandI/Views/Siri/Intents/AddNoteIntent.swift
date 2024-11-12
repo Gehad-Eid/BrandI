@@ -20,16 +20,16 @@ struct PostAddedView: View {
                 // Title & Platforms
                 HStack {
                     Text(post.title)
-                        .foregroundStyle(Color("Text"))
+                        .foregroundStyle(Color.white)
                         .fontWeight(.semibold)
                         .padding()
                     Spacer()
                    
                 }
-                .background(Color("BoxColor"))
+                .background(Color("BabyBlue"))
                 .frame(width: 330, height: 50)
-                              .background(Color.white)
-                              .shadow(radius: 10, x: 0, y: 10)
+                .background(Color.black)
+                              .shadow(radius: 10, x: 10, y: 10)
                 .clipShape(TopCornersRoundedRectangle(radius: 18))
               
                 
@@ -45,10 +45,11 @@ struct PostAddedView: View {
                     Spacer()
                 }
                 .frame(width: 330, height: 180)
-                .background(Color("BabyBlue"))
+                .background(Color.white)
                 .clipShape(BottomCornersRoundedRectangle(radius: 18))
                 
             }.padding(.vertical, 16)
+            .shadow(color: Color.black.opacity(0.3), radius: 10, x: 2, y: 2)
         }
     
             

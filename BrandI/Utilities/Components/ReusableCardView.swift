@@ -12,6 +12,7 @@ struct ReusableCardView: View {
       var platforms: [Platform]
       var description: String
       var destination: AnyView
+    
 
       @Environment(\.colorScheme) var colorScheme
 
@@ -21,7 +22,7 @@ struct ReusableCardView: View {
                   // Title & Platforms
                 HStack {
                     Text(title)
-                        .foregroundStyle(Color("Text"))
+                        .foregroundStyle(Color.white)
                         .fontWeight(.semibold)
                         .padding()
                     Spacer()
@@ -35,7 +36,7 @@ struct ReusableCardView: View {
                     .padding()
                 }
                 .frame(width: 330, height: 47)
-                .background(Color("BoxColor"))
+                .background(Color("BabyBlue"))
                 .clipShape(TopCornersRoundedRectangle(radius: 18))
                 .shadow(color: Color.black.opacity(0.9), radius: 1, x: 0.4, y: 0.4)
 
@@ -43,17 +44,63 @@ struct ReusableCardView: View {
                 VStack(alignment: .leading) {
                     HStack {
                         Text(description)
-                            .foregroundColor(Color("GrayText"))
+                            .foregroundColor(Color.black)
                             .padding(.top, 16)
                             .padding(.leading, 16)
                         Spacer()
                     }
                     Spacer()
+                    HStack{
+                        Spacer()
+                        
+                        
+                        ZStack {
+                          
+                            Image("22")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 40, height: 40)
+                                .clipped()
+                                .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.clear, lineWidth: 2)
+                                )
+                                .offset(x: 12)
+                            
+                            Image("1")
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 40, height: 40)
+                                .clipped()
+                                .cornerRadius(8)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.clear, lineWidth: 2)
+                                )
+                            
+                           
+                            Text("2+")
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.white)
+                                .padding(3)
+                                .background(
+                                                   RoundedRectangle(cornerRadius: 4)
+                                                    .fill(Color.gray.opacity(0.4))
+                                             )
+                                .offset(x: 20, y: 10)
+                        }
+                        .frame(width: 40, height: 40)
+                        
+                        
+                        
+                    }.padding(.trailing,30)
+                        .padding(.bottom,10)
                 }
                 .frame(width: 330, height: 153)
-                .background(Color("BabyBlue"))
+                .background(Color.white)
                 .clipShape(BottomCornersRoundedRectangle(radius: 18))
-                .shadow(color: Color.black.opacity(0.3), radius: 0.1, x: 0.5, y: 0.5)
+                .shadow(color: Color.black.opacity(0.1), radius: 10, x: 2, y: 2)
             }
         }
     }
@@ -62,6 +109,11 @@ struct ReusableCardView: View {
 
 #Preview {
     NavigationStack {
-        ReusableCardView(title: "plapladfghjkjhnbgvfcdfvgbhjkjhbgvfcpla", platforms: [.instagram,.linkedin, .tiktok, .twitter], description: "", destination: AnyView(Text("dfghj")))
+        ReusableCardView(title: "plapladfghjkjhnbgvfcdfvgbhjkjhbgvfcpla", platforms: [.instagram,.linkedin, .tiktok, .twitter], description: "we will be the best version of us ", destination: AnyView(Text("dfghj")))
     }
 }
+
+
+
+
+

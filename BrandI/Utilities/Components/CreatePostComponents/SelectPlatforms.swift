@@ -30,9 +30,9 @@ struct SelectPlatforms: View {
     
     var body: some View {
         Text("Select Your Platform")
-            .font(.system(size: 18, weight: .semibold))
+            .font(.system(size: 18, weight: .medium))
         
-        HStack(spacing: 20) {
+        HStack(alignment: .center, spacing: 20) {
             // Show only selected platforms when not editing, or all platforms if editing
             ForEach(platformList.indices, id: \.self) { index in
                 let platform = platformList[index]
@@ -49,7 +49,7 @@ struct SelectPlatforms: View {
                         Image(iconName)
                             .resizable()
                             .scaledToFill()
-                            .frame(width: 50, height: 50)
+                            .frame(width: 45, height:45)
                             .clipped()
                             .cornerRadius(10)
                             .overlay(
@@ -60,7 +60,12 @@ struct SelectPlatforms: View {
                 }
             }
         }
-        .padding(.top, 5)
+        .padding()
+  
+        .frame(width: 362, height: 66)
+        .background(Color("graybackground"))
+        .cornerRadius(18)
+        
     }
     
     // Toggle platform selection

@@ -65,7 +65,7 @@ struct PhotoView: View {
                                     .cornerRadius(8)
                             }
                         }
-                        
+                    }
                         if isEditingEnabled {
                             // Plus button to add more photos
                             Button(action: {
@@ -81,10 +81,14 @@ struct PhotoView: View {
                             }
                         }
                     }
+                    .frame(width: 360, height: 66)
+                    .background(Color("graybackground"))
+                    .cornerRadius(18)
                     .padding(.horizontal)
-                }
+                
             }
         }
+        .padding(.top, 10)
         .sheet(isPresented: $isShowingPhotoPicker) {
             PhotoPicker(selectedUIImagesAndNames: $selectedUIImagesAndNames)
         }
