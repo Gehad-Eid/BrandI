@@ -32,11 +32,11 @@ struct onboarding1: View {
                 
                 
             VStack(alignment: .center){
-                AnimatedImage(name:"AI.gif")
+                Image("AImagicgif")
                     .resizable()
-                    .frame(width: 250 , height: 200 )
+                    .frame(width: 250 , height: 250 )
                     .padding(.bottom,60)
-                    .padding(.trailing,50)
+                    .padding(.trailing,20)
                    
                 
                 

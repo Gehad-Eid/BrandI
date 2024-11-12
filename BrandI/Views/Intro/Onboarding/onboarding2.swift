@@ -32,7 +32,7 @@ struct onboarding2: View {
                 .padding(.top,-280)
                 
             VStack{
-                AnimatedImage(name: "Social media 1.gif")
+                Image("postGIF")
                     .resizable()
                     .frame(width:300,height:250)
                     .padding(.bottom,90)
