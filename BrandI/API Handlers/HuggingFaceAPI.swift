@@ -23,6 +23,9 @@ class HuggingFaceAPI {
                 "text": caption
             ]
         ]
+        
+        //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
+        
 
         AF.request(apiUrl, method: .post, parameters: parameters, encoding: JSONEncoding.default, headers: headers).responseJSON { response in
             switch response.result {
