@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
+
 
 struct onboarding1: View {
    
@@ -35,7 +35,7 @@ struct onboarding1: View {
                 Image("AImagicgif")
                     .resizable()
                     .frame(width: 250 , height: 250 )
-                    .padding(.bottom,60)
+                    .padding(.bottom,10)
                     .padding(.trailing,20)
                    
                 

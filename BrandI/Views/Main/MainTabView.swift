@@ -21,11 +21,11 @@ struct MainTabView: View {
         TabView(selection: $selectedTab) {
             AgendaView(calenerviewModel: calenerviewModel, mainTabSelection: $selectedTab, isAuthenticated: $isAuthenticated)
                 .tabItem {
-                    Label("Agenda", systemImage: "house.fill")
+                    Label("Agenda", systemImage: "list.bullet.rectangle.portrait")
                 }
                 .tag(0)
             
-            CalenderMainView(isAuthenticated: $isAuthenticated, calenerviewModel: calenerviewModel)
+            CalenderMainView(isAuthenticated: $isAuthenticated, calenerviewModel: calenerviewModel )
                 .tabItem {
                     Label("Calendar", systemImage: "calendar")
                 }
