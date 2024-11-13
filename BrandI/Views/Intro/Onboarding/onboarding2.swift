@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
 
 struct onboarding2: View {
    
@@ -34,8 +33,9 @@ struct onboarding2: View {
             VStack{
                 Image("postGIF")
                     .resizable()
+                    .scaledToFit()
                     .frame(width:300,height:250)
-                    .padding(.bottom,90)
+                    .padding(.bottom,40)
                    
                 
                 

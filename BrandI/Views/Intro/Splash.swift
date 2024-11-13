@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
 struct Splash: View {
     
     @Binding var isFirstTimeUser: Bool
