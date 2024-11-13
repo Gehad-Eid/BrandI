@@ -7,8 +7,6 @@
 
 import SwiftUI
 
-
-
 struct EventView: View {
     @State private var title: String = ""
     @State private var startDate: Date = Date()

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct DeleteAlert: View {
-    @EnvironmentObject var addPostVM: AddPostViewModel
+    @ObservedObject var addPostVM = AddPostViewModel()
     
     @Binding var showDeletePopup: Bool
     let item: Any

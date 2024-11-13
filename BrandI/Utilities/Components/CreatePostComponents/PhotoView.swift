@@ -65,11 +65,11 @@ struct PhotoView: View {
                                     .cornerRadius(8)
                             }
                         }
-                    }
+                        
                         if isEditingEnabled {
                             // Plus button to add more photos
                             Button(action: {
-//                                isShowingPhotoPicker = true
+                                //isShowingPhotoPicker = true
                                 checkPhotoLibraryPermission()
                             }) {
                                 Image(systemName: "plus")
@@ -80,6 +80,7 @@ struct PhotoView: View {
                                     .cornerRadius(8)
                             }
                         }
+                    }
                     }
                     .frame(width: 360, height: 66)
                     .background(Color("graybackground"))

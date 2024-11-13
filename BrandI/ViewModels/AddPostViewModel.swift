@@ -11,6 +11,7 @@ import FirebaseFirestore
 
 @MainActor
 final class AddPostViewModel: ObservableObject {
+    
     var isFormValid: Bool {
         !title.isEmpty && !postContent.isEmpty && selectedPlatforms.isEmpty == false
     }
@@ -33,6 +34,18 @@ final class AddPostViewModel: ObservableObject {
     @Published var uploadedImages: [ImageData] = []
     
     private var inProgressImageURLs = Set<String>()
+    
+    func reset() {
+        title = ""
+        postContent = ""
+        selectedDate = Date()
+        selectedPlatforms = []
+        isDraft = false
+        imageList = []
+        imageDataList = []
+        startDate = Date()
+        endDate = Date()
+    }
     
     //Save image to firestore storage
     func saveImagesToFirebase() async throws {
@@ -89,6 +102,7 @@ final class AddPostViewModel: ObservableObject {
             print("postId in vm: \(postId)")
             
             try await AgendaViewModel().loadPosts(userId: userId)
+            reset()
         }
     }
     

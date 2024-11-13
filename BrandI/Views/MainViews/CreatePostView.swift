@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreatePostView: View {
-    @EnvironmentObject var vm: AddPostViewModel
+//    @EnvironmentObject var vm: AddPostViewModel
     @Environment(\.presentationMode) var presentationMode
     
     @State private var content: String = ""
@@ -20,6 +20,7 @@ struct CreatePostView: View {
     @State var post: Post?
     @State var event: Event?
     
+    @StateObject var vm = AddPostViewModel()
     @ObservedObject var siriVM = SiriViewModel()
     
     var body: some View {
@@ -52,16 +53,6 @@ struct CreatePostView: View {
                             presentationMode.wrappedValue.dismiss()
                         }
                         .foregroundColor(.black)
-                    } else {
-                        Button(action: {
-                            presentationMode.wrappedValue.dismiss()
-                        }) {
-                            HStack {
-                                Image(systemName: "chevron.backward")
-                                Text("Back")
-                            }
-                            .foregroundColor(Color("BabyBlue"))
-                        }
                     }
                 }
                 
@@ -74,9 +65,9 @@ struct CreatePostView: View {
                                 
                                 if selectedTab == "Add Post" {
                                     if post != nil , let postId = post?.postId {
-                                        print("postId: \(post)")
+//                                        print("postId: \(post)")
                                         vm.updatePost(userId: userID, postId: postId)
-                                        print("postId: \(postId)")
+//                                        print("postId: \(postId)")
                                     } else {
                                         vm.addPost(userId: userID)
                                     }
@@ -121,6 +112,7 @@ struct CreatePostView: View {
                     // get the url to uiImage
                     if let userID = UserDefaults.standard.string(forKey: "userID") {
                         try await vm.getImageToUIImage(userId: userID, images: post?.images ?? [])
+                        print("Done getting image to UIImage .........")
                     }
                 }
                 
@@ -159,8 +151,6 @@ struct CreatePostView: View {
             if isEditingEnabled || (event != nil && !isEditingEnabled) {
                 HStack {
                     TextField("Title", text: $vm.title)
-                    //                        .padding(.horizontal)
-                    //                        .padding(.vertical, 10)
                         .background(Color.clear)
                         .font(.title2)
                         .disabled((event != nil && !isEditingEnabled) ? true : !isEditingEnabled)
@@ -233,30 +223,6 @@ struct CreatePostView: View {
             
             // Platform selection section
             SelectPlatforms(selectedPlatforms: $vm.selectedPlatforms, isEditingEnabled: $isEditingEnabled)
-            
-//            HStack {
-//                Button(action: {
-//                    // TODO: Handle boost action
-//                }) {
-//                    Text("Check Performance")
-//                        .padding()
-//                        .frame(maxWidth: .infinity)
-//                        .background(Color.blue.opacity(0.2))
-//                        .cornerRadius(10)
-//                }
-//                
-//                if !isEditingEnabled {
-//                    Button(action: {
-//                        // TODO: Handle publish action
-//                    }) {
-//                        Text("Publish")
-//                            .padding()
-//                            .background(Color.red.opacity(0.2))
-//                            .cornerRadius(10)
-//                    }
-//                }
-//            }
-//            .padding(.top, 10)
         }
         .padding()
     }

@@ -11,30 +11,30 @@ import FirebaseCore
 @main
 struct BrandIApp: App {
     @StateObject private var mainViewModel = MainViewModel()
-    @StateObject private var addPostViewModel = AddPostViewModel()
+//    @StateObject private var addPostViewModel = AddPostViewModel()
     @StateObject private var agendaViewModel = AgendaViewModel()
 
    
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    var vm = AgendaViewModel()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(mainViewModel)
-                .environmentObject(addPostViewModel)
+//                .environmentObject(addPostViewModel)
                 .environmentObject(agendaViewModel)
                 .onAppear{
                     Task {
                         if let userID = UserDefaults.standard.string(forKey: "userID") {
-                            try await vm.loadPosts(userId: userID)
-                            try await vm.loadEvents(userId: userID)
+                            try await agendaViewModel.loadPosts(userId: userID)
+                            try await agendaViewModel.loadEvents(userId: userID)
                             
-                            try await vm.loadMonthPostsAndEvents(userId: userID)
+                            try await agendaViewModel.loadMonthPostsAndEvents(userId: userID)
                             
-                            try await vm.loadRecentPosts(userId: userID)
+                            try await agendaViewModel.loadRecentPosts(userId: userID)
                             
-                            vm.loadDraftPosts()
-                            vm.loadUpcomingPostsAndEvents()
+                            agendaViewModel.loadDraftPosts()
+                            agendaViewModel.loadUpcomingPostsAndEvents()
                         } else {
                             print("userID not found")
                         }
