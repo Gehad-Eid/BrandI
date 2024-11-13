@@ -51,12 +51,14 @@ struct OnboardingView: View {
                     .bold()
                     .padding()
                     .foregroundColor(.white)
-                    .background(currentPage == 2 ? Color.blue : Color.clear)
+                    .background(currentPage == 2 ? Color("BabyBlue") : Color.clear)
                     .cornerRadius(10)
             }
-            .padding(.bottom, 20)
+            .padding(.bottom, 50)
         }
+        .ignoresSafeArea()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        
     }
     
     private func completeOnboarding() {
@@ -71,6 +73,7 @@ struct OnboardingViewWrapper: View {
     
     var body: some View {
         OnboardingView(isFirstTimeUser: $isFirstTimeUser)
+            .ignoresSafeArea()
     }
 }
 

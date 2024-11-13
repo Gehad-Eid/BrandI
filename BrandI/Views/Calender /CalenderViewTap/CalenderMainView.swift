@@ -19,12 +19,13 @@ struct CalenderMainView: View {
     @State private var showingAddPostView = false
     @State private var showDeletePopup = false
     @State private var showSignInSheet = false
-    
+    @State private var showCalendarSheet = false
     @ObservedObject var calenerviewModel: CalenderViewModel
 //    @StateObject var vm = AgendaViewModel()
     
     @State var item: Any? = nil
-
+//
+    
     var body: some View {
         NavigationStack {
             ZStack {
@@ -35,7 +36,9 @@ struct CalenderMainView: View {
                 }
                 
                 VStack(alignment: .leading) {
-                    WeeklyScrollView(calenerviewModel: calenerviewModel/*, agendaViewModel: vm*/)
+                    WeeklyScrollView(calenerviewModel: calenerviewModel/*, agendaViewModel: vm*/
+                                     
+                    )
                         .frame(height: 89)
                         .padding(.top,40)
                     
@@ -61,7 +64,20 @@ struct CalenderMainView: View {
                                 .fontWeight(.bold)
                         }
                     }
-                    
+                    // Calendar Icon Toolbar Item
+                                   ToolbarItem(placement: .topBarTrailing) {
+                                       Button(action: {
+                                           showCalendarSheet = true
+                                       }, label: {
+                                           Image(systemName: "calendar")
+                                               .foregroundColor(.babyBlue)
+                                       })
+                                       .sheet(isPresented: $showCalendarSheet) {
+                                           CalendarView(calendar: .current,isAuthenticated: $isAuthenticated, calenerviewModel:calenerviewModel,
+                                                        currentDate: $currentDate
+                                           )
+                                       }
+                                   }
                     ToolbarItem(placement: .topBarTrailing) {
                         Button(action: {
                             if isAuthenticated {
@@ -80,6 +96,11 @@ struct CalenderMainView: View {
                             AuthContainerView(isAuthenticated: $isAuthenticated, showSignInSheet: $showSignInSheet)
                         }
                     }
+                    //
+                  
+                               
+                    
+                    
                 }
             }
         }
