@@ -36,7 +36,21 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		104D32352CE5D389007CC611 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		104D32222CE5D388007CC611 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		B897CFA92CA92E60002CC428 /* Challange1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Challange1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B897CFB92CA92E61002CC428 /* Challange1Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Challange1Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		B897CFC32CA92E61002CC428 /* Challange1UITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Challange1UITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -124,12 +138,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		104D321F2CE5D388007CC611 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				104D32222CE5D388007CC611 /* SwiftUI.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B897CFA02CA92E60002CC428 = {
 			isa = PBXGroup;
 			children = (
 				B897CFAB2CA92E60002CC428 /* BrandI */,
 				B897CFBC2CA92E61002CC428 /* BrandITests */,
 				B897CFC62CA92E61002CC428 /* BrandIUITests */,
+				104D321F2CE5D388007CC611 /* Frameworks */,
 				B897CFAA2CA92E60002CC428 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -154,6 +177,7 @@
 				B897CFA52CA92E60002CC428 /* Sources */,
 				B897CFA62CA92E60002CC428 /* Frameworks */,
 				B897CFA72CA92E60002CC428 /* Resources */,
+				104D32352CE5D389007CC611 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -232,7 +256,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1610;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					B897CFA82CA92E60002CC428 = {
