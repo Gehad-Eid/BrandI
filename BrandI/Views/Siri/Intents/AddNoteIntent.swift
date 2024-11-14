@@ -24,6 +24,11 @@ struct PostAddedView: View {
                         .fontWeight(.semibold)
                         .padding()
                     Spacer()
+//                    Image("SiriIcon")
+//                        .resizable()
+//                        .frame(width:40 , height: 40)
+//                        .padding(.trailing, 12)
+//                        .shadow(color: Color.white, radius: 0.3, x: 1, y: 1)
                    
                 }
                 .background(Color("BabyBlue"))
@@ -51,10 +56,11 @@ struct PostAddedView: View {
             }.padding(.vertical, 16)
             .shadow(color: Color.black.opacity(0.3), radius: 10, x: 2, y: 2)
         }
+  
     
-            
-    
-    
+}
+#Preview {
+    PostAddedView(post:Post(postId:"",title: "Hello World", content: "Hello World", date:Date(), images:nil, isDraft: true ))
 }
 //here with custom view
 
@@ -80,7 +86,7 @@ struct AddPostIntent: AppIntent {
         try await viewModel.addPostToDB(note: newNote)
 
         // Provide feedback to the user through Siri
-        let dialog = IntentDialog("Your post has been saved successfully.")
+        let dialog = IntentDialog("Got it! Your post has been saved as a draft.")
 
         // Return a custom SwiftUI view showing the note
         let snippetView = PostAddedView(post: newNote)

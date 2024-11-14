@@ -26,6 +26,7 @@ class AnimationScene: SKScene {
         addChild(sprite)
 
         let textures = [
+            SKTexture(imageNamed: "1"),
             SKTexture(imageNamed: "2"),
             SKTexture(imageNamed: "3"),
             SKTexture(imageNamed: "4"),
@@ -33,7 +34,9 @@ class AnimationScene: SKScene {
             SKTexture(imageNamed: "6"),
             SKTexture(imageNamed: "7"),
             SKTexture(imageNamed: "8"),
-            SKTexture(imageNamed: "9")
+            SKTexture(imageNamed: "9"),
+            SKTexture(imageNamed: "10"),
+        
             
         ]
 

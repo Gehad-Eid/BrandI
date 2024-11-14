@@ -68,7 +68,7 @@ struct ReusableCardView: View {
                                 )
                                 .offset(x: 12)
                             
-                            Image("1")
+                            Image("11")
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 40, height: 40)

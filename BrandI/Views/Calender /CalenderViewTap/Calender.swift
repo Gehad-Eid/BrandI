@@ -17,7 +17,8 @@ struct CalendarView: View {
     @State private var selectedDate = Self.now
     private static var now = Date()
 
-
+    // Add a list of dates to highlight
+        private let highlightedDates: [Date]
  
     @State private var navigateToCalenderMainView = false
 
@@ -37,74 +38,83 @@ struct CalendarView: View {
         self.dayFormatter = DateFormatter(dateFormat: "d", calendar: calendar)
         self.weekDayFormatter = DateFormatter(dateFormat: "EEEEE", calendar: calendar)
         self.fullFormatter = DateFormatter(dateFormat: "MMMM dd, yyyy", calendar: calendar)
+        //Here is the list that will return the Days with posts
+            //Supose to be from the view model
+        let highlightedDateComponents = [
+                   DateComponents(year: 2024, month: 11, day: 15),
+                   DateComponents(year: 2024, month: 11, day: 16),
+                   DateComponents(year: 2024, month: 11, day: 17)
+               ]
+               self.highlightedDates = highlightedDateComponents.compactMap { calendar.date(from: $0) }
         
     }
     // MARK: This is a main calender view
     var body: some View {
-        NavigationView {
-                  VStack {
-                      CalendarViewComponent(
-                          calendar: calendar,
-                          date: $selectedDate,
-                          content: { date in
-                              VStack {
-                                  Text(dayFormatter.string(from: date))
-                                      .padding(8)
-                                      .foregroundColor(calendar.isDateInToday(date) ? Color.white : .primary)
-                                      .background(
-                                          calendar.isDateInToday(date) ? Color("BabyBlue")
-                                          : calendar.isDate(date, inSameDayAs: selectedDate) ? .gray
-                                          : .clear
-                                      )
-                                      .frame(maxHeight: .infinity)
-                                      .contentShape(Rectangle())
-                                      .cornerRadius(7)
-                                      .onTapGesture {
-                                          selectedDate = date
-                                          currentDate = date
-                                          dismiss()
-                                          print("User clicked date: ⛅️ ⛅️ \(fullFormatter.string(from: date))")
-                                      }
+           NavigationView {
+               VStack {
+                   CalendarViewComponent(
+                       calendar: calendar,
+                       date: $selectedDate,
+                       content: { date in
+                           VStack {
+                               Text(dayFormatter.string(from: date))
+                                   .padding(8)
+                                   .foregroundColor(calendar.isDateInToday(date) ? Color.white : .primary)
+                                   .background(
+                                       calendar.isDateInToday(date) ? Color("BabyBlue")
+                                       : highlightedDates.contains { calendar.isDate($0, inSameDayAs: date) } ? Color("BabyBlue").opacity(0.3)
+                                       : calendar.isDate(date, inSameDayAs: selectedDate) ? .gray
+                                       : .clear
+                                   )
+                                   .frame(maxHeight: .infinity)
+                                   .contentShape(Rectangle())
+                                   .cornerRadius(7)
+                                   .onTapGesture {
+                                       selectedDate = date
+                                       currentDate = date
+                                       dismiss()
+                                       print("User clicked date: ⛅️ ⛅️ \(fullFormatter.string(from: date))")
+                                   }
 
-                                  NavigationLink(
-                                      destination: CalenderMainView(isAuthenticated: $isAuthenticated, calenerviewModel: calenerviewModel),
-                                      isActive: $navigateToCalenderMainView
-                                  ) {
-                                      EmptyView()
-                                  }
-                              }
-                          },
-                     trailing: { date in
-                         Button(action: { selectedDate = date }) {
-                             Text(dayFormatter.string(from: date))
-                                 .padding(8)
-                                 .foregroundColor(calendar.isDateInToday(date) ? .white : .gray)
-                                 .background(
-                                     calendar.isDateInToday(date) ? .green
-                                     : calendar.isDate(date, inSameDayAs: selectedDate) ? .gray
-                                     : .clear
-                                 )
-                                 .cornerRadius(7)
-                         }
-                     },
-                     header: { date in
-                         Text(weekDayFormatter.string(from: date)).fontWeight(.bold)
-                     },
-                     title: { date in
-                         HStack {
-                             Text(monthFormatter.string(from: date))
-                                 .font(.title)
-                                 .fontWeight(.bold)
-                                 .foregroundStyle(Color("BabyBlue"))
-                                 .padding(.vertical, 8)
-                             Spacer()
-                         }
-                     }
-                 )
-                  }.padding()
-         }
-     }
- }
+                               NavigationLink(
+                                   destination: CalenderMainView(isAuthenticated: $isAuthenticated, calenerviewModel: calenerviewModel),
+                                   isActive: $navigateToCalenderMainView
+                               ) {
+                                   EmptyView()
+                               }
+                           }
+                       },
+                       trailing: { date in
+                           Button(action: { selectedDate = date }) {
+                               Text(dayFormatter.string(from: date))
+                                   .padding(8)
+                                   .foregroundColor(calendar.isDateInToday(date) ? .white : .gray)
+                                   .background(
+                                       calendar.isDateInToday(date) ? .green
+                                       : calendar.isDate(date, inSameDayAs: selectedDate) ? .gray
+                                       : .clear
+                                   )
+                                   .cornerRadius(7)
+                           }
+                       },
+                       header: { date in
+                           Text(weekDayFormatter.string(from: date)).fontWeight(.bold)
+                       },
+                       title: { date in
+                           HStack {
+                               Text(monthFormatter.string(from: date))
+                                   .font(.title)
+                                   .fontWeight(.bold)
+                                   .foregroundStyle(Color("BabyBlue"))
+                                   .padding(.vertical, 8)
+                               Spacer()
+                           }
+                       }
+                   )
+               }.padding()
+           }
+       }
+   }
 // MARK: - Component
 
 public struct CalendarViewComponent<Day: View, Header: View, Title: View, Trailing: View>: View {
@@ -315,10 +325,16 @@ struct SizePreferenceKey: PreferenceKey {
 // MARK: - Previews
 
 #if DEBUG
-//struct CalendarView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CalendarView(calendar: .current, isAuthenticated: true)
-//        //            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-//    }
-//}
+struct CalendarView_Previews: PreviewProvider {
+    static var previews: some View {
+        CalendarView(
+            calendar: .current,
+            isAuthenticated: .constant(true),
+            calenerviewModel: CalenderViewModel(),
+            currentDate: .constant(Date())
+        )
+        //            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
+    }
+}
+
 #endif
