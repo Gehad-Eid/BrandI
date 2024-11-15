@@ -13,10 +13,7 @@ struct CalenderItemView: View {
 
     
     let item: Any
-    
-//    @ObservedObject var vm: AgendaViewModel
-//    @EnvironmentObject var addPostVM: AddPostViewModel
-    
+
     @Binding var itemBinding: Any?
     
     @Binding var showDeletePopup: Bool

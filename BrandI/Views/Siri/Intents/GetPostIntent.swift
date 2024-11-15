@@ -29,7 +29,7 @@ struct GetPostInfo: AppIntent {
             throw NSError(domain: "com.example.AppIntents", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to load post details"])
         }
         
-        let snippet = PostAddedView(post: postData)
+        let snippet = PostViewDialog(post: postData)
         
         let dialog = IntentDialog(
             full: "You’re viewing the latest details for \(getpost.title)!",
