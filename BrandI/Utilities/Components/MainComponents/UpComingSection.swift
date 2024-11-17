@@ -25,7 +25,7 @@ struct UpcomingSection: View {
             TabView {
                 ForEach(vm.upcomingItems?.indices ?? 0..<0, id: \.self) { index in
                     if let item = vm.upcomingItems?[index] {
-                        UpcomingCard(item: item/*, vm: vm*/)
+                        UpcomingCard(item: item)
                             .padding()
                     }
                 }

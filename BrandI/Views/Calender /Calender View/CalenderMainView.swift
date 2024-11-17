@@ -5,13 +5,14 @@
 //  Created by sumaiya on 24/10/2567 BE.
 //
 
-
 import SwiftUI
 import SwiftData
 
 struct CalenderMainView: View {
-//    @Environment var addPostVM: AddPostViewModel
     @EnvironmentObject var vm: AgendaViewModel
+    @EnvironmentObject var calenerviewModel: CalenderViewModel
+    
+    @ObservedObject var addPostVM = AddPostViewModel()
     
     @Binding var isAuthenticated: Bool
     
@@ -20,30 +21,40 @@ struct CalenderMainView: View {
     @State private var showDeletePopup = false
     @State private var showSignInSheet = false
     @State private var showCalendarSheet = false
-    @ObservedObject var calenerviewModel: CalenderViewModel
-//    @StateObject var vm = AgendaViewModel()
-    
     @State var item: Any? = nil
-//
     
     var body: some View {
         NavigationStack {
             ZStack {
+                VStack {
+                    // Success notification
+                    if !vm.showSuccessNotificationMessage.isEmpty {
+                        Text("\(vm.showSuccessNotificationMessage)")
+                            .foregroundColor(.white)
+                            .padding()
+                            .background(Color.green)
+                            .cornerRadius(8)
+                            .transition(.move(edge: .top))
+                            .animation(.easeInOut)
+                    }
+                    
+                    Spacer()
+                }
+                .zIndex(100)
+                
                 // Delete confirmation popup overlay
                 if showDeletePopup {
-                    DeleteAlert(/*addPostVM: addPostVM,*/ showDeletePopup: $showDeletePopup, item: item as Any)
+                    DeleteAlert(addPostVM: addPostVM, showDeletePopup: $showDeletePopup, item: item as Any)
                         .zIndex(1)
                 }
                 
                 VStack(alignment: .leading) {
-                    WeeklyScrollView(calenerviewModel: calenerviewModel/*, agendaViewModel: vm*/
-                                     
-                    )
+                    WeeklyScrollView()
                         .frame(height: 89)
                         .padding(.top,40)
                     
                     if isAuthenticated {
-                        CalenderListView(showDeletePopup: $showDeletePopup, item: $item/*, agendaViewModel: vm, addPostVM: addPostVM*/)
+                        CalenderListView(showDeletePopup: $showDeletePopup, item: $item)
                             .scrollIndicators(.hidden)
                     } else {
                         VStack {
@@ -58,6 +69,7 @@ struct CalenderMainView: View {
                             Text(self.calenerviewModel.currentDate.formatted(.dateTime.month(.wide)))
                                 .font(.largeTitle)
                                 .fontWeight(.bold)
+                            
                             Text(self.calenerviewModel.currentDate.formatted(.dateTime.year()))
                                 .foregroundColor(Color("Text"))
                                 .font(.largeTitle)
@@ -65,19 +77,18 @@ struct CalenderMainView: View {
                         }
                     }
                     // Calendar Icon Toolbar Item
-                                   ToolbarItem(placement: .topBarTrailing) {
-                                       Button(action: {
-                                           showCalendarSheet = true
-                                       }, label: {
-                                           Image(systemName: "calendar")
-                                               .foregroundColor(.babyBlue)
-                                       })
-                                       .sheet(isPresented: $showCalendarSheet) {
-                                           CalendarView(calendar: .current,isAuthenticated: $isAuthenticated, calenerviewModel:calenerviewModel,
-                                                        currentDate: $currentDate
-                                           )
-                                       }
-                                   }
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button(action: {
+                            showCalendarSheet = true
+                        }, label: {
+                            Image(systemName: "calendar")
+                                .foregroundColor(.babyBlue)
+                        })
+                        .sheet(isPresented: $showCalendarSheet) {
+                            CalendarView(calendar: .current,isAuthenticated: $isAuthenticated, currentDate: $currentDate, highlightedDates: vm.extractDates(from: vm.AllPostsAndEvents ?? [])
+                            )
+                        }
+                    }
                     ToolbarItem(placement: .topBarTrailing) {
                         Button(action: {
                             if isAuthenticated {
@@ -90,17 +101,12 @@ struct CalenderMainView: View {
                                 .foregroundColor(.babyBlue)
                         })
                         .sheet(isPresented: $showingAddPostView) {
-                            CreatePostView(post: nil)
+                            AddPostView()
                         }
                         .sheet(isPresented: $showSignInSheet) {
                             AuthContainerView(isAuthenticated: $isAuthenticated, showSignInSheet: $showSignInSheet)
                         }
                     }
-                    //
-                  
-                               
-                    
-                    
                 }
             }
         }
@@ -112,9 +118,35 @@ struct CalenderMainView: View {
                     
                     vm.getAll()
                     vm.getAllInDay(date: calenerviewModel.currentDate)
-                        
+                    
                 } else {
                     print("Failed to retrieve posts: userID not found")
+                }
+            }
+        }
+        .onChange(of: vm.updateUITrigger) { _ in
+            Task {
+                if let userID = UserDefaults.standard.string(forKey: "userID") {
+                    try await vm.loadPosts(userId: userID)
+                    try await vm.loadEvents(userId: userID)
+                    
+                    vm.getAll()
+                    vm.getAllInDay(date: calenerviewModel.currentDate)
+                } else {
+                    print("userID not found")
+                }
+            }
+        }
+        .onChange(of: addPostVM.updateUITrigger) { _ in
+            Task {
+                if let userID = UserDefaults.standard.string(forKey: "userID") {
+                    try await vm.loadPosts(userId: userID)
+                    try await vm.loadEvents(userId: userID)
+                    
+                    vm.getAll()
+                    vm.getAllInDay(date: calenerviewModel.currentDate)
+                } else {
+                    print("userID not found")
                 }
             }
         }

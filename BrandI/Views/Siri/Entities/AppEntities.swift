@@ -83,22 +83,17 @@ extension PostQuery: EnumerableEntityQuery {
 //                    await SiriViewModel.shared.trail(with: id)
 //                }
 //            }
-//            
+//
 //            var results: [Post?] = []
 //            for try await post in group {
 //                results.append(post)
 //            }
 //            return results
 //        }
-//        
+//
 //        // Map the posts to NoteEntity objects, filtering out nil values
 //        return notes.compactMap { $0 }.map {
 //            PostEntity(post: $0)
 //        }
 //    }
 //}
-
-
-
-
-

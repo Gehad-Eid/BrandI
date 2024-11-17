@@ -28,27 +28,34 @@ struct SettingsView: View {
                     if isAuthenticated /*let userID = UserDefaults.standard.string(forKey: "userID")*/ {
                         Section {
                             // TODO: pretty suer that should change to account at least !!
-                            settingsRow(iconName: "envelope", title: "Profile", destination: EditNameView(/*vm: vm*/),
-                                        isSystemImage: true)
+                            settingsRow(iconName: "envelope",
+                                        title: "Profile",
+                                        destination: EditNameView(),
+                                        isSystemImage: true
+                            )
                             
                             if vm.authProviders.contains(where: { $0 == .email }) {
                                 // TODO: pretty suer that should change !!
-                                settingsRow(iconName: "key.fill", title: "Change Password", destination: PasswordChangeView(vm: vm),
+                                settingsRow(iconName: "key.fill",
+                                            title: "Change Password",
+                                            destination: PasswordChangeView(vm: vm),
                                             isSystemImage: true
                                 )
                             }
                             
-                            //                        // API Integration
-                            //                        settingsRow(iconName: "link", title: "Linked Accounts", destination: IntegrationView(),
-                            //                                    isSystemImage: true)
-                            //
-                            //                        // Identity - AI
-                            //                        settingsRow(iconName: "light", title: "My Brand Identity",
-                            //                                    destination: BrandIdentityView(),
-                            //
-                            //                                    isSystemImage: false
-                            //                        )
+                            // API Integration
+                            //settingsRow(iconName: "link",
+                            //            title: "Linked Accounts",
+                            //            destination: IntegrationView(),
+                            //            isSystemImage: true
+                            //)
                             
+                            // Identity - AI
+                            settingsRow(iconName: "light",
+                                        title: "My Brand Identity",
+                                        destination: BrandIdentityView(),
+                                        isSystemImage: false
+                            )
                         }
                         
                         // Sign Out
@@ -68,8 +75,8 @@ struct SettingsView: View {
                                     Spacer()
                                 }
                                 .padding()
-                                //                            .background(RoundedRectangle(cornerRadius: 18)
-                                //                                .fill(Color.white))
+                                // .background(RoundedRectangle(cornerRadius: 18)
+                                // .fill(Color.white))
                             }
                             .alert(isPresented: $showSignOutAlert) {
                                 Alert(
@@ -100,27 +107,17 @@ struct SettingsView: View {
                                     Spacer()
                                 }
                                 .padding()
-                                //                            .background(RoundedRectangle(cornerRadius: 18)
-                                //                                .fill(Color.white))
+                                // .background(RoundedRectangle(cornerRadius: 18)
+                                // .fill(Color.white))
                             }
+                            
                             VStack {
                                 ShortcutsLink()
-                                    .overlay(
-                                        VStack {
-                                            Text("BrandI shortcuts")
-                                                .fontWeight(.semibold)
-                                                .font(.system(size: 15))
-                                                .foregroundColor(.white)
-                                                .padding()
-                                                .background(Color.black)
-                                                .cornerRadius(8)
-                                        }
-                                        .padding(.leading, 50)
-                                        .allowsHitTesting(false),
-                                        alignment: .center
-                                    )
-                            }                    .padding(.leading,60)
-                            
+                                    .frame(maxWidth: .infinity, alignment: .center) // Center the ShortcutsLink
+                            }
+                            .frame(maxWidth: .infinity) // Make VStack take the full width
+                            // .padding(.leading,60)
+                            // .padding(.vertical,8)
                         }
                     }
                     else {
@@ -149,11 +146,11 @@ struct SettingsView: View {
                             .sheet(isPresented: $showSignInSheet) {
                                 AuthContainerView(isAuthenticated: $isAuthenticated, showSignInSheet: $showSignInSheet)
                             }
-//                            .onChange(of: isAuthenticated) { authenticated in
-//                                if authenticated {
-//                                    showSignInSheet = false
-//                                }
-//                            }
+                            //                            .onChange(of: isAuthenticated) { authenticated in
+                            //                                if authenticated {
+                            //                                    showSignInSheet = false
+                            //                                }
+                            //                            }
                         }
                     }
                 }
@@ -180,24 +177,24 @@ private func settingsRow<Destination: View>(iconName: String, title: String, des
 ) -> some View {
     NavigationLink(destination: destination) {
         HStack {
-                  if isSystemImage {
-                      Image(systemName: iconName)
-                          .foregroundColor(.babyBlue)
-                  } else {
-                      Image(iconName)
-                          .resizable()
-                          .scaledToFit()
-                          .frame(width: 24, height: 24)
-                          .foregroundColor(.babyBlue)
-                  }
+            if isSystemImage {
+                Image(systemName: iconName)
+                    .foregroundColor(.babyBlue)
+            } else {
+                Image(iconName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24, height: 24)
+                    .foregroundColor(.babyBlue)
+            }
             Text(title)
                 .font(.system(size: 18, weight: .medium))
                 .padding(.leading, 10)
             Spacer()
         }
         .padding()
-//        .background(RoundedRectangle(cornerRadius: 18)
-//            .fill(Color("BoxColor")))
+        //        .background(RoundedRectangle(cornerRadius: 18)
+        //            .fill(Color("BoxColor")))
     }
 }
 

@@ -57,21 +57,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		B8CBA3212CAE78F600288719 /* Exceptions for "BrandI" folder in "Challange1Tests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"GoogleService-Info.plist",
-			);
-			target = B897CFB82CA92E61002CC428 /* Challange1Tests */;
-		};
-		B8CBA3222CAE78F600288719 /* Exceptions for "BrandI" folder in "Challange1UITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"GoogleService-Info.plist",
-			);
-			target = B897CFC22CA92E61002CC428 /* Challange1UITests */;
-		};
-		B8CBA3292CAE80EE00288719 /* Exceptions for "BrandI" folder in "Challange1" target */ = {
+		B874A66A2CE9EE8900943E2B /* Exceptions for "BrandI" folder in "Challange1" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -84,9 +70,7 @@
 		B897CFAB2CA92E60002CC428 /* BrandI */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				B8CBA3292CAE80EE00288719 /* Exceptions for "BrandI" folder in "Challange1" target */,
-				B8CBA3212CAE78F600288719 /* Exceptions for "BrandI" folder in "Challange1Tests" target */,
-				B8CBA3222CAE78F600288719 /* Exceptions for "BrandI" folder in "Challange1UITests" target */,
+				B874A66A2CE9EE8900943E2B /* Exceptions for "BrandI" folder in "Challange1" target */,
 			);
 			path = BrandI;
 			sourceTree = "<group>";

@@ -11,10 +11,8 @@ import SwiftUI
 
 struct WeeklyScrollView: View {
     @EnvironmentObject var agendaViewModel: AgendaViewModel
-
-    @ObservedObject var calenerviewModel : CalenderViewModel
-//    @ObservedObject var agendaViewModel: AgendaViewModel
-
+    @EnvironmentObject var calenerviewModel : CalenderViewModel
+    
     var body: some View {
         VStack {
             HStack {
@@ -33,7 +31,7 @@ struct WeeklyScrollView: View {
                 }
             }
             .padding(.horizontal)
-           
+            
             ScrollViewReader { proxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 16) {
@@ -72,7 +70,7 @@ struct WeeklyScrollView: View {
                                     agendaViewModel.getAllInDay(date: date)
                                 }
                             }
-                            .id(date) 
+                            .id(date)
                         }
                     }
                     .padding(.horizontal)
@@ -80,9 +78,14 @@ struct WeeklyScrollView: View {
                 }
                 .onAppear {
                     // Scroll to today's date when the view appears
-                    if let today = calenerviewModel.currentMonthDates.first(where: { calenerviewModel.isToday(date: $0) }) {
-                        proxy.scrollTo(today, anchor: .center)
-                    }
+                    scrollToCurrentDate(proxy: proxy)
+                }
+                .onChange(of: calenerviewModel.currentDate) { _ in
+                    // Scroll to today's date when the date changes
+                    scrollToCurrentDate(proxy: proxy)
+                }
+                .onChange(of: calenerviewModel.currentMonthDates) { _ in
+                    scrollToCurrentDate(proxy: proxy)
                 }
             }
             
@@ -95,12 +98,31 @@ struct WeeklyScrollView: View {
                 .padding(.horizontal)
             
             Divider()
-                
+            
         }
         .onAppear {
-            // Set the current date to today's date if it's the first load
-            calenerviewModel.currentDate = Date()
-            agendaViewModel.getAllInDay(date: Date())
+            // if the "Show All" presseed on the Agenda view
+            if let currentDate = calenerviewModel.currentDateFromAgenda {
+                calenerviewModel.currentDate = currentDate
+                agendaViewModel.getAllInDay(date: currentDate)
+                calenerviewModel.currentDateFromAgenda = nil
+            }
+            else {
+                // Set the current date to today's date if it's the first load
+                calenerviewModel.currentDate = Date()
+                agendaViewModel.getAllInDay(date: Date())
+            }
+        }
+    }
+    
+    // Scroll to the current date and center it in the view
+    private func scrollToCurrentDate(proxy: ScrollViewProxy) {
+        DispatchQueue.main.async {
+            if let today = calenerviewModel.currentMonthDates.first(where: { calenerviewModel.isToday(date: $0) }) {
+                withAnimation {
+                    proxy.scrollTo(today, anchor: .center)
+                }
+            }
         }
     }
 }

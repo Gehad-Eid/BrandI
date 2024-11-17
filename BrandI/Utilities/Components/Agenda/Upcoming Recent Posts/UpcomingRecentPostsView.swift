@@ -5,18 +5,17 @@
 //  Created by Gehad Eid on 04/11/2024.
 //
 
-
 import SwiftUI
 
 struct UpcomingRecentPostsView: View {
     @EnvironmentObject var vm: AgendaViewModel
+    @EnvironmentObject var calenerviewModel: CalenderViewModel
     
-    @ObservedObject var calenerviewModel: CalenderViewModel
     @Binding var mainTabSelection: Int
-
-    @State private var selectedDay = 1
     @Binding var isAuthenticated: Bool
-
+    
+    @State private var selectedDay = 1
+    
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
             // Date representation
@@ -29,7 +28,7 @@ struct UpcomingRecentPostsView: View {
                 
                 Button("Show All") {
                     mainTabSelection = 1 // Switch to Calendar tab in MainTabView
-                    calenerviewModel.currentDate = vm.getFormattedDate(forDayOffset: selectedDay).date ?? Date()
+                    calenerviewModel.currentDateFromAgenda = vm.getFormattedDate(forDayOffset: selectedDay).date ?? Date()
                 }
                 .foregroundColor(Color("BabyBlue"))
             }
@@ -57,16 +56,14 @@ struct UpcomingRecentPostsView: View {
                 .tabViewStyle(.page(indexDisplayMode: .always))
                 .indexViewStyle(.page(backgroundDisplayMode: .interactive))
             }
-            
-//            // Custom Page Indicator
-//            PageIndicator(currentPage: $selectedDay, numberOfPages: vm.getCountsForUpcomingDays().count)
-//                .padding(.top, 8)
-        }.onAppear {
+        }
+        .onAppear {
             setupAppearance()
-          }
+        }
     }
+    
     func setupAppearance() {
         UIPageControl.appearance().currentPageIndicatorTintColor = .babyBlue
         UIPageControl.appearance().pageIndicatorTintColor = UIColor.black.withAlphaComponent(0.2)
-      }
+    }
 }

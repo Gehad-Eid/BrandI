@@ -36,7 +36,7 @@ struct HeaderView: View {
                     .accessibilityLabel(Text("Press the button to create a post"))
             }
             .sheet(isPresented: $showingAddPostView) {
-                CreatePostView(post: nil)
+                AddPostView(/*post: nil*/)
             }
             .sheet(isPresented: $showSignInSheet) {
                 AuthContainerView(isAuthenticated: $isAuthenticated, showSignInSheet: $showSignInSheet)
