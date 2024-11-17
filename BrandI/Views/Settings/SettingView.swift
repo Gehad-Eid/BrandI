@@ -53,7 +53,7 @@ struct SettingsView: View {
                             // Identity - AI
                             settingsRow(iconName: "light",
                                         title: "My Brand Identity",
-                                        destination: BrandIdentityView(),
+                                        destination: BrandIdentityView(onDone: nil),
                                         isSystemImage: false
                             )
                         }

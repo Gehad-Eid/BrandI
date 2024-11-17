@@ -52,6 +52,11 @@ struct SelectPhotosScrollView: View {
                                                 .cornerRadius(8)
                                                 .padding(.vertical)
                                                 .padding(.leading, 10)
+                                                .onTapGesture {
+                                                    // To show the fullscreen view
+                                                    currentImageIndex = index
+                                                    isViewingImage = true
+                                                }
                                         } placeholder: {
                                             ProgressView()
                                                 .frame(width: 80, height: 80)

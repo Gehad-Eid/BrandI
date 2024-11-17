@@ -28,6 +28,7 @@ struct EditView: View {
     @State private var loadingButton: Bool = false
     @State private var isLoading: Bool = false
     @State private var showPopup: Bool = false
+    @State private var showBrandIdentitySheet: Bool = false
     
     @State var post: Post?
     @State var event: Event?
@@ -92,8 +93,8 @@ struct EditView: View {
                             Button("Edit") {
                                 isEditingEnabled = true
                             }
-                            .disabled(!doneloadingImages)
-                            .foregroundColor(doneloadingImages ? Color("BabyBlue") : .gray)
+                            .disabled(post != nil ? !doneloadingImages : isEditingEnabled)
+                            .foregroundColor((post != nil ? doneloadingImages : !isEditingEnabled) ? Color("BabyBlue") : .gray)
                         }
                     }
                     
@@ -230,9 +231,9 @@ struct EditView: View {
                     if isEditingEnabled {
                         if let userID = UserDefaults.standard.string(forKey: "userID") {
                             if post != nil , let postId = post?.postId {
+                                loadingButton = true
                                 vm.updatePost(userId: userID, postId: postId){
                                     Task {
-                                        loadingButton = true
                                         try await agendaViewModel.DoneAdding(userId: userID, type: "Your Post Has Been Updated Successfully!")
                                         dismiss()
                                         loadingButton = false
@@ -241,9 +242,9 @@ struct EditView: View {
                                 print("postId: \(postId)")
                             }
                             else if event != nil , let eventId = event?.eventId {
+                                loadingButton = true
                                 vm.updateEvent(userId: userID, eventId: eventId){
                                     Task {
-                                        loadingButton = true
                                         try await agendaViewModel.DoneAdding(userId: userID, type: "Your Event Has Been Updated Successfully!")
                                         dismiss()
                                         loadingButton = false
@@ -258,7 +259,6 @@ struct EditView: View {
                     print("outlined Button")
                 }) {
                     Text(/*isEditingEnabled ?*/ loadingButton ? "Updating..." : "Save" /*: "Post"*/)
-                    //  .fontWeight(.semibold)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
                         .overlay(
@@ -270,17 +270,52 @@ struct EditView: View {
                 .disabled(loadingButton)
             }
             
-            // Filled Button
-            Button(action: {
-                //                if let brand = mainViewModel.user?.brand {
-                if post != nil {
-                    if !vm.imageList.isEmpty {
-                        if vm.imageList.count > 1 {
-                            showSelectingImageSheet = true
-                            print("full image")
+            // Check Preformance Button
+            if post != nil {
+                Button(action: {
+                    if !brandIdentity.isEmpty {
+                        if !vm.imageList.isEmpty {
+                            if vm.imageList.count > 1 {
+                                showSelectingImageSheet = true
+                                print("full image")
+                            }
+                            else if vm.imageList.count == 1 {
+                                selectedImage = vm.imageList.first?.image
+                                Task {
+                                    do {
+                                        try await doneSelectingImage()
+                                    } catch {
+                                        // Handle any errors here
+                                        print("Error: \(error.localizedDescription)")
+                                    }
+                                }
+                            }
+                        } else {
+                            Task {
+                                do {
+                                    try await doneSelectingImage()
+                                } catch {
+                                    // TODO: Handle errors
+                                    print("Error: \(error.localizedDescription)")
+                                }
+                            }
                         }
-                        else if vm.imageList.count == 1 {
-                            selectedImage = vm.imageList.first?.image
+                    }
+                }) {
+                    Text("Check Preformance")
+                    //  .fontWeight(.semibold)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .background(doneloadingImages ? Color("BabyBlue") : .gray.opacity(0.5))
+                        .foregroundColor(.white)
+                        .cornerRadius(15)
+                        .disabled(!doneloadingImages)
+                }
+                .sheet(isPresented: $showSelectingImageSheet){
+                    ImageSelectionSheet(
+                        imageList: vm.imageList,
+                        selectedImage: $selectedImage,
+                        onDone: {
                             Task {
                                 do {
                                     try await doneSelectingImage()
@@ -290,46 +325,43 @@ struct EditView: View {
                                 }
                             }
                         }
-                    } else if vm.imageDataList.isEmpty {
+                    )
+                }
+                .sheet(isPresented: $showBrandIdentitySheet){
+                    BrandIdentityView(){
+                        // First, dismiss the sheet
+                        showBrandIdentitySheet = false
+                        
+                        // Then proceed with the rest of the logic
                         Task {
-                            do {
-                                try await doneSelectingImage()
-                                print("Done in empty image")
-                            } catch {
-                                // Handle any errors here
-                                print("Error: \(error.localizedDescription)")
+                            if !vm.imageList.isEmpty {
+                                if vm.imageList.count > 1 {
+                                    showSelectingImageSheet = true
+                                }
+                                else if vm.imageList.count == 1 {
+                                    Task {
+                                        do {
+                                            selectedImage = vm.imageList.first?.image
+                                            try await doneSelectingImage()
+                                        } catch {
+                                            // TODO: Handle errors
+                                            print("Error: \(error.localizedDescription)")
+                                        }
+                                    }
+                                }
+                            } else {
+                                Task {
+                                    do {
+                                        try await doneSelectingImage()
+                                    } catch {
+                                        // TODO: Handle errors
+                                        print("Error: \(error.localizedDescription)")
+                                    }
+                                }
                             }
                         }
-                    }
-                    else {
-                        print("No image itsssss empty image")
                     }
                 }
-            }) {
-                Text("Check Preformance")
-                //  .fontWeight(.semibold)
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .background(doneloadingImages ? Color("BabyBlue") : .gray.opacity(0.5))
-                    .foregroundColor(.white)
-                    .cornerRadius(15)
-                    .disabled(!doneloadingImages)
-            }
-            .sheet(isPresented: $showSelectingImageSheet){
-                ImageSelectionSheet(
-                    imageList: vm.imageList,
-                    selectedImage: $selectedImage,
-                    onDone: {
-                        Task {
-                            do {
-                                try await doneSelectingImage()
-                            } catch {
-                                // Handle any errors here
-                                print("Error: \(error.localizedDescription)")
-                            }
-                        }
-                    }
-                )
             }
         }
         .padding()
@@ -346,46 +378,60 @@ struct EditView: View {
                 let colorText = userBrand.colors
                 let nameText = userBrand.name
                 
-                brandIdentity = " brand name: " + nameText + "purpose: " + identityText + " audience: " + audianceText + " category: " + selectedCategory + " color palate: " + colorText
+                brandIdentity = "brand name: " + nameText + " purpose: " + identityText + " audience: " + audianceText + " category: " + selectedCategory + " color palate: " + colorText
             }
         }
     }
     
     private func doneSelectingImage() async throws {
-        guard let selectedImage = selectedImage else { return }
-        guard let imageData = selectedImage.jpegData(compressionQuality: 0.8) else { return }
-        base64Image = imageData.base64EncodedString()
-        showPopup = true
-        isLoading = true
+        try? await mainViewModel.loadCurrentUser()
+        loadUserBrand()
         
-        let text = """
-            using this as brand identity "\(brandIdentity)", evaluate this post and does it match the brand identity by giving it a score out of 100 and a feedback if necessary of max 10 words and if there's a image attached check if it matches the color palate and check if it matchs the post if not dont add their score to the respond and make the respond in this exact format 'overallScore: int, compatability: int, grammar and spiling: int, color match: int, image match: int, feedback: str', where the overallScore is the mean for the scores. here is the post: "\(vm.postContent)"
-            """
-//        let text = "using this as brand identity " BRAND IDENTITY ", evaluate this post and does it match the brand identity by giving it a score out of 100 and a feedback if necessary of max 10 words and if there's a image attached check if it matches the color palate and check if it matchs the post if not dont add their score to the respond and make the respond in this exact format 'overallScore: int, compatability: int, grammar and spiling: int, color match: int, image match: int, feedback: str',where the overallScore is the mean for the scores. here is the post: " POST CONTENT "
-        
-        
-        try await APIManager.shared.callOpenAIModel(imageBase64: base64Image ?? "", text: text){ response in
-            if let response = response {
-                self.responseText = response
-                print(response)
+        if !brandIdentity.isEmpty {
+            if let selectedImage = selectedImage {
+                guard let imageData = selectedImage.jpegData(compressionQuality: 0.8) else { return }
+                base64Image = imageData.base64EncodedString()
             } else {
-                self.responseText = "Failed to get a response."
+                base64Image = ""
+                print("passed")
             }
-            isLoading = false
+            
+            showPopup = true
+            isLoading = true
+            
+            let content = vm.title + "\n" + vm.postContent
+            let text = """
+                using this as brand identity "\(brandIdentity)", evaluate this post and does it match the brand identity by giving it a score out of 100 and a feedback if necessary of max 10 words and if there's a image attached check if it matches the color palate and check if it matchs the post if not dont add their score to the respond and make the respond in this exact format 'overallScore: int, compatability: int, grammar and spiling: int, color match: int, image match: int, feedback: str', where the overallScore is the mean for the scores. here is the post: "\(content)"
+                """
+            
+            
+            try await APIManager.shared.callOpenAIModel(imageBase64: base64Image ?? "", text: text){ response in
+                if let response = response {
+                    self.responseText = response
+                    print(response)
+                } else {
+                    self.responseText = "Failed to get a response."
+                }
+                isLoading = false
+            }
+        }
+        else {
+            showBrandIdentitySheet = true
         }
     }
-    
-    
+}
+
+
 //    func callOpenAIModel(imageBase64: String, text: String, completion: @escaping (String?) -> Void) {
 //        let baseUrl = "https://api.openai.com/v1/chat/completions"
-//        
+//
 //        let apiToken = "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"
-//        
+//
 //        let headers: HTTPHeaders = [
 //            "Content-Type": "application/json",
 //            "Authorization":  "Bearer \(apiToken)"
 //        ]
-//        
+//
 //        let payload = [
 //            "model": "gpt-4o-mini",
 //            "messages": [
@@ -407,7 +453,7 @@ struct EditView: View {
 //                ]
 //            ]
 //        ] as! [String : Any]
-//        
+//
 //        AF.request(baseUrl, method: .post, parameters: payload, encoding: JSONEncoding.default, headers: headers)
 //            .responseJSON { response in
 //                switch response.result {
@@ -426,7 +472,7 @@ struct EditView: View {
 //                    completion(nil)
 //                }
 //            }
-//        
+//
 ////        AF.request(baseUrl,
 ////                   method: .post,
 ////                   parameters: payload,
@@ -437,91 +483,3 @@ struct EditView: View {
 ////            print(data.result)
 ////        }
 //    }
-}
-
-
-struct ImageSelectionSheet: View {
-    @Environment(\.dismiss) var dismiss
-    
-    let imageList: [(image: UIImage, name: String)]
-    @Binding var selectedImage: UIImage?
-    let onDone: () -> Void
-    
-    var body: some View {
-        NavigationView {
-            ScrollView {
-                VStack {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("Important: Select the Best Image for Analysis")
-                            .font(.caption)
-                            .fontWeight(.bold)
-                            .foregroundColor(.red.opacity(0.8))
-                            .padding(.horizontal)
-                            .multilineTextAlignment(.leading)
-                        
-                        Text("To get the most accurate feedback for your post, please select an image that best matches the content or represents the main theme of your post. This image will be analyzed by our AI to provide you with personalized feedback.")
-                            .font(.caption)
-                            .foregroundColor(.gray)
-                            .multilineTextAlignment(.leading)
-                            .padding(.horizontal)
-                        
-                        Spacer()
-                    }
-                    
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))], spacing: 10) {
-                        ForEach(imageList, id: \.name) { imageItem in
-                            ZStack {
-                                Image(uiImage: imageItem.image)
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 100, height: 100)
-                                    .cornerRadius(8)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 8)
-                                            .stroke(selectedImage == imageItem.image ? Color.blue : Color.clear, lineWidth: 3)
-                                    )
-                                    .opacity(selectedImage == nil || selectedImage == imageItem.image ? 1.0 : 0.5)
-                                    .onTapGesture {
-                                        if selectedImage == imageItem.image {
-                                            selectedImage = nil
-                                        } else {
-                                            selectedImage = imageItem.image
-                                        }
-                                    }
-                                
-                                if selectedImage == imageItem.image {
-                                    Image(systemName: "checkmark.circle.fill")
-                                        .foregroundColor(.blue)
-                                        .background(Circle().fill(Color.white))
-                                        .font(.headline)
-                                        .offset(x: -35, y: -35)
-                                }
-                            }
-                        }
-                    }
-                    .padding()
-                }
-            }
-            .navigationTitle("Select an Image")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Cancel") {
-                        selectedImage = nil
-                        dismiss()
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        dismiss()
-                        onDone()
-                    }
-                    .disabled(selectedImage == nil)
-                }
-            }
-        }
-        .onDisappear {
-            selectedImage = nil
-        }
-    }
-}

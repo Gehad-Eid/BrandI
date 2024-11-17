@@ -37,7 +37,10 @@ struct FullScreenImageCarousel: View {
                     }) {
                         Image(systemName: "xmark.app.fill")
                             .font(.largeTitle)
-                            .foregroundColor(.white)
+                            .foregroundColor(.red)
+                        //TODO: make background white with nothing out
+                            .background(Color.white)
+                            .cornerRadius(20)
                             .padding()
                     }
                 }

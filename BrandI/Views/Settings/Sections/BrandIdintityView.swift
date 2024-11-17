@@ -12,6 +12,7 @@ struct BrandIdentityView: View {
     @StateObject var vm = SettingsViewModel()
     @StateObject var brandVM = BrandIdintityViewModel()
     @State private var showImagePicker: Bool = false
+    let onDone: (() -> Void)?
 
     // Expanded categories list
     let categories = [
@@ -27,7 +28,13 @@ struct BrandIdentityView: View {
                 // Split complex UI components into smaller views
                 BrandInputSection(brandVM: brandVM, categories: categories, showImagePicker: $showImagePicker)
                 BrandImageSection(brandVM: brandVM, showImagePicker: $showImagePicker)
-                UploadButtonSection(brandVM: brandVM, updateBrand: vm.updateBrand)
+                
+                if let onDone = onDone {
+                    UploadButtonSection(brandVM: brandVM, updateBrand: vm.updateBrand, onDone: onDone)
+                } else {
+                    UploadButtonSection(brandVM: brandVM, updateBrand: vm.updateBrand, onDone: nil)
+                }
+                
                 Spacer()
             }
             .onAppear(){
@@ -56,5 +63,5 @@ struct BrandIdentityView: View {
 }
 
 #Preview {
-    BrandIdentityView()
+    BrandIdentityView(onDone: nil)
 }

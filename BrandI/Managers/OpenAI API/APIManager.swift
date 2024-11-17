@@ -22,27 +22,58 @@ class APIManager {
             "Authorization":  "Bearer \(apiToken)"
         ]
         
-        let payload = [
-            "model": "gpt-4o-mini",
-            "messages": [
-                [
-                    "role": "user",
-                    "content": [
-                        [
-                            "type": "text",
-                            "text": text
-                        ],
-                        [
-                            "type": "image_url",
-                            "image_url": [
-                                "url": "data:image/jpeg;base64,\(imageBase64)",
-                                "detail": "low"
-                            ]
-                        ]
+        //        let payload = [
+        //            "model": "gpt-4o-mini",
+        //            "messages": [
+        //                [
+        //                    "role": "user",
+        //                    "content": [
+        //                        [
+        //                            "type": "text",
+        //                            "text": text
+        //                        ],
+        //                        [
+        //                            "type": "image_url",
+        //                            "image_url": [
+        //                                "url": "data:image/jpeg;base64,\(imageBase64)",
+        //                                "detail": "low"
+        //                            ]
+        //                        ]
+        //                    ]
+        //                ]
+        //            ]
+        //        ] as! [String : Any]
+        
+        var messages: [[String: Any]] = [
+            [
+                "role": "user",
+                "content": [
+                    [
+                        "type": "text",
+                        "text": text
                     ]
                 ]
             ]
-        ] as! [String : Any]
+        ]
+        
+        // Conditionally add image content
+        if !imageBase64.isEmpty {
+            if var content = messages[0]["content"] as? [[String: Any]] {
+                content.append([
+                    "type": "image_url",
+                    "image_url": [
+                        "url": "data:image/jpeg;base64,\(imageBase64)",
+                        "detail": "low"
+                    ]
+                ])
+                messages[0]["content"] = content
+            }
+        }
+        
+        let payload: [String: Any] = [
+            "model": "gpt-4o-mini",
+            "messages": messages
+        ]
         
         let response = await AF.request(baseUrl,
                                         method: .post,
