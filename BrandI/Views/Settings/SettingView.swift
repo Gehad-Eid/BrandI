@@ -113,11 +113,22 @@ struct SettingsView: View {
                             
                             VStack {
                                 ShortcutsLink()
-                                    .frame(maxWidth: .infinity, alignment: .center) // Center the ShortcutsLink
+                                    .overlay(
+                                        VStack {
+                                            Text("BrandI shortcuts")
+                                                .fontWeight(.semibold)
+                                                .font(.system(size: 15))
+                                                .foregroundColor(.white)
+                                                .padding()
+                                                .background(Color.black)
+                                                .cornerRadius(8)
+                                        }
+                                            .padding(.leading, 50)
+                                            .allowsHitTesting(false),
+                                        alignment: .center
+                                    )
                             }
-                            .frame(maxWidth: .infinity) // Make VStack take the full width
-                            // .padding(.leading,60)
-                            // .padding(.vertical,8)
+                            .padding(.leading,60)
                         }
                     }
                     else {
