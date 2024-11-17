@@ -46,6 +46,21 @@ final class UserManager {
     func updateEmail(userID: String, newEmail: String) async throws {
         try await userDocument(userId: userID).updateData([DBUser.CodingKeys.email.rawValue: newEmail])
     }
+    
+    func updateBrand(userID: String, newBrand: [BarandIdentity]) async throws {
+        // Convert BarandIdentity array to dictionary array
+        let brandDictionaries = newBrand.map { brand in
+            return [
+                BarandIdentity.CodingKeys.purpose.rawValue: brand.purpose,
+                BarandIdentity.CodingKeys.audience.rawValue: brand.audience,
+                BarandIdentity.CodingKeys.category.rawValue: brand.category,
+                BarandIdentity.CodingKeys.colors.rawValue: brand.colors,
+                BarandIdentity.CodingKeys.name.rawValue: brand.name
+            ]
+        }
+        
+        try await userDocument(userId: userID).updateData([DBUser.CodingKeys.brand.rawValue: brandDictionaries])
+    }
 }
 
 // MARK: Posts functions

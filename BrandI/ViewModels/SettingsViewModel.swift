@@ -54,6 +54,11 @@ final class SettingsViewModel : ObservableObject {
         try await FirebaseAuthManager.shared.updateEmail(email: email)
     }
     
+    func updateBrand(barnd: [BarandIdentity]) async throws {
+        let authUser = try FirebaseAuthManager.shared.getAuthenticatedUser()
+        try await UserManager.shared.updateBrand(userID: authUser.uid, newBrand: barnd)
+    }
+    
     func updatePassword(pass: String) async throws {
         let authUser = try FirebaseAuthManager.shared.getAuthenticatedUser()
         

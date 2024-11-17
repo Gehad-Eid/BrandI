@@ -12,20 +12,23 @@ struct DBUser : Codable {
     let email: String?
     let name: String?
     let dateCreated: Date?
+    let brand: [BarandIdentity]?
     
     init(authUser: AuthDataResultModel) {
         self.userId = authUser.uid
         self.email = authUser.email
         self.name = authUser.name
         self.dateCreated = Date()
+        self.brand = []
     }
     
-    // For dynamic coding where whatever other developers writes in the DB we can handel it in 2 sec
+    // For dynamic coding where whatever other developers writes in the DB we can handel it
     enum CodingKeys: String, CodingKey {
         case userId = "user_id"
         case email = "email"
         case name = "name"
         case dateCreated = "date_created"
+        case brand = "brand"
     }
     
     init(from decoder: any Decoder) throws {
@@ -34,6 +37,7 @@ struct DBUser : Codable {
         self.email = try container.decodeIfPresent(String.self, forKey: .email)
         self.name = try container.decodeIfPresent(String.self, forKey: .name)
         self.dateCreated = try container.decodeIfPresent(Date.self, forKey: .dateCreated)
+        self.brand = try container.decodeIfPresent([BarandIdentity].self, forKey: .brand)
     }
     
     func encode(to encoder: Encoder) throws {
@@ -42,5 +46,6 @@ struct DBUser : Codable {
         try container.encodeIfPresent(email, forKey: .email)
         try container.encodeIfPresent(name, forKey: .name)
         try container.encodeIfPresent(dateCreated, forKey: .dateCreated)
+        try container.encodeIfPresent(brand, forKey: .brand)
     }
 }

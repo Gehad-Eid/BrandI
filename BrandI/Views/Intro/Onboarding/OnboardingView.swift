@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+//TODO: Skip button
+//TODO: view instead of images
 
 struct OnboardingView: View {
     @State private var currentPage = 0
@@ -23,7 +25,7 @@ struct OnboardingView: View {
                 onboarding3()
                     .tag(2)
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never)) // Hide default indicator
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             .animation(.easeInOut, value: currentPage)
             .edgesIgnoringSafeArea(.all)
             

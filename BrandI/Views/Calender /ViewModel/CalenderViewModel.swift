@@ -11,6 +11,7 @@ import Foundation
 class CalenderViewModel: ObservableObject {
     @Published var allWeeks: [Week] = []
     @Published var currentDate: Date = Date()
+    @Published var currentDateFromAgenda: Date?
     
     @Published var currentIndex: Int = 0
     @Published var indexToUpdate: Int = 0

@@ -45,10 +45,11 @@ struct DailyCardView: View {
             ReusableCardView(
                 title: post.title,
                 platforms: post.platforms ?? [],
+                selectedImages: post.images ?? [],
                 description: post.content,
-                destination: AnyView(CreatePostView(post: post))
+                destination: AnyView(EditView(post: post))
             )
-            .offset(y: CGFloat(index * 60))
+            .offset(y: CGFloat(index * 60)) // 200 -> // TODO: make expandable
         }
     }
 }

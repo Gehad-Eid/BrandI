@@ -12,8 +12,12 @@ import FirebaseFirestore
 @MainActor
 final class AddPostViewModel: ObservableObject {
     
-    var isFormValid: Bool {
+    var isPostFormValid: Bool {
         !title.isEmpty && !postContent.isEmpty && selectedPlatforms.isEmpty == false
+    }
+    
+    var isEventFormValid: Bool {
+        !title.isEmpty && startDate <= endDate
     }
 
     @Published var title: String = ""
@@ -32,6 +36,8 @@ final class AddPostViewModel: ObservableObject {
     
     @Published var newDocInfo: (docId: String, doc: DocumentReference)?
     @Published var uploadedImages: [ImageData] = []
+    
+    @Published var updateUITrigger: Bool = false
     
     private var inProgressImageURLs = Set<String>()
     
@@ -79,7 +85,7 @@ final class AddPostViewModel: ObservableObject {
     }
         
     // Add New Post
-    func addPost(userId: String) {
+    func addPost(userId: String, onSuccess: @escaping () -> Void) {
         Task {
             // Save images in DB and save their URLs
             try await saveImagesToFirebase()
@@ -101,18 +107,18 @@ final class AddPostViewModel: ObservableObject {
             postId = try await UserManager.shared.addNewPost(userID: userId, post: post, docInfo: newDocInfo)
             print("postId in vm: \(postId)")
             
-            try await AgendaViewModel().loadPosts(userId: userId)
-            reset()
+            onSuccess()
         }
     }
     
     func deletePost(userId: String, postId: String) async throws {
         try await StorageManager.shared.deleteImages(userId: userId, postId: postId)
         try await UserManager.shared.deletePost(userID: userId, postID: postId)
+        updateUITrigger.toggle()
     }
     
     // Update a post
-    func updatePost(userId: String, postId: String) {
+    func updatePost(userId: String, postId: String, onSuccess: @escaping () -> Void) {
         Task {
             // Save images
             try await saveImagesToFirebase()
@@ -133,35 +139,110 @@ final class AddPostViewModel: ObservableObject {
                 // TODO: Handle error
                 print("Failed to update post: \(error)")
             }
+            
+            updateUITrigger.toggle()
+            onSuccess()
         }
     }
     
     // Get the images from URL to UIImage
     func getImageToUIImage(userId: String, images: [ImageData]) async throws {
         var tempImageList: [(image: UIImage, name: String)] = []
-        
-        for imageData in images {
-            // Skip if this URL is already being downloaded
-            if inProgressImageURLs.contains(imageData.imageUrl) { continue }
-            
-            // Mark the URL as in progress
-            inProgressImageURLs.insert(imageData.imageUrl)
-            
-            // Download the image asynchronously
-            do {
-                if let image = try await downloadImage(userId: userId, imagePath: imageData, postId: postId) {
-                    tempImageList.append((image, imageData.name))
+        let maxConcurrentTasks = 4 // Limit concurrent downloads
+
+        // Dictionary to track active downloads
+        var activeTasks: [String: Task<(UIImage, String)?, Error>] = [:]
+
+        // TaskGroup with limited concurrent downloads
+        try await withThrowingTaskGroup(of: (UIImage, String)?.self, body: { group in
+            for imageData in images {
+                // Access and modify inProgressImageURLs on the main actor
+                let alreadyInProgress = await MainActor.run {
+                    if inProgressImageURLs.contains(imageData.imageUrl) {
+                        return true
+                    }
+                    inProgressImageURLs.insert(imageData.imageUrl)
+                    return false
                 }
-            } catch {
-                print("Error downloading image: \(error)")
+
+                if alreadyInProgress {
+                    print("Skipping already in-progress URL: \(imageData.imageUrl)")
+                    continue
+                }
+
+                // Check if the URL is already being processed
+                if let existingTask = activeTasks[imageData.imageUrl] {
+                    group.addTask {
+                        return try await existingTask.value
+                    }
+                    continue
+                }
+
+                // Add a new download task
+                let task = Task<(UIImage, String)?, Error> {
+                    do {
+                        if let image = try await self.downloadImage(userId: userId, imagePath: imageData, postId: self.postId) {
+                            return (image, imageData.name)
+                        } else {
+                            return nil
+                        }
+                    } catch {
+                        print("Error downloading image \(imageData.imageUrl): \(error)")
+                        return nil
+                    }
+                }
+
+                activeTasks[imageData.imageUrl] = task
+                group.addTask {
+                    let result = try await task.value
+                    await MainActor.run {
+                        self.inProgressImageURLs.remove(imageData.imageUrl) // Remove from progress tracking
+                    }
+                    return result
+                }
             }
-            
-            // Remove from in progress set after download completes
-            inProgressImageURLs.remove(imageData.imageUrl)
+
+            // Collect results
+            for try await result in group {
+                if let validResult = result {
+                    tempImageList.append(validResult)
+                }
+            }
+        })
+
+        // Update the image list
+        await MainActor.run {
+            self.imageList = tempImageList
         }
-        
-        self.imageList = tempImageList
     }
+
+
+
+//    func getImageToUIImage(userId: String, images: [ImageData]) async throws {
+//        var tempImageList: [(image: UIImage, name: String)] = []
+//
+//        for imageData in images {
+//            // Skip if this URL is already being downloaded
+//            if inProgressImageURLs.contains(imageData.imageUrl) { continue }
+//
+//            // Mark the URL as in progress
+//            inProgressImageURLs.insert(imageData.imageUrl)
+//
+//            // Download the image asynchronously
+//            do {
+//                if let image = try await downloadImage(userId: userId, imagePath: imageData, postId: postId) {
+//                    tempImageList.append((image, imageData.name))
+//                }
+//            } catch {
+//                print("Error downloading image: \(error)")
+//            }
+//
+//            // Remove from in progress set after download completes
+//            inProgressImageURLs.remove(imageData.imageUrl)
+//        }
+//
+//        self.imageList = tempImageList
+//    }
 
     // Helper function to download an image
     private func downloadImage(userId: String, imagePath: ImageData, postId: String) async throws -> UIImage? {
@@ -169,20 +250,22 @@ final class AddPostViewModel: ObservableObject {
     }
     
     // Add New Event
-    func addEvent(userId: String) {
+    func addEvent(userId: String, onSuccess: @escaping () -> Void) {
         let event = Event(eventId: "", title: title, startDate: startDate, endDate: endDate)
         Task {
            eventId = try await UserManager.shared.addNewevent(userID: userId, event: event)
             print("eventId in vm: \(eventId)")
+            onSuccess()
         }
     }
     
     func deleteEvent(userId: String, eventId: String) async throws {
         try await UserManager.shared.deleteEvent(userID: userId, eventID: eventId)
+        updateUITrigger.toggle()
     }
     
     // Update a event
-    func updateEvent(userId: String, eventId: String) {
+    func updateEvent(userId: String, eventId: String, onSuccess: @escaping () -> Void) {
         let updatedEvent = Event(
             eventId: eventId,
             title: title,
@@ -197,6 +280,9 @@ final class AddPostViewModel: ObservableObject {
                 // Handle error (e.g., show an alert)
                 print("Failed to update event: \(error)")
             }
+            
+            updateUITrigger.toggle()
+            onSuccess()
         }
     }
 }

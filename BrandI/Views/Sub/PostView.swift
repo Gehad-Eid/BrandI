@@ -5,7 +5,6 @@
 //  Created by Gehad Eid on 19/10/2024.
 //
 
-
 import SwiftUI
 
 struct PostView: View {
@@ -48,8 +47,4 @@ struct PostView: View {
         .padding()
         .navigationTitle("Post Details")
     }
-}
-
-#Preview {
-    PostView(post: .init(postId: "1", title: "Post Title", content: "Post Content", date: .init(), images: nil, platforms: nil, recommendation: nil, isDraft: nil), userId: "")
 }

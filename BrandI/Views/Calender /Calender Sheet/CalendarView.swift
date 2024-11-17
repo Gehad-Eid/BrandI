@@ -8,117 +8,129 @@
 import SwiftUI
 
 struct CalendarView: View {
+    @EnvironmentObject var calenerviewModel: CalenderViewModel
+    @EnvironmentObject var vm: AgendaViewModel
+    @Environment(\.dismiss) var dismiss
+    
     private let calendar: Calendar
     private let monthFormatter: DateFormatter
     private let dayFormatter: DateFormatter
     private let weekDayFormatter: DateFormatter
     private let fullFormatter: DateFormatter
-    @Binding var isAuthenticated: Bool
-    @State private var selectedDate = Self.now
+    private let highlightedDates: [Date]
+    
     private static var now = Date()
-
-    // Add a list of dates to highlight
-        private let highlightedDates: [Date]
- 
+    
+    @Binding var isAuthenticated: Bool
+    @Binding var currentDate: Date
+    
+    @State private var selectedDate = Self.now
     @State private var navigateToCalenderMainView = false
-
-        @ObservedObject var calenerviewModel: CalenderViewModel
-    @Environment(\.dismiss) var dismiss
-       @Binding var currentDate: Date
     
     
-    init(calendar: Calendar, isAuthenticated: Binding<Bool>,calenerviewModel: CalenderViewModel,
-    currentDate: Binding<Date>
+    
+    init(calendar: Calendar, isAuthenticated: Binding<Bool>, currentDate: Binding<Date>, highlightedDates: [Date]
     ) {
         self.calendar = calendar
         self._isAuthenticated = isAuthenticated
-        self.calenerviewModel = calenerviewModel
         self._currentDate = currentDate
         self.monthFormatter = DateFormatter(dateFormat: "MMMM", calendar: calendar)
         self.dayFormatter = DateFormatter(dateFormat: "d", calendar: calendar)
         self.weekDayFormatter = DateFormatter(dateFormat: "EEEEE", calendar: calendar)
         self.fullFormatter = DateFormatter(dateFormat: "MMMM dd, yyyy", calendar: calendar)
-        //Here is the list that will return the Days with posts
-            //Supose to be from the view model
-        let highlightedDateComponents = [
-                   DateComponents(year: 2024, month: 11, day: 15),
-                   DateComponents(year: 2024, month: 11, day: 16),
-                   DateComponents(year: 2024, month: 11, day: 17)
-               ]
-               self.highlightedDates = highlightedDateComponents.compactMap { calendar.date(from: $0) }
-        
+        self.highlightedDates = highlightedDates
     }
-    // MARK: This is a main calender view
+    
     var body: some View {
-           NavigationView {
-               VStack {
-                   CalendarViewComponent(
-                       calendar: calendar,
-                       date: $selectedDate,
-                       content: { date in
-                           VStack {
-                               Text(dayFormatter.string(from: date))
-                                   .padding(8)
-                                   .foregroundColor(calendar.isDateInToday(date) ? Color.white : .primary)
-                                   .background(
-                                       calendar.isDateInToday(date) ? Color("BabyBlue")
-                                       : highlightedDates.contains { calendar.isDate($0, inSameDayAs: date) } ? Color("BabyBlue").opacity(0.3)
-                                       : calendar.isDate(date, inSameDayAs: selectedDate) ? .gray
-                                       : .clear
-                                   )
-                                   .frame(maxHeight: .infinity)
-                                   .contentShape(Rectangle())
-                                   .cornerRadius(7)
-                                   .onTapGesture {
-                                       selectedDate = date
-                                       currentDate = date
-                                       dismiss()
-                                       print("User clicked date: ⛅️ ⛅️ \(fullFormatter.string(from: date))")
-                                   }
-
-                               NavigationLink(
-                                   destination: CalenderMainView(isAuthenticated: $isAuthenticated, calenerviewModel: calenerviewModel),
-                                   isActive: $navigateToCalenderMainView
-                               ) {
-                                   EmptyView()
-                               }
-                           }
-                       },
-                       trailing: { date in
-                           Button(action: { selectedDate = date }) {
-                               Text(dayFormatter.string(from: date))
-                                   .padding(8)
-                                   .foregroundColor(calendar.isDateInToday(date) ? .white : .gray)
-                                   .background(
-                                       calendar.isDateInToday(date) ? .green
-                                       : calendar.isDate(date, inSameDayAs: selectedDate) ? .gray
-                                       : .clear
-                                   )
-                                   .cornerRadius(7)
-                           }
-                       },
-                       header: { date in
-                           Text(weekDayFormatter.string(from: date)).fontWeight(.bold)
-                       },
-                       title: { date in
-                           HStack {
-                               Text(monthFormatter.string(from: date))
-                                   .font(.title)
-                                   .fontWeight(.bold)
-                                   .foregroundStyle(Color("BabyBlue"))
-                                   .padding(.vertical, 8)
-                               Spacer()
-                           }
-                       }
-                   )
-               }.padding()
-           }
-       }
-   }
+        NavigationView {
+            VStack {
+                CalendarViewComponent(
+                    calendar: calendar,
+                    date: $selectedDate,
+                    content: { date in
+                        VStack {
+                            Text(dayFormatter.string(from: date))
+                                .padding(8)
+                                .foregroundColor(calendar.isDateInToday(date) ? Color.white : .primary)
+                                .background(
+                                    ZStack {
+                                        if calendar.isDateInToday(date) {
+                                            Color("BabyBlue")
+                                        } else if highlightedDates.contains(where: { calendar.isDate($0, inSameDayAs: date) }) {
+                                            Color("BabyBlue").opacity(0.3)
+                                        } else if calendar.isDate(date, inSameDayAs: selectedDate) {
+                                            Color.gray
+                                        } else {
+                                            Color.clear
+                                        }
+                                    }
+                                        .cornerRadius(7)
+                                        .padding(.vertical, 4) // Add padding to the background
+                                    
+//                                    calendar.isDateInToday(date) ? Color("BabyBlue")
+//                                    : highlightedDates.contains { calendar.isDate($0, inSameDayAs: date) } ? Color("BabyBlue").opacity(0.3)
+//                                    : calendar.isDate(date, inSameDayAs: selectedDate) ? .gray
+//                                    : .clear
+                                )
+                                .frame(maxHeight: .infinity)
+                                .contentShape(Rectangle())
+                                .cornerRadius(7)
+                                .onTapGesture {
+                                    selectedDate = date
+                                    currentDate = date
+                                    
+                                    // to show it in the main calendar
+                                    calenerviewModel.currentDate = date
+                                    calenerviewModel.fetchCurrentMonth()
+                                    vm.getAllInDay(date: date)
+                                    
+                                    dismiss()
+                                    print("User clicked date: ⛅️ ⛅️ \(fullFormatter.string(from: date))")
+                                }
+                            
+                            NavigationLink(
+                                destination: CalenderMainView(isAuthenticated: $isAuthenticated),
+                                isActive: $navigateToCalenderMainView
+                            ) {
+                                EmptyView()
+                            }
+                        }
+                    },
+                    trailing: { date in
+                        Button(action: { selectedDate = date }) {
+                            Text(dayFormatter.string(from: date))
+                                .padding(8)
+                                .foregroundColor(calendar.isDateInToday(date) ? .white : .gray)
+                                .background(
+                                    calendar.isDateInToday(date) ? .green
+                                    : calendar.isDate(date, inSameDayAs: selectedDate) ? .gray
+                                    : .clear
+                                )
+                                .cornerRadius(7)
+                        }
+                    },
+                    header: { date in
+                        Text(weekDayFormatter.string(from: date)).fontWeight(.bold)
+                    },
+                    title: { date in
+                        HStack {
+                            Text(monthFormatter.string(from: date))
+                                .font(.title)
+                                .fontWeight(.bold)
+                                .foregroundStyle(Color("BabyBlue"))
+                                .padding(.vertical, 8)
+                            Spacer()
+                        }
+                    }
+                )
+            }.padding()
+        }
+    }
+}
 // MARK: - Component
 
 public struct CalendarViewComponent<Day: View, Header: View, Title: View, Trailing: View>: View {
-
+    
     private var calendar: Calendar
     private var months: [Date] = []
     @Binding private var date: Date
@@ -126,13 +138,13 @@ public struct CalendarViewComponent<Day: View, Header: View, Title: View, Traili
     private let trailing: (Date) -> Trailing
     private let header: (Date) -> Header
     private let title: (Date) -> Title
-
+    
     let spaceName = "scroll"
     @State var wholeSize: CGSize = .zero
     @State var scrollViewSize: CGSize = .zero
     @State private var isInitialScroll = true
     private let daysInWeek = 7
-
+    
     public init(
         calendar: Calendar,
         date: Binding<Date>,
@@ -149,7 +161,7 @@ public struct CalendarViewComponent<Day: View, Header: View, Title: View, Traili
         self.title = title
         self.months = makeMonths()
     }
-
+    
     public var body: some View {
         ScrollViewReader { scrollViewProxy in
             ChildSizeReader(size: $wholeSize) {
@@ -160,7 +172,7 @@ public struct CalendarViewComponent<Day: View, Header: View, Title: View, Traili
                                 VStack {
                                     let month = month.startOfMonth(using: calendar)
                                     let days = makeDays(from: month)
-
+                                    
                                     Section(header: title(month)) { }
                                         .id(month) // Set unique ID for each month
                                     VStack {
@@ -217,12 +229,12 @@ private extension CalendarViewComponent {
         else {
             return []
         }
-
+        
         let dateInterval = DateInterval(start: yearFirstMonth.start, end: yearLastMonth.end)
-        return calendar.generateDates(for: dateInterval,
-                                      matching: calendar.dateComponents([.day], from: dateInterval.start))
+        return calendar.generateDates(for: dateInterval, matching: calendar.dateComponents([.day], from: dateInterval.start)
+        )
     }
-
+    
     func makeDays(from date: Date) -> [Date] {
         guard let monthInterval = calendar.dateInterval(of: .month, for: date),
               let monthFirstWeek = calendar.dateInterval(of: .weekOfMonth, for: monthInterval.start),
@@ -230,7 +242,7 @@ private extension CalendarViewComponent {
         else {
             return []
         }
-
+        
         let dateInterval = DateInterval(start: monthFirstWeek.start, end: monthLastWeek.end)
         return calendar.generateDays(for: dateInterval)
     }
@@ -241,25 +253,25 @@ private extension Calendar {
         for dateInterval: DateInterval,
         matching components: DateComponents) -> [Date] {
             var dates = [dateInterval.start]
-
+            
             enumerateDates(
                 startingAfter: dateInterval.start,
                 matching: components,
                 matchingPolicy: .nextTime
             ) { date, _, stop in
                 guard let date = date else { return }
-
+                
                 guard date < dateInterval.end else {
                     stop = true
                     return
                 }
-
+                
                 dates.append(date)
             }
-
+            
             return dates
         }
-
+    
     func generateDays(for dateInterval: DateInterval) -> [Date] {
         generateDates(
             for: dateInterval,
@@ -294,7 +306,7 @@ struct ViewOffsetKey: PreferenceKey {
 
 struct ChildSizeReader<Content: View>: View {
     @Binding var size: CGSize
-
+    
     let content: () -> Content
     var body: some View {
         ZStack {
@@ -316,25 +328,8 @@ struct ChildSizeReader<Content: View>: View {
 struct SizePreferenceKey: PreferenceKey {
     typealias Value = CGSize
     static var defaultValue: Value = .zero
-
+    
     static func reduce(value _: inout Value, nextValue: () -> Value) {
         _ = nextValue()
     }
 }
-
-// MARK: - Previews
-
-#if DEBUG
-struct CalendarView_Previews: PreviewProvider {
-    static var previews: some View {
-        CalendarView(
-            calendar: .current,
-            isAuthenticated: .constant(true),
-            calenerviewModel: CalenderViewModel(),
-            currentDate: .constant(Date())
-        )
-        //            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
-    }
-}
-
-#endif

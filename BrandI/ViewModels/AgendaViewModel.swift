@@ -29,6 +29,35 @@ final class AgendaViewModel: ObservableObject {
     @Published private(set) var upcomingEvents: [Event]? = nil
     @Published private(set) var upcomingItems: [Any]? = nil
     
+    @Published var showSuccessNotificationMessage: String = ""
+    
+    @Published var updateUITrigger: Bool = false
+    
+    func DoneAdding(userId: String, type: String) async throws {
+        
+        try await loadPosts(userId: userId)
+        try await loadEvents(userId: userId)
+        updateUITrigger.toggle()
+        
+        showSuccessNotificationMessage = type
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            self.showSuccessNotificationMessage = ""
+        }
+    }
+    
+    func loadAll(userId: String) async throws {
+        if let userID = UserDefaults.standard.string(forKey: "userID") {
+            try await loadPosts(userId: userID)
+            try await loadEvents(userId: userID)
+            try await loadMonthPostsAndEvents(userId: userID)
+            try await loadRecentPosts(userId: userID)
+            loadDraftPosts()
+            loadUpcomingPostsAndEvents()
+        } else {
+            print("userID not found")
+        }
+    }
+    
     func loadPosts(userId: String) async throws {
         self.posts = try await UserManager.shared.getUserPosts(userID: userId)
     }
@@ -69,19 +98,19 @@ final class AgendaViewModel: ObservableObject {
     // get upcoming posts and events within 3-5 days
     func loadUpcomingPostsAndEvents() {
         let currentDate = Date()
-        let threeDaysFromNow = Calendar.current.date(byAdding: .day, value: 3, to: currentDate)!
-        let fiveDaysFromNow = Calendar.current.date(byAdding: .day, value: 5, to: currentDate)!
+        let twoDaysFromNow = Calendar.current.date(byAdding: .day, value: 2, to: currentDate)!
+        let sixDaysFromNow = Calendar.current.date(byAdding: .day, value: 6, to: currentDate)!
         
         // Filter upcoming posts
         var upcomingPosts: [Post] = []
         if let upposts = posts {
-            upcomingPosts = upposts.filter { !($0.isDraft ?? false) && ($0.date >= threeDaysFromNow && $0.date <= fiveDaysFromNow) }
+            upcomingPosts = upposts.filter { !($0.isDraft ?? false) && ($0.date >= twoDaysFromNow && $0.date <= sixDaysFromNow) }
         }
         
         // Filter upcoming events
         var upcomingEvents: [Event] = []
         if let uppevents = events {
-            upcomingEvents = uppevents.filter { $0.startDate >= threeDaysFromNow && $0.startDate <= fiveDaysFromNow }
+            upcomingEvents = uppevents.filter { $0.startDate >= twoDaysFromNow && $0.startDate <= sixDaysFromNow }
         }
         
         // Combine upcoming posts and events into one array
@@ -125,6 +154,20 @@ final class AgendaViewModel: ObservableObject {
             let date2 = extractDate(from: second) ?? Date.distantPast
             return date1 < date2
         }
+    }
+    
+    func extractDates(from items: [Any]) -> [Date] {
+        var dates: [Date] = []
+        
+        for item in items {
+            if let event = item as? Event {
+                dates.append(event.startDate)
+            } else if let post = item as? Post {
+                dates.append(post.date)
+            }
+        }
+        
+        return dates
     }
     
     func getAllInDay(date: Date) {

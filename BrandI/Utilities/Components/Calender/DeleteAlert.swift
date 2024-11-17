@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct DeleteAlert: View {
-    @ObservedObject var addPostVM = AddPostViewModel()
+    @ObservedObject var addPostVM: AddPostViewModel
     
     @Binding var showDeletePopup: Bool
     let item: Any
@@ -19,15 +19,12 @@ struct DeleteAlert: View {
             onDelete: {
                 withAnimation {
                     if let userID = UserDefaults.standard.string(forKey: "userID") {
-                        print("here")
                         print(item)
                         if let post = item as? Post {
-                            print("ppost")
                             Task {
                                 try await addPostVM.deletePost(userId: userID, postId: post.postId)
                             }
                         } else if let event = item as? Event {
-                            print("eevent")
                             Task {
                                 try await addPostVM.deleteEvent(userId: userID, eventId: event.eventId)
                             }

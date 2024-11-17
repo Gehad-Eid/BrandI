@@ -17,7 +17,7 @@ struct UpcomingCard: View {
         let post = item as? Post
         let event = item as? Event
         
-        NavigationLink(destination: CreatePostView(post: post, event: event)) {
+//        NavigationLink(destination: EditView(post: post, event: event)) {
             HStack {
                 VStack(alignment: .center) {
                     Image(systemName: vm.getImageName(for: item))
@@ -45,6 +45,6 @@ struct UpcomingCard: View {
             .frame(width: 350, height: 80, alignment: .leading)
             .background(Color("BoxColor"))
             .cornerRadius(18)
-        }
+//        }
     }
 }
