@@ -88,12 +88,14 @@ struct CalenderItemView: View {
                                     showAddToDrafts = true
                                     showDelete = false
                                     activeSwipedItem = getItemID()
-                                } else if value.translation.width < -100 { // Swiped right
-                                    offset = -100
-                                    showDelete = true
-                                    showAddToDrafts = false
-                                    activeSwipedItem = getItemID()
-                                } else {
+                                }
+//                                else if value.translation.width < -100 { // Swiped right
+//                                    offset = -100
+//                                    showDelete = true
+//                                    showAddToDrafts = false
+//                                    activeSwipedItem = getItemID()
+//                                }
+                                else {
                                     resetState()
                                 }
                             }

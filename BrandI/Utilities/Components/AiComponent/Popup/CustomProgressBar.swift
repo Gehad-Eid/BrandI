@@ -14,11 +14,11 @@ struct CustomProgressBar: View {
         VStack {
             ZStack(alignment: .leading) {
                 RoundedRectangle(cornerRadius: 10)
-                    .frame(height: 20)
+                    .frame(height: 15)
                     .foregroundColor(Color("ProgressBackground"))
                 
                 RoundedRectangle(cornerRadius: 10)
-                    .frame(width: progress * 277, height: 20)
+                    .frame(width: progress * 280, height: 15)
                     .foregroundColor(Color("BabyBlue"))
                     .animation(.easeInOut(duration: 0.5), value: progress)
             }

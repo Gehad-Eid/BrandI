@@ -23,6 +23,23 @@ struct BrandIApp: App {
                 .environmentObject(mainViewModel)
                 .environmentObject(calenerviewModel)
                 .environmentObject(agendaViewModel)
+                .onAppear{
+                    Task {
+                        if let userID = UserDefaults.standard.string(forKey: "userID") {
+                            try await agendaViewModel.loadPosts(userId: userID)
+                            try await agendaViewModel.loadEvents(userId: userID)
+                            
+                            try await agendaViewModel.loadMonthPostsAndEvents(userId: userID)
+                            
+                            try await agendaViewModel.loadRecentPosts(userId: userID)
+                            
+                            agendaViewModel.loadDraftPosts()
+                            agendaViewModel.loadUpcomingPostsAndEvents()
+                        } else {
+                            print("userID not found")
+                        }
+                    }
+                }
         }
     }
 }
