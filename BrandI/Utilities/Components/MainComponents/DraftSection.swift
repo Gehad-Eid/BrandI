@@ -8,38 +8,31 @@
 import SwiftUI
 
 struct DraftSection: View {
+    let items: [Post]
+    
     var body: some View {
-           NavigationView {
-               HStack {
-                   Text("Draft")
-                       .font(.headline)
-                       .foregroundColor(.black)
-                   
-                   Spacer()
-                   
-                   NavigationLink(destination: DraftView()) {
-                       Image(systemName: "chevron.right")
-                           .font(.title2)
-                           .foregroundColor(.black)
-                   }
-               }
-               .padding()
-               .background(Color("graybackground"))
-               .cornerRadius(10)
-               .padding(.horizontal)
-               
-           }
-       }
-}
-//The View
-struct DraftView: View {
-    var body: some View {
-        Text("Welcome to Draft View!")
-            .font(.title)
+        NavigationLink(destination: ItemScrollView(items: items, type: "drafts")) {
+            HStack {
+                Text("Draft")
+                    .font(.body)
+                    .foregroundColor(.black)
+                
+                Spacer()
+                
+                Image(systemName: "chevron.right")
+                    .font(.body)
+                    .foregroundColor(.black)
+            }
             .padding()
+            .background(Color("graybackground"))
+            .cornerRadius(15)
+            .padding(.horizontal)
+        }
     }
 }
 
+
+
 #Preview {
-    DraftSection()
+    DraftSection(items: [])
 }

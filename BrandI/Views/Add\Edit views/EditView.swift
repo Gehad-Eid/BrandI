@@ -36,7 +36,7 @@ struct EditView: View {
     var body: some View {
         ZStack {
             if showPopup {
-                PopUpAi(isLoading: $isLoading, response: $responseText)
+                PopUpAi(isLoading: $isLoading, response: $responseText, showPopup: $showPopup)
                     .zIndex(100)
             }
             
@@ -273,10 +273,15 @@ struct EditView: View {
             // Check Preformance Button
             if post != nil {
                 Button(action: {
-                    if !brandIdentity.isEmpty {
+//                    if !brandIdentity.isEmpty {
                         if !vm.imageList.isEmpty {
                             if vm.imageList.count > 1 {
-                                showSelectingImageSheet = true
+                                if !brandIdentity.isEmpty {
+                                    showSelectingImageSheet = true
+                                }
+                                else {
+                                    showBrandIdentitySheet = true
+                                }
                                 print("full image")
                             }
                             else if vm.imageList.count == 1 {
@@ -300,7 +305,7 @@ struct EditView: View {
                                 }
                             }
                         }
-                    }
+//                    }
                 }) {
                     Text("Check Preformance")
                     //  .fontWeight(.semibold)
@@ -401,7 +406,7 @@ struct EditView: View {
             
             let content = vm.title + "\n" + vm.postContent
             let text = """
-                using this as brand identity "\(brandIdentity)", evaluate this post and does it match the brand identity by giving it a score out of 100 and a feedback if necessary of max 10 words and if there's a image attached check if it matches the color palate and check if it matchs the post if not dont add their score to the respond and make the respond in this exact format 'overallScore: int, compatability: int, grammar and spiling: int, color match: int, image match: int, feedback: str', where the overallScore is the mean for the scores. here is the post: "\(content)"
+                using this as brand identity "\(brandIdentity)", evaluate this post and does it match the brand identity by giving it a score out of 100 and a feedback if necessary of max 10 words and if there's a image attached check if it matches the color palate and check if it matchs the post if not dont add their score to the respond and make the respond EXACTLY in this EXACT format 'overallScore: int, compatability: int, grammar and spiling: int, color match: int, image match: int, feedback: str', where the overallScore is the mean for the scores. here is the post: "\(content)"
                 """
             
             

@@ -21,7 +21,7 @@ struct UpcomingDayView: View {
         VStack {
             VStack(alignment: .leading, spacing: 5) {
                 HStack {
-                    Text("In \(day) days")
+                    Text("Upcoming in \(day) days")
                         .font(.system(size: 18))
                         .bold()
                         .foregroundColor(Color.white)
@@ -65,7 +65,7 @@ struct UpcomingDayView: View {
                 .padding(.horizontal)
                 .padding(.vertical, 5)
                 .background(
-                    RoundedRectangle(cornerRadius: 4)
+                    RoundedRectangle(cornerRadius: 9)
                         .fill(Color.white.opacity(0.3))
                 )
             }

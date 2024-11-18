@@ -16,7 +16,7 @@ struct UpcomingView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
-            Text("Upcoming this week")
+            Text("For this week")
                 .font(.title3)
                 .fontWeight(.bold)
                 .padding(.bottom, -30)

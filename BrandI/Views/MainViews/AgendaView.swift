@@ -59,10 +59,12 @@ struct AgendaView: View {
                                 .accessibilityAddTraits(.isButton) // VoiceOver will treat it like a button
                                 
                                 // Month details
-                                MonthInfoView(EventsCount: vm.thisMonthEvents?.count ?? 0, PostsCount: vm.thisMonthPosts?.count ?? 0, DraftsCount: vm.thisMonthDraftPosts?.count ?? 0)
+                                MonthInfoView(Events: vm.thisMonthEvents ?? [], Posts: vm.thisMonthPosts ?? [], Drafts: vm.thisMonthDraftPosts ?? [])
                                 
-                                //Draft View
-//                                DraftSection()
+                                if let DraftsCount = vm.thisMonthDraftPosts?.count, DraftsCount != 0 {
+                                    //Draft View
+                                    DraftSection(items: vm.thisMonthDraftPosts ?? [])
+                                }
                                 
                                 // Upcoming events and posts for the next week
                                 if vm.upcomingItems?.isEmpty == false {
@@ -74,7 +76,7 @@ struct AgendaView: View {
                             }
                             else {
                                 // Month details
-                                MonthInfoView(EventsCount: 0, PostsCount: 0, DraftsCount: 0)
+                                MonthInfoView(Events: [], Posts: [], Drafts: [])
                                 
                                 // Yesterday, today, and tomorrow's Posts
                                 UpcomingRecentPostsView(mainTabSelection: $mainTabSelection, isAuthenticated: $isAuthenticated)
