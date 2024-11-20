@@ -40,9 +40,12 @@ struct BrandInputSection: View {
                     Spacer()
                 }
                 .background(Color.background)
-                .cornerRadius(10)
+                .cornerRadius(18)
             }
             .pickerStyle(MenuPickerStyle())
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .cornerRadius(18)
 
             BrandIdentityInputView(
                 title: "Who is your audience",

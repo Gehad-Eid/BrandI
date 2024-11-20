@@ -14,28 +14,24 @@ struct ItemScrollView: View {
     
     let type: String
     
-//    var array: [Any?] {
-//        switch type {
-//        case "posts":
-//            return vm.thisMonthPosts ?? []
-//        case "events":
-//            return vm.thisMonthEvents ?? []
-//        case "drafts":
-//            return vm.thisMonthDraftPosts ?? []
-//        default:
-//            return []
-//        }
-//    }
-    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading ,spacing: 16) {
-                ForEach(items.indices, id: \.self) { index in
-                    ListItem(item: items[index])
+                if !items.isEmpty {
+                    ForEach(items.indices, id: \.self) { index in
+                        ListItem(item: items[index])
+                    }
+                }
+                else {
+                    VStack {
+                        Text("Nothing found")
+                            .font(.headline)
+                            .padding(.vertical)
+                    }
                 }
             }
-            
             .padding(.top, 20)
-        }.navigationTitle("Draft")
+        }
+        .navigationTitle("Draft")
     }
 }

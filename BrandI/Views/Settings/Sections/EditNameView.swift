@@ -23,14 +23,13 @@ struct EditNameView: View {
                 if let user = vm.user {
                     if !(user.name?.isEmpty ?? true || user.name == nil) {
                         VStack(alignment: .leading) {
-                            Text("Name").font(.headline)
-                                .padding(.horizontal)
-                            Text("\(vm.user?.name ?? "Not Available")")
+                            Text("Name").font(.title3)
+                            Text("\(user.name ?? "Not Available")")
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .background(Color(.systemGray6))
-                                .cornerRadius(9)
-                                .padding(.horizontal)
+                                .cornerRadius(12)
+                                .foregroundColor(Color(.gray))
                                 .padding(.bottom, 20)
                         }
                     }
@@ -38,7 +37,7 @@ struct EditNameView: View {
                     VStack(alignment: .leading) {
                         Text("Email").font(.title3)
                          
-                        Text("\(vm.user?.email ?? "Not Available")")
+                        Text("\(user.email ?? "Not Available")")
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Color(.systemGray6))
@@ -48,7 +47,6 @@ struct EditNameView: View {
                     }
                     
                     if vmSettings.authProviders.contains(where: { $0 == .email }) {
-                        // TODO: pretty suer that should change !!
                         VStack{
                             settingsRow(iconName: "key.fill",
                                         title: "Change Password",

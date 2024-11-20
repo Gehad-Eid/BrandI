@@ -9,6 +9,8 @@
 import SwiftUI
 
 struct UploadButtonSection: View {
+    @Environment(\.dismiss) private var dismiss
+
     @ObservedObject var brandVM: BrandIdintityViewModel
     let updateBrand: ([BarandIdentity]) async throws -> Void
     let onDone: (() -> Void)?
@@ -20,9 +22,15 @@ struct UploadButtonSection: View {
             if let _ = brandVM.selectedImage {
                 isDonePressed = true
                 Task {
-                    await brandVM.handleImageUploadAndSave(updateBrand: updateBrand)
-                    // Call `onDone` only if it's provided
-                    onDone?()
+                    await brandVM.handleImageUploadAndSave(updateBrand: updateBrand){
+                        // Call `onDone` only if it's provided
+                        if let onDone = onDone {
+                            onDone()
+                        }
+                        else {
+                            dismiss()
+                        }
+                    }
                 }
             }
         }) {

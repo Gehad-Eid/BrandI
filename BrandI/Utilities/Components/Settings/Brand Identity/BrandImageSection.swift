@@ -9,6 +9,7 @@
 import SwiftUI
 
 struct BrandImageSection: View {
+    @Environment(\.colorScheme) var colorScheme
     @ObservedObject var brandVM: BrandIdintityViewModel
     @Binding var showImagePicker: Bool
 
@@ -23,10 +24,11 @@ struct BrandImageSection: View {
             } else {
                 RoundedRectangle(cornerRadius: 20)
                     .fill(Color.gray.opacity(0.1))
-                    .frame(width: 350, height: 300)
+                    .frame(width: 370, height: 300)
+                    .padding(.vertical)
                     .overlay(
                         VStack {
-                            Image("Vector")
+                            Image(colorScheme == .light ? "VectorLight" : "Vector")
                                 .resizable()
                                 .frame(width: 80, height: 80)
                                 .padding(.bottom, 30)
