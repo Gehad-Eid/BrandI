@@ -156,8 +156,7 @@ struct CalendarView: View {
                             }
                         )
                     }
-                    .padding(.top , 20)
-                    .padding(.bottom,10)
+                    .padding(.vertical , 10)
                     .padding(.horizontal,20)
                 }
                 .background(Color("Background"))

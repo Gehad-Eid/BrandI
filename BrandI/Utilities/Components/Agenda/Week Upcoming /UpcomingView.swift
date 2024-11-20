@@ -42,11 +42,11 @@ struct UpcomingView: View {
         
     }
     func setupAppearance() {
-        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor { traitCollection in
-            traitCollection.userInterfaceStyle == .dark ? .babyBlue : .blue
-        }
+        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor(named: "BabyBlue")
         UIPageControl.appearance().pageIndicatorTintColor = UIColor { traitCollection in
-            traitCollection.userInterfaceStyle == .dark ? UIColor.white.withAlphaComponent(0.2) : UIColor.black.withAlphaComponent(0.2)
+            traitCollection.userInterfaceStyle == .dark
+                ? UIColor.white.withAlphaComponent(0.2)
+                : UIColor.black.withAlphaComponent(0.2)
         }
     }
 }
