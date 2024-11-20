@@ -30,11 +30,13 @@ struct AgendaView: View {
                     if !vm.showSuccessNotificationMessage.isEmpty {
                         Text("\(vm.showSuccessNotificationMessage)")
                             .foregroundColor(.white)
+                            .font(Font.system(size: 12))
                             .padding()
-                            .background(Color.green)
+                            .background(Color("BabyBlue"))
                             .cornerRadius(8)
                             .transition(.move(edge: .top))
                             .animation(.easeInOut)
+                            .frame(maxWidth: 290, minHeight: 50)
                     }
                     
                     Spacer()
@@ -46,6 +48,7 @@ struct AgendaView: View {
                         VStack(alignment: .leading) {
                             // Header
                             HeaderView(showingAddPostView: $showingAddPostView, isAuthenticated: $isAuthenticated)
+                                .padding(.bottom, tipIsShown ? 0 : -15)
                             
                             
                             if isAuthenticated {

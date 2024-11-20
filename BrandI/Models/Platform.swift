@@ -19,15 +19,15 @@ enum Platform: String, Codable, Hashable, CaseIterable {
     // Get the correct icon image based on the platform and color scheme
     func iconName(for colorScheme: ColorScheme) -> String {
         switch (self, colorScheme) {
+        case (.instagram, .dark): return "Intagram icon Dark"
         case (.instagram, .light): return "Intagram icon Dark"
-        case (.instagram, .dark): return "Intagram icon Light"
 
+        case (.twitter, .dark): return "X icon Dark"
         case (.twitter, .light): return "X icon Dark"
-        case (.twitter, .dark): return "X icon Light"
+        case (.linkedin, .dark): return "Linkedin icon Dark"
         case (.linkedin, .light): return "Linkedin icon Dark"
-        case (.linkedin, .dark): return "Linkedin icon Light"
+        case (.tiktok, .dark): return "Tiktok icon Dark"
         case (.tiktok, .light): return "Tiktok icon Dark"
-        case (.tiktok, .dark): return "Tiktok icon Light"
         case (.siri, .light): return "SiriIcon"
         case (.siri, .dark): return "SiriIcon"
         }

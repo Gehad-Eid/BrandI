@@ -30,18 +30,18 @@ struct SettingsView: View {
                             // TODO: pretty suer that should change to account at least !!
                             settingsRow(iconName: "envelope",
                                         title: "Profile",
-                                        destination: EditNameView(),
+                                        destination: EditNameView(vmSettings: vm),
                                         isSystemImage: true
                             )
                             
-                            if vm.authProviders.contains(where: { $0 == .email }) {
-                                // TODO: pretty suer that should change !!
-                                settingsRow(iconName: "key.fill",
-                                            title: "Change Password",
-                                            destination: PasswordChangeView(vm: vm),
-                                            isSystemImage: true
-                                )
-                            }
+//                            if vm.authProviders.contains(where: { $0 == .email }) {
+//                                // TODO: pretty suer that should change !!
+//                                settingsRow(iconName: "key.fill",
+//                                            title: "Change Password",
+//                                            destination: PasswordChangeView(vm: vm),
+//                                            isSystemImage: true
+//                                )
+//                            }
                             
                             // API Integration
                             //settingsRow(iconName: "link",
@@ -56,10 +56,10 @@ struct SettingsView: View {
                                         destination: BrandIdentityView(onDone: nil),
                                         isSystemImage: false
                             )
-                        }
-                        
-                        // Sign Out
-                        Section {
+                            //                        }
+                            //
+                            //                        Section {
+                            // Sign Out
                             Button()
                             {
                                 showSignOutAlert = true
@@ -112,12 +112,9 @@ struct SettingsView: View {
                             }
                             
                             VStack {
-                                ShortcutsLink()
-                                    .frame(maxWidth: .infinity, alignment: .center) // Center the ShortcutsLink
+                                Shortcut()
                             }
-                            .frame(maxWidth: .infinity) // Make VStack take the full width
-                            // .padding(.leading,60)
-                            // .padding(.vertical,8)
+                            .frame(maxWidth: .infinity)
                         }
                     }
                     else {

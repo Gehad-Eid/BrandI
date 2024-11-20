@@ -31,9 +31,9 @@ struct SelectPlatforms: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text(isEditingEnabled ?? true ? "Select Platforms" : "Platforms")
-                .font(.headline.weight(.regular))
+                .font(.headline.weight(.medium))
             HStack {
-                HStack(alignment: .center, spacing: 20) {
+                HStack(alignment: .center, spacing: 50) {
                     // Show only selected platforms when not editing, or all platforms if editing
                     ForEach(platformList.indices, id: \.self) { index in
                         let platform = platformList[index]
@@ -61,7 +61,7 @@ struct SelectPlatforms: View {
                 .padding()
                 Spacer()
             }
-            .background(Color("graybackground"))
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(15)
         }
         .padding(.top, 10)

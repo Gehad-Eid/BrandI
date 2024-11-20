@@ -15,13 +15,13 @@ struct EditViewComponent<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
             Text(title)
-                .font(.headline.weight(.regular))
+                .font(.headline.weight(.medium))
             
             HStack {
                 content()
             }
             .padding()
-            .background(Color("graybackground"))
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(15)
         }
         .padding(.top, 10)

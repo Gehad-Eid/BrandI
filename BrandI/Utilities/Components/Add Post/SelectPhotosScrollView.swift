@@ -29,10 +29,12 @@ struct SelectPhotosScrollView: View {
                         Image(systemName: "photo.on.rectangle")
                             .font(.title)
                         Text("Add Photo")
-                            .font(.title3)
+                            .font(.system(size: 16))
+                            .fontWeight(.medium)
                     }
                     .foregroundColor(Color("BabyBlue"))
-                    .padding()
+                    //.padding()
+                    .padding(.top, -12)
                 }
             }
             // Show selected images if selected with a '+' button
@@ -47,7 +49,7 @@ struct SelectPhotosScrollView: View {
                                             image
                                                 .resizable()
                                                 .scaledToFill()
-                                                .frame(width: 80, height: 80)
+                                                .frame(width: 50, height: 50)
                                                 .clipped()
                                                 .cornerRadius(8)
                                                 .padding(.vertical)
@@ -70,9 +72,14 @@ struct SelectPhotosScrollView: View {
                                 else {
                                     HStack {
                                         Image(systemName: "photo.badge.exclamationmark")
-                                            .font(.title)
+                                            .font(.system(size: 16))
+                                           
+                                    
+                                         
+                                            
                                         Text("No Photo")
-                                            .font(.title3)
+                                            .font(.system(size: 16))
+                                            .fontWeight(.bold)
                                     }
                                     .foregroundColor(Color("Text"))
                                     .padding()
@@ -85,7 +92,7 @@ struct SelectPhotosScrollView: View {
                                             Image(uiImage: selectedUIImagesAndNames[index].image)
                                                 .resizable()
                                                 .scaledToFill()
-                                                .frame(width: 80, height: 80)
+                                                .frame(width: 50, height: 50)
                                                 .clipped()
                                                 .cornerRadius(8)
                                                 .onTapGesture {
@@ -122,17 +129,20 @@ struct SelectPhotosScrollView: View {
                                 }) {
                                     Image(systemName: "plus")
                                         .foregroundColor(Color.white)
-                                        .font(.title)
-                                        .frame(width: 80, height:80)
+                                        .font(.body)
+                                        .fontWeight(.bold)
+                                        .frame(width: 30, height:30)
                                         .background(Color("BabyBlue"))
                                         .cornerRadius(8)
-                                }
+                                        
+                                }.padding(.leading, -10)
                             }
                         }
                     }
                 }
-                .background(Color("graybackground"))
+                .background(Color.gray.opacity(0.1))
                 .cornerRadius(15)
+               
             }
         }
         .padding(.top, isEditingEnabled ?? true ? 10 : 0)

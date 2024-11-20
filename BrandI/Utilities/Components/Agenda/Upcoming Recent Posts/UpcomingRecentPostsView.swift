@@ -63,7 +63,12 @@ struct UpcomingRecentPostsView: View {
     }
     
     func setupAppearance() {
-        UIPageControl.appearance().currentPageIndicatorTintColor = .babyBlue
-        UIPageControl.appearance().pageIndicatorTintColor = UIColor.black.withAlphaComponent(0.2)
+        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor { traitCollection in
+            traitCollection.userInterfaceStyle == .dark ? .babyBlue : .blue
+        }
+        UIPageControl.appearance().pageIndicatorTintColor = UIColor { traitCollection in
+            traitCollection.userInterfaceStyle == .dark ? UIColor.white.withAlphaComponent(0.2) : UIColor.black.withAlphaComponent(0.2)
+        }
     }
+
 }

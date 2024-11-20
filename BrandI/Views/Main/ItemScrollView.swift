@@ -36,6 +36,6 @@ struct ItemScrollView: View {
             }
             
             .padding(.top, 20)
-        }
+        }.navigationTitle("Draft")
     }
 }

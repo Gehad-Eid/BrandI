@@ -15,6 +15,7 @@ struct DailyCardView: View {
         ZStack {
             if posts.isEmpty {
                     noPostsMessage
+                    .padding(.top, -150)
             } else {
                 postsView
                     .padding(.top, -150)
@@ -33,9 +34,11 @@ struct DailyCardView: View {
             Text("No Posts Scheduled Yet")
                 .foregroundColor(Color("GrayText"))
                 .bold()
+                .font(.system(size: 13))
             
             Text("Tap the \"+\" button to get started")
                 .foregroundColor(Color("GrayText"))
+                .font(.system(size: 15))
         }
     }
     

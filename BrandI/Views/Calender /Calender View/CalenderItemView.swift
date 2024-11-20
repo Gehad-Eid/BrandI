@@ -83,18 +83,19 @@ struct CalenderItemView: View {
                         }
                         .onEnded { value in
                             withAnimation {
-                                if value.translation.width > 100 { // Swiped left
-                                    offset = 100
-                                    showAddToDrafts = true
-                                    showDelete = false
-                                    activeSwipedItem = getItemID()
-                                }
-//                                else if value.translation.width < -100 { // Swiped right
-//                                    offset = -100
-//                                    showDelete = true
-//                                    showAddToDrafts = false
+//                                if value.translation.width > 100 { // Swiped left
+//                                    offset = 100
+//                                    showAddToDrafts = true
+//                                    showDelete = false
 //                                    activeSwipedItem = getItemID()
 //                                }
+//                                else
+                                if value.translation.width < -100 { // Swiped right
+                                    offset = -100
+                                    showDelete = true
+                                    showAddToDrafts = false
+                                    activeSwipedItem = getItemID()
+                                }
                                 else {
                                     resetState()
                                 }

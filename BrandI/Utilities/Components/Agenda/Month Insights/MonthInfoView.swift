@@ -24,7 +24,7 @@ struct MonthInfoView: View {
                 .font(.headline)
                 .fontWeight(.bold)
             
-            HStack/*(spacing: 15)*/ {
+            HStack(spacing: 15) {
                 //                Spacer()
                 MonthInfo(iconName: "calendar", count: Events.count, title: "Events")
                     .onTapGesture(){
@@ -40,12 +40,12 @@ struct MonthInfoView: View {
                         showScreen = true
                     }
                 //                Spacer()
-                MonthInfo(iconName: "pencil", count: Drafts.count, title: "Drafts")
-                    .onTapGesture(){
-                        type = "drafts"
-                        items = Drafts
-                        showScreen = true
-                    }
+//                MonthInfo(iconName: "pencil", count: Drafts.count, title: "Drafts")
+//                    .onTapGesture(){
+//                        type = "drafts"
+//                        items = Drafts
+//                        showScreen = true
+//                    }
                 //                Spacer()
             }
             .sheet(isPresented: $showScreen) {

@@ -47,7 +47,7 @@ struct Splash: View {
             }
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
             // After the animation is done, set isFirstTimeUser
             self.doneSplash = true
             self.isFirstTimeUser = isFirstTimeUser
