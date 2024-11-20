@@ -17,7 +17,8 @@ final class BrandIdintityViewModel : ObservableObject {
     @Published var selectedImage: UIImage? = nil
     
     // MARK: Handle Image Upload and Save
-    func handleImageUploadAndSave(updateBrand: @escaping ([BarandIdentity]) async throws -> Void) async {
+    func handleImageUploadAndSave(updateBrand: @escaping ([BarandIdentity]) async throws -> Void,
+                                  onSuccess: @escaping () -> Void) async {
         do {
             // Ensure there is a selected image
             guard let image = selectedImage,
@@ -54,6 +55,11 @@ final class BrandIdintityViewModel : ObservableObject {
             ]
             
             try await updateBrand(brand)
+            
+            // Execute the success handler
+            DispatchQueue.main.async {
+                onSuccess()
+            }
             print("Done")
             
         } catch {
