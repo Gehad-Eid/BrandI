@@ -40,7 +40,8 @@ struct HeaderView: View {
             }
             .sheet(isPresented: $showSignInSheet) {
                 AuthContainerView(isAuthenticated: $isAuthenticated, showSignInSheet: $showSignInSheet)
-            }
+            } .presentationDetents([.medium])
+            .presentationDragIndicator(.visible)
         }
     }
 }

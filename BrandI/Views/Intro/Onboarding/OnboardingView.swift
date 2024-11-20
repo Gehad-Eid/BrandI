@@ -16,6 +16,20 @@ struct OnboardingView: View {
     
     var body: some View {
         VStack {
+            HStack{
+                Spacer()
+                Button(action: {
+                     completeOnboarding()
+                }) {
+                    Text("Skip")
+                        .fontWeight(.bold)
+                        .foregroundColor(Color("BabyBlue"))
+                    
+                    
+                }
+                
+            }.padding(.horizontal ,30)
+                .padding(.top ,60)
             // Onboarding TabView
             TabView(selection: $currentPage) {
                 onboarding1()
@@ -49,7 +63,7 @@ struct OnboardingView: View {
                     currentPage += 1
                 }
             }) {
-                Text(currentPage == 2 ? "Get Started" : "Next")
+                Text(currentPage == 2 ? "Get Started" : " ")
                     .bold()
                     .padding()
                     .foregroundColor(.white)
@@ -63,7 +77,7 @@ struct OnboardingView: View {
         
     }
     
-    private func completeOnboarding() {
+    public func completeOnboarding() {
         UserDefaults.standard.set(true, forKey: "isFirstTimeUser")
         isFirstTimeUser = false
     }

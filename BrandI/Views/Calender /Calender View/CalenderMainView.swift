@@ -88,6 +88,8 @@ struct CalenderMainView: View {
                             CalendarView(calendar: .current,isAuthenticated: $isAuthenticated, currentDate: $currentDate, highlightedDates: vm.extractDates(from: vm.AllPostsAndEvents ?? [])
                             )
                         }
+                        .presentationDetents([.large])
+                        .presentationDragIndicator(.visible)
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         Button(action: {

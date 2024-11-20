@@ -22,7 +22,7 @@ struct BrandImageSection: View {
                     .cornerRadius(20)
             } else {
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(Color.background)
+                    .fill(Color.gray.opacity(0.1))
                     .frame(width: 350, height: 300)
                     .overlay(
                         VStack {

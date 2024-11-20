@@ -18,7 +18,7 @@ struct GetPostInfo: AppIntent {
         Summary("Get information on \(\.$getpost)")
     }
 
-    @Parameter(title: "Post", description: "The post to get information on.")
+    @Parameter(title: "Posts", description: "The post to get information on.")
     var getpost: PostEntity
     
     func perform() async throws -> some IntentResult & ReturnsValue<PostEntity> & ProvidesDialog & ShowsSnippetView {

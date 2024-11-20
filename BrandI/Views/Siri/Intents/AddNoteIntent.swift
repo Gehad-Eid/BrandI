@@ -20,7 +20,7 @@ struct PostAddedView: View {
                 // Title & Platforms
                 HStack {
                     Text(post.title)
-                        .foregroundStyle(Color.white)
+                        .foregroundColor(Color.white)
                         .fontWeight(.semibold)
                         .padding()
                     Spacer()
@@ -42,7 +42,7 @@ struct PostAddedView: View {
                 VStack(alignment: .leading) {
                     HStack {
                         Text(post.content)
-                            .foregroundColor(Color.black)
+                            .foregroundColor(Color("Text"))
                             .padding(.top, 16)
                             .padding(.leading, 16)
                         Spacer()
@@ -50,7 +50,7 @@ struct PostAddedView: View {
                     Spacer()
                 }
                 .frame(width: 330, height: 180)
-                .background(Color.white)
+                .background(Color("BoxColor2"))
                 .clipShape(BottomCornersRoundedRectangle(radius: 18))
                 
             }.padding(.vertical, 16)
@@ -66,6 +66,7 @@ struct PostAddedView: View {
 //View for get post with Images and platforms
 
 struct PostViewDialog: View {
+    
     let post: Post
     @Environment(\.colorScheme) private var colorScheme // Get the current color scheme
     
@@ -74,7 +75,7 @@ struct PostViewDialog: View {
             // Title & Platforms
             HStack {
                 Text(post.title)
-                    .foregroundColor(.white)
+                    .foregroundColor(Color.white)
                     .fontWeight(.semibold)
                     .padding()
                 
@@ -101,7 +102,7 @@ struct PostViewDialog: View {
             VStack(alignment: .leading) {
                 HStack {
                     Text(post.content)
-                        .foregroundColor(.black)
+                        .foregroundColor(Color("Text"))
                         .padding(.top, 16)
                         .padding(.leading, 16)
                     Spacer()
@@ -112,43 +113,51 @@ struct PostViewDialog: View {
                     Spacer()
                     
                     
-                    ZStack {
-                      
-                        Image("22")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 40, height: 40)
-                            .clipped()
-                            .cornerRadius(8)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.clear, lineWidth: 2)
-                            )
-                            .offset(x: 12)
-                        
-                        Image("11")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 40, height: 40)
-                            .clipped()
-                            .cornerRadius(8)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.clear, lineWidth: 2)
-                            )
-                        
-                       
-                        Text("2+")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(.white)
-                            .padding(3)
-                            .background(
-                                               RoundedRectangle(cornerRadius: 4)
-                                                .fill(Color.gray.opacity(0.4))
-                                         )
-                            .offset(x: 20, y: 10)
-                    }
-                    .frame(width: 40, height: 40)
+//                    ZStack {
+//                        // Ensure post.images is not nil or empty
+//                        if let images = post.images, !images.isEmpty {
+//                            ForEach(images.indices, id: \.self) { index in
+//                                AsyncImage(url: URL(string: images[index].imageUrl)) { image in
+//                                    image
+//                                        .resizable()
+//                                        .scaledToFill()
+//                                        .frame(width: 40, height: 40)
+//                                        .clipped()
+//                                        .cornerRadius(8)
+//                                        .overlay(
+//                                            RoundedRectangle(cornerRadius: 10)
+//                                                .stroke(Color.gray, lineWidth: 0.5)
+//                                        )
+//                                        // Stacked effect: Increase x-offset to make images overlap
+//                                        .offset(x: CGFloat(index * 5), y: 10)
+//                                        .zIndex(Double(index + 1))
+//                                } placeholder: {
+//                                    ProgressView()
+//                                        .frame(width: 40, height: 40)
+//                                        .clipped()
+//                                        .cornerRadius(8)
+//                                        .zIndex(Double(index + 1))
+//                                }
+//                            }
+//                            
+//                            // Display the "+X" label when there are more than 3 images
+//                            if images.count > 3 {
+//                                Text("\(images.count - 3)+")
+//                                    .font(.system(size: 12, weight: .bold))
+//                                    .foregroundColor(.white)
+//                                    .padding(3)
+//                                    .background(
+//                                        RoundedRectangle(cornerRadius: 4)
+//                                            .fill(Color.gray.opacity(0.9))
+//                                    )
+//                                    .offset(x: 20, y: 10)
+//                                    .zIndex(100)
+//                            }
+//                        }
+//                    }
+//                    .frame(width: 40, height: 40)
+//                    .padding(.bottom, 10)
+//                    .frame(width: 40, height: 40)
                     
                     
                     
@@ -156,7 +165,7 @@ struct PostViewDialog: View {
                     .padding(.bottom,10)
             }
             .frame(width: 330, height: 180)
-            .background(Color.white)
+            .background(Color("BoxColor2"))
             .clipShape(BottomCornersRoundedRectangle(radius: 18))
         }
         .padding(.vertical, 16)

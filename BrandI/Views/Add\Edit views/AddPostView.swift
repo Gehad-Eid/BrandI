@@ -15,7 +15,19 @@ struct AddPostView: View {
     
     @State private var selectedTab: String = "Add New Post"
     @State private var loadingButton: Bool = false
-    
+    init() {
+           
+            UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(named: "BabyBlue") // Set BabyBlue color
+            UISegmentedControl.appearance().setTitleTextAttributes(
+                [.foregroundColor: UIColor.white], // Selected text color
+                for: .selected
+            )
+            UISegmentedControl.appearance().setTitleTextAttributes(
+                [.foregroundColor: UIColor.gray], // Unselected text color
+                for: .normal
+            )
+        }
+        
     var body: some View {
         NavigationView {
             VStack {
@@ -47,17 +59,17 @@ struct AddPostView: View {
                             SelectPhotosScrollView(selectedUIImagesAndNames: $vm.imageList)
                             
                             // Date selection section
-                            SelecteDateView(selectedDate: $vm.selectedDate, selectedTab: $selectedTab)
+                            SelecteDateView(title: "", selectedDate: $vm.selectedDate, selectedTab: $selectedTab)
                             
                             // Platform selection section
                             SelectPlatforms(selectedPlatforms: $vm.selectedPlatforms)
                         }
                         else if selectedTab == "Add New Event" {
                             // Date selection section
-                            SelecteDateView(selectedDate: $vm.startDate, selectedTab: $selectedTab)
+                            SelecteDateView(title: "Starts in",selectedDate: $vm.startDate, selectedTab: $selectedTab)
                             
                             // Date selection section
-                            SelecteDateView(selectedDate: $vm.endDate, selectedTab: $selectedTab)
+                            SelecteDateView(title: "Ends in", selectedDate: $vm.endDate, selectedTab: $selectedTab)
                         }
                     }
                     .padding()

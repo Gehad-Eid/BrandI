@@ -56,7 +56,7 @@ struct EditView: View {
                                 VStack(alignment: .leading, spacing: 5) {
                                     if !isEditingEnabled {
                                         Text("Photos")
-                                            .font(.headline.weight(.regular))
+                                            .font(.headline.weight(.medium))
                                     }
                                     
                                     // Photo selection section
@@ -212,7 +212,7 @@ struct EditView: View {
             DatePicker("", selection: $vm.selectedDate, displayedComponents: .date)
                 .frame(width: 140, height: 40)
                 .foregroundColor(.white)
-                .background(isEditingEnabled ? Color("BabyBlue") : Color.clear)
+                .background(isEditingEnabled ? Color("BabyBlue") : Color("BabyBlue"))
                 .cornerRadius(10)
                 .datePickerStyle(.compact)
                 .labelsHidden()

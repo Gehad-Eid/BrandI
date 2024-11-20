@@ -22,5 +22,8 @@ struct BrandIdentityInputView: View {
                 .background(Color.background)
                 .cornerRadius(10)
         }
+//        .cornerRadius(10)
+        .padding()
+        .background(Color.gray.opacity(0.1))
     }
 }

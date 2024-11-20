@@ -10,7 +10,9 @@ import SwiftUI
 
 struct EditNameView: View {
     @EnvironmentObject var vm: MainViewModel
-
+    
+    @ObservedObject var vmSettings: SettingsViewModel
+    
     @State private var fullName: String = ""
     @State private var account: String = ""
     @State private var password: String = ""
@@ -20,8 +22,9 @@ struct EditNameView: View {
             VStack(alignment: .leading){
                 if let user = vm.user {
                     if !(vm.user?.name?.isEmpty ?? true || vm.user?.name == nil) {
-                        VStack {
+                        VStack(alignment: .leading) {
                             Text("Name").font(.headline)
+                                .padding(.horizontal)
                             Text("\(vm.user?.name ?? "Not Available")")
                                 .padding()
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -32,8 +35,9 @@ struct EditNameView: View {
                         }
                     }
                     
-                    VStack {
-                        Text("Name").font(.headline)
+                    VStack(alignment: .leading) {
+                        Text("Email").font(.headline)
+                            .padding(.horizontal)
                         Text("\(vm.user?.email ?? "Not Available")")
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -44,41 +48,50 @@ struct EditNameView: View {
                             .padding(.bottom, 20)
                     }
                     
-//                    Text("\(vm.user?.name ?? "Not Available")")
-//                        .padding()
-//                        .frame(maxWidth: .infinity, alignment: .leading)
-//                        .background(Color(.systemGray6))
-//                        .cornerRadius(9)
-//                        .padding(.horizontal)
-//                        .padding(.bottom, 20)
-//
-//                     Full Name TextField
-//                                    AppTextField(
-//                                        text: $fullName,
-//                                        placeholder: "Enter Full Name"
-//                                    ) {
-//                    
-//                                        print("Navigating from Full Name")
-//                                    }
-//
-//                    
-//                    AppTextField(
-//                        text: $account,
-//                        placeholder: "Enter Account"
-//                    ) {
-//                        // Action on tap or enter
-//                        print("Navigating from Account")
-//                    }
-//                    
-//                    
-//                    AppTextField(
-//                        text: $password,
-//                        placeholder: "Enter Password",
-//                        isSecure: true
-//                    ) {
-//                        
-//                        print("Navigating from Password")
-//                    }
+                    if vmSettings.authProviders.contains(where: { $0 == .email }) {
+                        // TODO: pretty suer that should change !!
+                        settingsRow(iconName: "key.fill",
+                                    title: "Change Password",
+                                    destination: PasswordChangeView(vm: vmSettings).navigationBarHidden(true),
+                                    isSystemImage: true
+                        )
+                    }
+                    
+                    //                    Text("\(vm.user?.name ?? "Not Available")")
+                    //                        .padding()
+                    //                        .frame(maxWidth: .infinity, alignment: .leading)
+                    //                        .background(Color(.systemGray6))
+                    //                        .cornerRadius(9)
+                    //                        .padding(.horizontal)
+                    //                        .padding(.bottom, 20)
+                    //
+                    //                     Full Name TextField
+                    //                                    AppTextField(
+                    //                                        text: $fullName,
+                    //                                        placeholder: "Enter Full Name"
+                    //                                    ) {
+                    //                    
+                    //                                        print("Navigating from Full Name")
+                    //                                    }
+                    //
+                    //                    
+                    //                    AppTextField(
+                    //                        text: $account,
+                    //                        placeholder: "Enter Account"
+                    //                    ) {
+                    //                        // Action on tap or enter
+                    //                        print("Navigating from Account")
+                    //                    }
+                    //                    
+                    //                    
+                    //                    AppTextField(
+                    //                        text: $password,
+                    //                        placeholder: "Enter Password",
+                    //                        isSecure: true
+                    //                    ) {
+                    //                        
+                    //                        print("Navigating from Password")
+                    //                    }
                     
                     Spacer()
                 }
@@ -86,7 +99,7 @@ struct EditNameView: View {
             .padding()
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Profile")
+                    Text("Account")
                         .font(.title2)
                         .foregroundColor(.primary)
                 }
@@ -96,11 +109,38 @@ struct EditNameView: View {
             try? await vm.loadCurrentUser()
         }
     }
+    
+    // Reusable Row for Settings Items
+    @ViewBuilder
+    private func settingsRow<Destination: View>(iconName: String, title: String, destination: Destination,isSystemImage: Bool = true
+    ) -> some View {
+        NavigationLink(destination: destination) {
+            HStack {
+                if isSystemImage {
+                    Image(systemName: iconName)
+                        .foregroundColor(.babyBlue)
+                } else {
+                    Image(iconName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 24, height: 24)
+                        .foregroundColor(.babyBlue)
+                }
+                Text(title)
+                    .font(.system(size: 18, weight: .medium))
+                    .padding(.leading, 10)
+                Spacer()
+            }
+            .padding()
+            //        .background(RoundedRectangle(cornerRadius: 18)
+            //            .fill(Color("BoxColor")))
+        }
+    }
 }
 
-#Preview {
-    EditNameView()
-}
+//#Preview {
+//    EditNameView()
+//}
 
 
 struct AppTextField: View {

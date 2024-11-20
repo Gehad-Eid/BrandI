@@ -15,7 +15,7 @@ struct UpcomingView: View {
     @State private var selectedDay = 0
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 3) {
+        VStack(alignment: .leading, spacing: 2) {
             Text("For this week")
                 .font(.title3)
                 .fontWeight(.bold)
@@ -36,6 +36,17 @@ struct UpcomingView: View {
                 .indexViewStyle(.page(backgroundDisplayMode: .interactive))
                 .accentColor(Color("BabyBlue"))
                 .frame(height: 150)
+        }.onAppear {
+            setupAppearance()
+        }
+        
+    }
+    func setupAppearance() {
+        UIPageControl.appearance().currentPageIndicatorTintColor = UIColor { traitCollection in
+            traitCollection.userInterfaceStyle == .dark ? .babyBlue : .blue
+        }
+        UIPageControl.appearance().pageIndicatorTintColor = UIColor { traitCollection in
+            traitCollection.userInterfaceStyle == .dark ? UIColor.white.withAlphaComponent(0.2) : UIColor.black.withAlphaComponent(0.2)
         }
     }
 }

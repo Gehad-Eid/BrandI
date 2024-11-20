@@ -20,9 +20,10 @@ struct UpcomingDayView: View {
     var body: some View {
         VStack {
             VStack(alignment: .leading, spacing: 5) {
-                HStack {
+                HStack (alignment: .center){
                     Text("Upcoming in \(day) days")
-                        .font(.system(size: 18))
+                        .fontWeight(.bold)
+                        .font(.system(size: 15))
                         .bold()
                         .foregroundColor(Color.white)
                     
@@ -31,9 +32,11 @@ struct UpcomingDayView: View {
                     //TODO: Edit formatt
                     Text(DateFormatter.localizedString(from: counts.date, dateStyle: .medium, timeStyle: .none))
                         .font(.system(size: 14))
+                        .fontWeight(.medium)
                         .foregroundColor(Color.white)
                 }
-                .padding(.top, 5)
+                .padding(.top, 3)
+                .padding(.bottom ,2)
                 
                 HStack {
                     HStack {
@@ -43,13 +46,15 @@ struct UpcomingDayView: View {
                             .frame(width: 13, height: 13)
                         
                         Text("\(counts.postCount) Posts")
+                            .fontWeight(.medium)
                             .font(.system(size: 14))
+                            .fontWeight(.medium)
                             .foregroundColor(Color.white)
                     }
                     
                     Text(".")
                         .foregroundColor(Color.white)
-                        .frame(width: 13, height: 13)
+                        .frame(width: 15, height: 15)
                     
                     HStack {
                         Image(systemName: "calendar")
@@ -59,6 +64,7 @@ struct UpcomingDayView: View {
                         
                         Text("\(counts.eventCount) Events")
                             .font(.system(size: 14))
+                            .fontWeight(.medium)
                             .foregroundColor(Color.white)
                     }
                 }
@@ -70,11 +76,12 @@ struct UpcomingDayView: View {
                 )
             }
             .padding(.horizontal)
+           
         }
         .frame(height: 80, alignment: .leading)
         .background(Color("BabyBlue"))
         .cornerRadius(18)
-        .padding(.horizontal)
+        .padding(.horizontal,5)
         .onTapGesture {
             mainTabSelection = 1 // Switch to Calendar tab in MainTabView
             calenerviewModel.currentDateFromAgenda = counts.date

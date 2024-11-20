@@ -36,12 +36,22 @@ class AnimationScene: SKScene {
             SKTexture(imageNamed: "8"),
             SKTexture(imageNamed: "9"),
             SKTexture(imageNamed: "10"),
-        
+            SKTexture(imageNamed: "11"),
+            SKTexture(imageNamed: "12"),
+            SKTexture(imageNamed: "13"),
+            SKTexture(imageNamed: "14"),
+            SKTexture(imageNamed: "15"),
+            SKTexture(imageNamed: "16"),
+            SKTexture(imageNamed: "17"),
+            SKTexture(imageNamed: "18"),
+            SKTexture(imageNamed: "19"),
+            SKTexture(imageNamed: "20"),
+           
             
         ]
 
         
-        let animation = SKAction.animate(with: textures, timePerFrame: 0.6)
+        let animation = SKAction.animate(with: textures, timePerFrame: 0.2)
            animation.timingMode = .easeInEaseOut
 
            let repeatAnimation = SKAction.repeatForever(animation)

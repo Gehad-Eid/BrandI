@@ -26,7 +26,7 @@ struct MonthInfoView: View {
                 .font(.headline)
                 .fontWeight(.bold)
             
-            HStack/*(spacing: 15)*/ {
+            HStack(spacing: 15) {
                 //                Spacer()
                 MonthInfo(iconName: "calendar", count: Events.count, title: "Events")
                     .onTapGesture(){

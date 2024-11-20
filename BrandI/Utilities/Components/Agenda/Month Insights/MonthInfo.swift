@@ -16,8 +16,8 @@ struct MonthInfo: View {
     
     var body: some View {
         //  NavigationLink(destination: destination) {
-        VStack {
-            HStack {
+        VStack (alignment: .leading){
+            HStack (alignment:.bottom){
                 Image(systemName: iconName)
                     .resizable()
                     .foregroundColor(Color("BabyBlue"))
@@ -31,4 +31,7 @@ struct MonthInfo: View {
         }
         //    }
     }
+}
+#Preview {
+    MonthInfo(iconName: "calendar", count: 10, title: "Events")
 }

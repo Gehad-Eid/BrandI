@@ -46,7 +46,7 @@ struct ReusableCardView: View {
             VStack(alignment: .leading) {
                 HStack {
                     Text(description)
-                        .foregroundColor(Color.black)
+                        .foregroundColor(Color("Text"))
                         .padding(.top, 16)
                         .padding(.leading, 16)
                     Spacer()
@@ -103,7 +103,7 @@ struct ReusableCardView: View {
                 .padding(.bottom,10)
             }
             .frame(width: 330, height: 153)
-            .background(Color.white)
+            .background(Color("BoxColor2"))
             .clipShape(BottomCornersRoundedRectangle(radius: 18))
             .shadow(color: Color.black.opacity(0.1), radius: 10, x: 2, y: 2)
         }
