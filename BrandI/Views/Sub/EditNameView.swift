@@ -36,25 +36,27 @@ struct EditNameView: View {
                     }
                     
                     VStack(alignment: .leading) {
-                        Text("Email").font(.headline)
-                            .padding(.horizontal)
+                        Text("Email").font(.title3)
+                         
                         Text("\(vm.user?.email ?? "Not Available")")
                             .padding()
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .background(Color(.systemGray6))
-                            .cornerRadius(9)
+                            .cornerRadius(12)
                             .foregroundColor(Color(.gray))
-                            .padding(.horizontal)
                             .padding(.bottom, 20)
                     }
                     
                     if vmSettings.authProviders.contains(where: { $0 == .email }) {
                         // TODO: pretty suer that should change !!
-                        settingsRow(iconName: "key.fill",
-                                    title: "Change Password",
-                                    destination: PasswordChangeView(vm: vmSettings).navigationBarHidden(true),
-                                    isSystemImage: true
-                        )
+                        VStack{
+                            settingsRow(iconName: "key.fill",
+                                        title: "Change Password",
+                                        destination: PasswordChangeView(vm: vmSettings).navigationBarHidden(true),
+                                        isSystemImage: true
+                            )
+                        }.background(Color(.systemGray6))
+                            .cornerRadius(12)
                     }
                     
                     //                    Text("\(vm.user?.name ?? "Not Available")")

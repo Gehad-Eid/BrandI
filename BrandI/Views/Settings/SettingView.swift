@@ -28,7 +28,7 @@ struct SettingsView: View {
                     if isAuthenticated /*let userID = UserDefaults.standard.string(forKey: "userID")*/ {
                         Section {
                             // TODO: pretty suer that should change to account at least !!
-                            settingsRow(iconName: "envelope",
+                            settingsRow(iconName: "person.crop.circle",
                                         title: "Profile",
                                         destination: EditNameView(vmSettings: vm),
                                         isSystemImage: true
@@ -65,7 +65,7 @@ struct SettingsView: View {
                                 showSignOutAlert = true
                             } label: {
                                 HStack {
-                                    Image(systemName: "arrowshape.turn.up.left")
+                                    Image(systemName: "iphone.and.arrow.forward.inward")
                                         .foregroundColor(.babyBlue)
                                     
                                     Text("Sign Out")
