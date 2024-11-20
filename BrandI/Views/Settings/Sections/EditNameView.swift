@@ -21,7 +21,7 @@ struct EditNameView: View {
         NavigationView {
             VStack(alignment: .leading){
                 if let user = vm.user {
-                    if !(vm.user?.name?.isEmpty ?? true || vm.user?.name == nil) {
+                    if !(user.name?.isEmpty ?? true || user.name == nil) {
                         VStack(alignment: .leading) {
                             Text("Name").font(.headline)
                                 .padding(.horizontal)
@@ -94,6 +94,9 @@ struct EditNameView: View {
                     //                    }
                     
                     Spacer()
+                }
+                else {
+                    
                 }
             }
             .padding()

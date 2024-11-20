@@ -45,7 +45,6 @@ struct CalendarView: View {
         ZStack(alignment: .top) {
             NavigationView {
                 VStack{
-                    
                     HStack{
                         //
                         //                    Text("Calender")

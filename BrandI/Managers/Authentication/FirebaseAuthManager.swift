@@ -11,7 +11,7 @@ import FirebaseAuth
 struct AuthDataResultModel {
     let uid: String
     let email: String?
-    let name: String?
+    var name: String?
     
     init(user: User) {
         self.uid = user.uid

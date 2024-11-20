@@ -95,7 +95,8 @@ final class SignUpViewModel: ObservableObject {
         }
         
         do {
-            let authDataResult = try await FirebaseAuthManager.shared.createUser(email: email, password: password)
+            var authDataResult = try await FirebaseAuthManager.shared.createUser(email: email, password: password)
+            authDataResult.name = name
             let user = DBUser(authUser: authDataResult)
             try await UserManager.shared.createNewUser(user: user)
             

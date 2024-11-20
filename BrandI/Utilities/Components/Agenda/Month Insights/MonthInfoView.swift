@@ -51,9 +51,12 @@ struct MonthInfoView: View {
                 //                Spacer()
             }
             .sheet(isPresented: $showEventsScreen) {
-                VStack {
-                    
+                ZStack {
                     ItemScrollView(items: Events, type: type)
+                    Capsule()
+                        .fill(Color.secondary)
+                        .frame(width: 70, height: 5)
+                        .padding(.top, 10)
                 }
             }
             .sheet(isPresented: $showPostsScreen) {
