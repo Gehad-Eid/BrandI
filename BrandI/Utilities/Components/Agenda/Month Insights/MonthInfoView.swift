@@ -13,9 +13,11 @@ struct MonthInfoView: View {
     let Posts: [Post]
     let Drafts: [Post]
 
-    @State var showScreen = false
+    @State var showEventsScreen = false
+    @State var showPostsScreen = false
+    @State var showDraftssScreen = false
     @State var type = ""
-    @State var items: [Any] = []
+//    @State var items: [Any] = []
     
     var body: some View {
         VStack(alignment: .leading, spacing: 5) {
@@ -29,28 +31,37 @@ struct MonthInfoView: View {
                 MonthInfo(iconName: "calendar", count: Events.count, title: "Events")
                     .onTapGesture(){
                         type = "events"
-                        items = Events
-                        showScreen = true
+//                        items = Events
+                        showEventsScreen = true
                     }
                 //                Spacer()
                 MonthInfo(iconName: "document.fill", count: Posts.count, title: "Posts")
                     .onTapGesture(){
                         type = "posts"
-                        items = Posts
-                        showScreen = true
+//                        items = Posts
+                        showPostsScreen = true
                     }
                 //                Spacer()
 //                MonthInfo(iconName: "pencil", count: Drafts.count, title: "Drafts")
 //                    .onTapGesture(){
 //                        type = "drafts"
-//                        items = Drafts
-//                        showScreen = true
+////                        items = Drafts
+//                        showDraftssScreen = true
 //                    }
                 //                Spacer()
             }
-            .sheet(isPresented: $showScreen) {
-                ItemScrollView(items: items, type: type)
+            .sheet(isPresented: $showEventsScreen) {
+                VStack {
+                    
+                    ItemScrollView(items: Events, type: type)
+                }
             }
+            .sheet(isPresented: $showPostsScreen) {
+                ItemScrollView(items: Posts, type: type)
+            }
+//            .sheet(isPresented: $showDraftssScreen) {
+//                ItemScrollView(items: Drafts, type: type)
+//            }
         }
         .padding(.vertical)
     }
